@@ -102,6 +102,9 @@
       line-height: 0.9;
       margin: 0 0 clamp(18px, 2.4vh, 30px);
       text-transform: uppercase;
+      /* il gradiente (background-clip:text) copre solo il box: senza questo
+         la parola più larga della colonna veniva tagliata a destra */
+      width: max-content; white-space: nowrap; padding-right: 0.06em;
       background: linear-gradient(180deg, #ffffff 30%, #c4b5fd 100%);
       -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent; color: transparent;
