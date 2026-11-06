@@ -23,7 +23,9 @@ const SNS = (function () {
     // id usato anche da Jarvis («dammi le news»): non cambiarlo
     { id: 'slide:news', src: 'news.html', thumb: 'img/sns/news.jpg', title: 'News', sub: 'crivellini.it' },
     // Dalla presentazione «The AI Era» (Geopolitica della AI)
-    { id: 'video:intro', video: true, thumb: 'img/intro-poster.jpg', title: 'Intro The AI Era', sub: 'Video · The AI Era' },
+    // la voce del video intro (0:02–0:28): la suona lo show, la slide mostra le didascalie
+    { id: 'slide:fedro-voce', src: 'fedro-voce.html', audio: 'audio/intro-voce.m4a', thumb: 'img/sns/fedro-voce.jpg',
+      title: 'Platone · Fedro', sub: 'La voce · didascalie' },
     { id: 'slide:scrittura',        src: 'scrittura.html',        thumb: 'img/sns/scrittura.jpg',        title: 'Citazione',            sub: 'The AI Era' },
     { id: 'slide:fotografia',       src: 'fotografia.html',       thumb: 'img/sns/fotografia.jpg',       title: 'Fotografia',           sub: 'The AI Era' },
     { id: 'slide:napa-valley',      src: 'napa-valley.html',      thumb: 'img/sns/napa-valley.jpg',      title: 'Napa Valley',          sub: 'The AI Era' },
@@ -40,8 +42,21 @@ const SNS = (function () {
     { id: 'slide:paypal-mafia-2',   src: 'paypal-mafia-2.html',   thumb: 'img/sns/paypal-mafia-2.jpg',   title: 'PayPal Mafia',         sub: 'The AI Era' },
     { id: 'slide:paypal-mafia-3',   src: 'paypal-mafia-3.html',   thumb: 'img/sns/paypal-mafia-3.jpg',   title: 'PayPal Mafia — foto',  sub: 'The AI Era' }
   ].concat(quizSlides());
-  // Se cambia l'ordine predefinito (qui sopra), gli ordini salvati prima non valgono più
   const ORDER_BASE = SLIDES.map(x => x.id).join('|');
+  // Un ordine salvato resta valido anche quando la scaletta predefinita cambia:
+  // si tengono le slide note e non eliminate, quelle nuove (o ripristinate)
+  // tornano al loro posto naturale, dopo la vicina che le precede.
+  function normalize(ids, deleted) {
+    const known = SLIDES.map(x => x.id), del = deleted || [];
+    const out = (ids || []).filter((id, i, a) => known.includes(id) && !del.includes(id) && a.indexOf(id) === i);
+    known.forEach((id, i) => {
+      if (out.includes(id) || del.includes(id)) return;
+      let at = 0;
+      for (let j = i - 1; j >= 0; j--) { const k = out.indexOf(known[j]); if (k !== -1) { at = k + 1; break; } }
+      out.splice(at, 0, id);
+    });
+    return out;
+  }
 
   // Quiz film (js/film-quiz-data.js): la soluzione compare sulla scheda della console.
   // Nello show SNS solo i quiz trama (gli emoji restano per dashboard e onepage).
@@ -213,5 +228,5 @@ const SNS = (function () {
 
   connectJarvis();
 
-  return { SLIDES, ORDER_BASE, VIDEOS, SOUNDS, send, listen, videos, sounds, isNext, isPrev, room, online: () => netOk };
+  return { SLIDES, ORDER_BASE, normalize, VIDEOS, SOUNDS, send, listen, videos, sounds, isNext, isPrev, room, online: () => netOk };
 })();

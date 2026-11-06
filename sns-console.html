@@ -116,6 +116,10 @@
       border: 1px solid var(--line); background: var(--panel-2); font-size: 13px; }
     .chip button { border: 1px solid rgba(52,211,153,0.5); background: rgba(52,211,153,0.12); color: #86efac;
       border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 700; }
+    h2 .saved { margin-left: auto; letter-spacing: 0; text-transform: none; font-size: 13px; font-weight: 600;
+      color: #86efac; opacity: 0; transition: opacity .3s; }
+    h2 .saved.on { opacity: 1; }
+    h2 .saved + .reset { margin-left: 12px !important; }
     h2 .reset { margin-left: auto; letter-spacing: 0; text-transform: none; font-size: 13px; font-weight: 500;
       color: var(--accent-soft); background: none; border: 0; padding: 4px 0; }
 
@@ -200,7 +204,7 @@
     </details>
 
     <section>
-      <h2>Slide <span>tocca per mandarla in onda · trascinala per riordinare (col dito: tieni premuto, poi sposta) · × per eliminare</span><button class="reset" id="reset-order" hidden>Ordine iniziale</button></h2>
+      <h2>Slide <span>tocca per mandarla in onda · trascinala per riordinare (col dito: tieni premuto, poi sposta) · × per eliminare</span><span class="saved" id="saved">✓ Salvato</span><button class="reset" id="reset-order" hidden>Ordine iniziale</button></h2>
       <div class="grid" id="slides"></div>
       <div class="trash" id="trash" hidden><span class="lbl">Eliminate</span></div>
     </section>
@@ -236,26 +240,23 @@
     let order = defaultOrder(), orderSaved = false;
     // Tiene solo le slide note e non eliminate; quelle mancanti (nuove o
     // ripristinate) tornano al loro posto naturale, dopo la vicina che le precede.
-    function normalize(ids) {
-      const known = SNS.SLIDES.map(x => x.id);
-      const out = (ids || []).filter(id => known.includes(id) && !deleted.includes(id));
-      known.forEach((id, i) => {
-        if (out.includes(id) || deleted.includes(id)) return;
-        let at = 0;
-        for (let j = i - 1; j >= 0; j--) { const k = out.indexOf(known[j]); if (k !== -1) { at = k + 1; break; } }
-        out.splice(at, 0, id);
-      });
-      return out;
-    }
-    try {                                     // vale solo se nato dall'ordine predefinito di adesso
+    const normalize = ids => SNS.normalize(ids, deleted);
+    try {                                     // resta valido anche se la scaletta predefinita cambia
       const saved = JSON.parse(localStorage.getItem(ORDER_KEY));
-      if (saved && saved.base === SNS.ORDER_BASE && Array.isArray(saved.ids)) { order = normalize(saved.ids); orderSaved = true; }
+      if (saved && Array.isArray(saved.ids)) { order = normalize(saved.ids); orderSaved = true; }
     } catch (_) {}
     function saveOrder(send) {
       orderSaved = true;
       try { localStorage.setItem(ORDER_KEY, JSON.stringify({ base: SNS.ORDER_BASE, ids: order })); localStorage.setItem(DELETED_KEY, JSON.stringify(deleted)); } catch (_) {}
       $('reset-order').hidden = order.join() === defaultOrder().join();
-      if (send) SNS.send({ t: 'order', ids: order, deleted });
+      if (send) { SNS.send({ t: 'order', ids: order, deleted }); flashSaved(); }
+    }
+    // conferma discreta: la nuova scaletta è salvata qui e mandata allo show
+    let savedTimer = null;
+    function flashSaved() {
+      const el = $('saved'); if (!el) return;
+      el.classList.add('on'); clearTimeout(savedTimer);
+      savedTimer = setTimeout(() => el.classList.remove('on'), 1800);
     }
     function deleteSlide(id) {
       const s = SNS.SLIDES.find(x => x.id === id);
@@ -543,14 +544,15 @@
       $('status').querySelector('span').textContent = alive ? 'Show collegato' : 'Show non aperto';
       const oa = $('onair');
       oa.classList.toggle('off', !alive);
-      oa.classList.toggle('video', !!(alive && show.id && show.id.startsWith('video:')));
+      const media = !!(alive && (show.media || (show.id && show.id.startsWith('video:'))));   // video o voce
+      oa.classList.toggle('video', media);
       $('onair-tag').textContent = alive ? 'IN ONDA' : 'FUORI ONDA';
       $('onair-what').textContent = !alive ? 'Apri lo show per iniziare'
         : show.blocked ? nameOf(show.id) + ' — bloccato: tocca lo schermo dello show'
         : (show.muted && show.id && show.id.startsWith('video:')) ? nameOf(show.id) + ' — senza audio: tocca lo schermo dello show'
         : nameOf(show.id);
       paintFx(alive);
-      if (alive && show.id && show.id.startsWith('video:')) {
+      if (media) {
         $('v-play').textContent = show.playing ? 'Pausa' : 'Play';
         const t = show.playing ? Math.min(show.dur || 0, show.time + (Date.now() - (show.at || Date.now())) / 1000) : show.time;
         $('v-time').textContent = fmt(t) + ' / ' + fmt(show.dur);

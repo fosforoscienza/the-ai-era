@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platone, Fedro — la voce</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --accent: #41b7ff; --accent-soft: #8fd2ff; --ink: #02040b; --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: var(--ink) !important; overflow: hidden; height: 100%; margin: 0; }
+    body { font-family: inherit; }
+    .stage { position: fixed; inset: 0; overflow: hidden; background: var(--ink); }
+
+    /* ---------- Atmosfera (come «La nascita dell'AI») ---------- */
+    .beam {
+      position: absolute; left: -20vw; top: -30vh; width: 95vw; height: 160vh; pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, rgba(65,183,255,0.10) 35%, rgba(143,210,255,0.16) 50%, rgba(65,183,255,0.08) 65%, transparent 100%);
+      transform: rotate(-24deg); transform-origin: 50% 0; mix-blend-mode: screen; opacity: 0;
+      animation: fade 2.4s 0.2s ease both, flicker 7s 2.6s ease-in-out infinite;
+    }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes flicker { 0%,100% { opacity: 1; } 42% { opacity: 0.82; } 46% { opacity: 0.95; } 70% { opacity: 0.88; } }
+    .fog { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(40px); opacity: 0; }
+    .fog.f1 { left: -10vw; bottom: -20vh; width: 70vw; height: 60vh;
+      background: radial-gradient(closest-side, rgba(31,127,209,0.22), transparent);
+      animation: fade 3s 0.4s ease both, drift1 22s ease-in-out infinite alternate; }
+    .fog.f2 { left: 30vw; top: 10vh; width: 50vw; height: 50vh;
+      background: radial-gradient(closest-side, rgba(65,183,255,0.10), transparent);
+      animation: fade 3s 0.8s ease both, drift2 26s ease-in-out infinite alternate; }
+    @keyframes drift1 { to { transform: translate(6vw, -3vh); } }
+    @keyframes drift2 { to { transform: translate(-5vw, 4vh); } }
+    #dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .vignette { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 240px 60px rgba(0,0,0,0.8); }
+
+    /* ---------- La figura in penombra ---------- */
+    .figure { position: absolute; left: -6vw; bottom: 0; height: 100%; aspect-ratio: 1000 / 1080; max-width: 56vw; }
+    .figure svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .fig-in { opacity: 0; animation: figIn 2.4s 0.2s var(--ease) both; }
+    @keyframes figIn { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: none; } }
+    .breathe { transform-box: view-box; transform-origin: 500px 1080px; animation: breathe 5.5s 3s ease-in-out infinite; }
+    @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.006) translateY(-2px); } }
+    .rim { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 2.4s 0.6s cubic-bezier(0.65,0,0.35,1) forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    /* la voce: onde dalla bocca, la loro intensità segue il volume */
+    .wave { fill: none; stroke: var(--accent-soft); stroke-width: 3; stroke-linecap: round;
+      transform-box: fill-box; transform-origin: 0% 50%; animation: wave 1.5s ease-out infinite; opacity: 0; }
+    .wave:nth-child(2) { animation-delay: 0.38s; } .wave:nth-child(3) { animation-delay: 0.76s; } .wave:nth-child(4) { animation-delay: 1.14s; }
+    @keyframes wave { 0% { opacity: 0; transform: scale(0.35); } 15% { opacity: 0.95; } 100% { opacity: 0; transform: scale(2.6); } }
+
+    /* ---------- Didascalie grandi, a destra ---------- */
+    .copy { position: absolute; z-index: 3; left: 44vw; right: 5vw; top: 0; bottom: 0;
+      display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow { position: absolute; top: clamp(40px, 9vh, 110px); left: 0;
+      font-size: clamp(13px, 1.1vw, 19px); font-weight: 700; letter-spacing: 0.34em; text-transform: uppercase;
+      color: var(--accent-soft); animation: rise 1s 0.8s var(--ease) both; }
+    .eyebrow::after { content: ''; display: block; width: 90px; height: 1px; margin-top: 16px;
+      background: linear-gradient(90deg, rgba(143,210,255,0.7), transparent); }
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+    .caps { position: relative; min-height: 4.2em; font-size: clamp(34px, 3.7vw, 72px); }
+    .block { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+      line-height: 1.16; font-weight: 300; color: #eaf2fb; letter-spacing: -0.005em;
+      transition: opacity .7s ease, transform .9s var(--ease), filter .7s ease; }
+    .block.out { opacity: 0; transform: translateY(calc(-50% - 0.8em)); filter: blur(10px); }
+    .block.wait { opacity: 0; }
+    .line { display: inline; }   /* la frase scorre: va a capo dove serve, non a ogni battuta */
+    .w { display: inline-block; opacity: 0; transform: translateY(0.4em); filter: blur(10px);
+      transition: opacity .45s ease, transform .6s var(--ease), filter .5s ease; }
+    .w.on { opacity: 1; transform: none; filter: blur(0); }
+    .w.hl { font-weight: 700; color: #fff; text-shadow: 0 0 30px rgba(65,183,255,0.8); }
+    .block.past .w.on { color: rgba(234,242,251,0.55); }
+    .block.past .w.hl.on { color: #fff; }
+
+    .who { position: absolute; bottom: clamp(50px, 11vh, 130px); left: 0;
+      font-size: clamp(12px, 1vw, 17px); font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase;
+      color: rgba(143,210,255,0.8); opacity: 0; transform: translateY(14px);
+      transition: opacity 1s ease, transform 1s var(--ease); }
+    .who.on { opacity: 1; transform: none; }
+
+    /* fuori dallo show, se il browser blocca l'audio */
+    #play { position: absolute; z-index: 5; left: 44vw; bottom: clamp(50px, 11vh, 130px); display: none;
+      padding: 12px 22px; border-radius: 999px; border: 1px solid rgba(65,183,255,0.6);
+      background: rgba(65,183,255,0.16); color: #dff2ff; font: inherit; font-size: 16px; cursor: pointer; }
+    #play.show { display: block; }
+
+    @media (max-aspect-ratio: 1/1) {
+      .figure { left: -22vw; opacity: 0.45; max-width: none; }
+      .copy { left: 8vw; right: 8vw; }
+      .caps { font-size: 7vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stage">
+    <div class="beam"></div>
+    <div class="fog f1"></div>
+    <div class="fog f2"></div>
+    <canvas id="dust"></canvas>
+
+    <!-- Lo stesso personaggio in penombra di «La nascita dell'AI»: non un ritratto -->
+    <div class="figure" aria-hidden="true">
+      <svg viewBox="0 0 1000 1080" preserveAspectRatio="xMinYMax meet">
+        <defs>
+          <path id="body" d="M40 1080 C60 900 150 820 260 790 C300 780 320 760 325 720 C330 690 300 660 290 600
+            C270 480 330 330 470 310 C580 295 650 360 660 430 C665 460 668 480 676 500 C682 512 690 520 688 530
+            L684 545 C690 570 712 600 722 615 C726 622 720 630 706 632 C700 640 704 650 708 656
+            C712 662 704 668 702 672 C708 680 704 690 696 694 C694 705 700 720 694 735
+            C686 755 660 765 630 768 C600 770 585 790 585 810 C590 840 640 860 700 870
+            C790 885 860 940 900 1080 Z"/>
+          <clipPath id="clip-body"><use href="#body"/></clipPath>
+          <linearGradient id="g-fill" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#010207"/><stop offset="0.75" stop-color="#040913"/><stop offset="1" stop-color="#08142a"/>
+          </linearGradient>
+          <radialGradient id="g-side" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#41b7ff" stop-opacity="0.22"/><stop offset="1" stop-color="#41b7ff" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="g-rim-mask" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0.52" stop-color="#000"/><stop offset="0.68" stop-color="#fff"/>
+          </linearGradient>
+          <mask id="m-rim" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1080">
+            <rect width="1000" height="1080" fill="url(#g-rim-mask)"/>
+          </mask>
+          <linearGradient id="g-rim-fall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0.25" stop-color="#fff"/><stop offset="0.66" stop-color="#fff"/>
+            <stop offset="0.80" stop-color="#666"/><stop offset="0.97" stop-color="#000"/>
+          </linearGradient>
+          <mask id="m-fall" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1080">
+            <rect width="1000" height="1080" fill="url(#g-rim-fall)"/>
+          </mask>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="16"/></filter>
+        </defs>
+
+        <g class="fig-in"><g class="breathe">
+          <use href="#body" fill="url(#g-fill)"/>
+          <g clip-path="url(#clip-body)"><ellipse id="side" cx="790" cy="600" rx="230" ry="460" fill="url(#g-side)" opacity="0.6"/></g>
+          <g mask="url(#m-fall)"><g mask="url(#m-rim)" id="rim">
+            <use href="#body" class="rim" pathLength="1" fill="none" stroke="#41b7ff" stroke-width="26" stroke-opacity="0.32" filter="url(#soft)"/>
+            <use href="#body" class="rim" pathLength="1" fill="none" stroke="#bfe6ff" stroke-width="3" filter="url(#glow)"/>
+          </g></g>
+          <g id="waves" transform="translate(728 666)" opacity="0">
+            <path class="wave" d="M0 -38 A38 38 0 0 1 0 38"/><path class="wave" d="M0 -38 A38 38 0 0 1 0 38"/>
+            <path class="wave" d="M0 -38 A38 38 0 0 1 0 38"/><path class="wave" d="M0 -38 A38 38 0 0 1 0 38"/>
+          </g>
+        </g></g>
+      </svg>
+    </div>
+
+    <div class="vignette"></div>
+
+    <div class="copy">
+      <div class="eyebrow" id="eyebrow"></div>
+      <div class="caps" id="caps" aria-live="polite"></div>
+      <div class="who" id="who"></div>
+    </div>
+    <button id="play">▶ Ascolta</button>
+  </div>
+
+  <audio id="voice" src="audio/intro-voce.m4a" preload="auto"></audio>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="news.html">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="scrittura.html">&#8594;</a>
+
+  <div id="lang-toggle">
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // Platone, Fedro 275a: il re Thamus a Theuth, inventore della scrittura.
+    // Tempi (s) della voce in audio/intro-voce.m4a (video intro da 0:02 a 0:28).
+    // Ogni frase è un blocco; le righe compaiono parola per parola mentre sono dette.
+    // *parola* = in evidenza.
+    const CUES = [
+      [[1.27, 'Questa invenzione produrrà *dimenticanza*', 'This invention will produce *forgetfulness*'],
+       [3.75, "nelle menti di coloro che l'apprendono,", 'in the minds of those who learn it,'],
+       [6.33, 'per mancanza di esercizio della memoria.', 'through lack of exercise of memory.']],
+      [[9.19, 'Procurerà *apparenza* di saggezza,', 'It will give the *appearance* of wisdom,'],
+       [11.77, 'ma non *verità.*', 'but not *truth.*']],
+      [[13.40, 'Infatti, divenuti grazie a te', 'For, having become through you'],
+       [15.75, 'ascoltatori di molte', 'hearers of many'],
+       [17.00, 'nozioni, senza insegnamento,', 'things, without instruction,']],
+      [[19.54, 'crederanno di essere conoscitori di', 'they will believe they know'],
+       [21.50, 'molte cose,', 'many things,'],
+       [22.81, 'pur essendo, per lo più, *ignoranti.*', 'while being, for the most part, *ignorant.*']]
+    ];
+    const END = 25.8;
+    const TXT = {
+      it: { eyebrow: 'Platone · Fedro', who: '— Il re Thamus a Theuth, inventore della scrittura · Fedro 275a' },
+      en: { eyebrow: 'Plato · Phaedrus', who: '— King Thamus to Theuth, inventor of writing · Phaedrus 275a' }
+    };
+    // volume della voce ogni 50 ms (0–9), per le onde e la luce sul volto
+    const ENV = '00000000000000000000000000000222234420499655430366366366435555513615655610555545545553054431566656204432005766665443100000000039656551668606535542631027500562432323467653333210000000009930966857420037205655670353521452125410003410000005866877676587464074100000000000007850563100362000000686869932725665200353206974321075144079956344467932855400069654551000005868136541045434654310630000000007996845455635432106440265531151365465354444043155453221000000000069877421000000018511165553530252342037520016755446555410121000000';
+
+    const caps = document.getElementById('caps');
+    let words = [], blocks = [];          // [{el, t}], [{el, start, end}]
+    function renderTexts() {
+      document.getElementById('eyebrow').textContent = TXT[lang].eyebrow;
+      document.getElementById('who').textContent = TXT[lang].who;
+      caps.textContent = ''; words = []; blocks = [];
+      const col = lang === 'en' ? 2 : 1;
+      CUES.forEach((cue, b) => {
+        const el = document.createElement('div'); el.className = 'block wait';
+        const start = cue[0][0], end = b + 1 < CUES.length ? CUES[b + 1][0][0] : Infinity;
+        cue.forEach(([t0, ...txt], k) => {
+          const t1 = k + 1 < cue.length ? cue[k + 1][0] : (b + 1 < CUES.length ? CUES[b + 1][0][0] : END);
+          const line = document.createElement('span'); line.className = 'line';
+          const ws = txt[col - 1].split(' ');
+          const total = ws.reduce((a, w) => a + w.length + 1, 0);
+          const span = Math.max(0.4, (t1 - t0) - 0.35) * 0.85;   // le parole arrivano col parlato
+          let acc = 0;
+          ws.forEach((w, i) => {
+            if (i) line.appendChild(document.createTextNode(' '));
+            const s = document.createElement('span');
+            const hl = /^\*.*\*$/.test(w) || /^\*/.test(w);
+            s.className = 'w' + (hl ? ' hl' : '');
+            s.textContent = w.replace(/\*/g, '');
+            line.appendChild(s);
+            words.push({ el: s, t: t0 + span * acc / total, on: false });
+            acc += w.length + 1;
+          });
+          if (k) el.appendChild(document.createTextNode(' '));
+          el.appendChild(line);
+        });
+        caps.appendChild(el);
+        blocks.push({ el, start, end, state: 'wait' });
+      });
+      lastT = -1;
+    }
+    function onLangChange() { renderTexts(); }
+
+    // ── Orologio: nello show l'audio lo suona lo show (sbloccato dal primo tocco)
+    //    e manda qui il tempo; fuori dallo show suona questa pagina. ──
+    const voice = document.getElementById('voice');
+    const qT = parseFloat(new URLSearchParams(location.search).get('t'));   // ?t=24: fermo immagine
+    let hosted = false, base = { t: 0, at: performance.now(), playing: false };
+    window.addEventListener('message', e => {
+      const d = e.data || {};
+      if (d.type === 'op-audio-host') { hosted = true; voice.pause(); }
+      else if (d.type === 'op-audio') { hosted = true; voice.pause(); base = { t: d.t, at: performance.now(), playing: !!d.playing }; }
+    });
+    const playBtn = document.getElementById('play');
+    function selfPlay() {
+      if (hosted || isFinite(qT)) return;
+      voice.play().then(() => playBtn.classList.remove('show')).catch(() => playBtn.classList.add('show'));
+    }
+    playBtn.addEventListener('click', e => { e.stopPropagation(); selfPlay(); });
+    setTimeout(selfPlay, 700);           // nello show il «padrone» si presenta prima
+
+    function now() {
+      if (isFinite(qT)) return qT;
+      if (hosted) return base.playing ? base.t + (performance.now() - base.at) / 1000 : base.t;
+      return voice.currentTime || 0;
+    }
+    const level = t => { const i = Math.floor(t * 20); return i >= 0 && i < ENV.length ? +ENV[i] / 9 : 0; };
+
+    const wavesEl = document.getElementById('waves'), sideEl = document.getElementById('side');
+    const who = document.getElementById('who');
+    let lastT = -1, lv = 0;
+    function frame() {
+      const t = now();
+      if (t !== lastT) {
+        if (t < lastT - 0.3) words.forEach(w => { w.on = false; w.el.classList.remove('on'); });   // riavvolto
+        words.forEach(w => { if (!w.on && t >= w.t) { w.on = true; w.el.classList.add('on'); } });
+        blocks.forEach((b, i) => {
+          const st = t < b.start ? 'wait' : t < b.end ? 'live' : 'out';
+          if (st !== b.state) { b.state = st; b.el.className = 'block' + (st === 'live' ? '' : ' ' + st); }
+        });
+        who.classList.toggle('on', t >= END - 0.6);
+        lastT = t;
+      }
+      const target = (hosted ? base.playing : !voice.paused) || isFinite(qT) ? level(t) : 0;
+      lv += (target - lv) * 0.25;
+      wavesEl.setAttribute('opacity', Math.min(1, lv * 1.4).toFixed(3));
+      sideEl.setAttribute('opacity', (0.6 + lv * 0.9).toFixed(3));
+      requestAnimationFrame(frame);
+    }
+
+    // Polvere sospesa nel fascio di luce
+    function startDust(cv) {
+      const ctx = cv.getContext('2d');
+      let W, H, P = [];
+      function init() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        P = Array.from({ length: Math.round(W * H / 14000) }, () => ({
+          x: Math.random() * W, y: Math.random() * H, r: 0.6 + Math.random() * 1.8,
+          vx: (Math.random() - 0.3) * 0.12, vy: -0.05 - Math.random() * 0.18, a: Math.random() * Math.PI * 2 }));
+      }
+      const inBeam = (x, y) => { const d = (x - 0.18 * W) * Math.cos(0.42) + y * Math.sin(0.42) - 0.30 * W; return Math.max(0, 1 - Math.abs(d) / (0.22 * W)); };
+      function draw(t) {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of P) {
+          p.x += p.vx; p.y += p.vy; p.a += 0.01;
+          if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+          if (p.x > W + 5) p.x = -5;
+          ctx.globalAlpha = (0.12 + 0.75 * inBeam(p.x, p.y)) * (0.6 + 0.4 * Math.sin(p.a + t / 900));
+          ctx.fillStyle = '#cfe9ff'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      init(); addEventListener('resize', init); requestAnimationFrame(draw);
+    }
+
+    initLangToggle();
+    renderTexts();
+    initNav();
+    startDust(document.getElementById('dust'));
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>

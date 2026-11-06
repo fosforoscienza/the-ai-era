@@ -37,7 +37,7 @@ function initLangToggle() {
 // Navigation dots (13 pages by default)
 // ════════════════════════════════════════════════════
 const DEFAULT_PAGES = [
-  'saturday-night-science.html', 'index.html', 'video.html', 'scrittura.html', 'fotografia.html',
+  'saturday-night-science.html', 'index.html', 'video.html', 'fedro-voce.html', 'scrittura.html', 'fotografia.html',
   'pechino-1.html', 'pechino-2.html', 'pechino-3.html',
   'dartmouth-1956.html', 'dartmouth-1956-voce.html', 'dartmouth-1956-2.html',
   'timeline.html', 'napa-valley.html', 'musk-page.html', 'musk-page-2.html', 'musk-altman.html', 'paesi.html', 'leader.html',

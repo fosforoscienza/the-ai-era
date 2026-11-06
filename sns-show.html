@@ -94,6 +94,10 @@
   <script>
     const frames = [document.getElementById('frame-a'), document.getElementById('frame-b')];
     const vid = document.getElementById('vid');
+    // Voce delle slide con «audio»: la suona lo show (sbloccata al primo tocco
+    // come i video) e manda il tempo alla slide, che mostra le didascalie.
+    const voice = new Audio(); voice.preload = 'auto';
+    let voiceSlide = null;
     let front = 0;                 // iframe visibile
     let current = null;            // id dell'elemento in onda
     let slideIdx = 0;              // posizione nella scaletta dell'ultima slide mostrata
@@ -112,8 +116,7 @@
         try { localStorage.setItem(DELETED_KEY, JSON.stringify(deleted)); } catch (_) {}
       }
       const byId = new Map(SNS.SLIDES.map(x => [x.id, x]));
-      const next = ids.filter(id => byId.has(id) && !deleted.includes(id)).map(id => byId.get(id));
-      SNS.SLIDES.forEach(x => { if (!next.includes(x) && !deleted.includes(x.id)) next.push(x); });   // slide nuove in coda
+      const next = SNS.normalize(ids, deleted).map(id => byId.get(id));     // slide nuove al loro posto
       if (!next.length) return false;
       const changed = next.some((x, i) => x !== order[i]);
       order = next;
@@ -122,23 +125,25 @@
       try { localStorage.setItem(ORDER_KEY, JSON.stringify({ base: SNS.ORDER_BASE, ids: order.map(x => x.id) })); } catch (_) {}
       return changed;
     }
-    try {                                     // vale solo se nato dall'ordine predefinito di adesso
+    try {                                     // resta valido anche se la scaletta predefinita cambia
       const saved = JSON.parse(localStorage.getItem(ORDER_KEY));
-      if (saved && saved.base === SNS.ORDER_BASE) setOrder(saved.ids);
+      if (saved && Array.isArray(saved.ids)) setOrder(saved.ids);
     } catch (_) {}
     let videoURL = null;
     let lang = localStorage.getItem('geopolitica-lang') || 'it';
     let loadToken = 0;
 
     function state() {
-      return { t: 'state', id: current, lang,
-        playing: current && current.startsWith('video:') ? !vid.paused && !vid.ended : false,
-        time: vid.currentTime || 0, dur: isFinite(vid.duration) ? vid.duration : 0,
+      const m = voiceSlide ? voice : vid, media = !!voiceSlide || !!(current && current.startsWith('video:'));
+      return { t: 'state', id: current, lang, media,
+        playing: media ? !m.paused && !m.ended : false,
+        time: m.currentTime || 0, dur: isFinite(m.duration) ? m.duration : 0,
         fs: !!document.fullscreenElement, order: order.map(x => x.id), base: SNS.ORDER_BASE, deleted, blocked: tap.classList.contains('show'), muted: vid.muted, sound: soundNow, sounds: soundsLoaded, at: Date.now() };
     }
     function report(local) { SNS.send(state(), local); }
 
     function stopVideo() {
+      stopVoice();
       vid.pause();
       vid.classList.remove('on');
       sound.classList.remove('show');
@@ -157,12 +162,14 @@
       back.onload = () => {
         if (token !== loadToken) return;
         try { back.contentWindow.postMessage({ type: 'op-setlang', lang }, '*'); } catch (_) {}
+        if (s.audio) try { back.contentWindow.postMessage({ type: 'op-audio-host' }, '*'); } catch (_) {}
         setTimeout(() => {
           if (token !== loadToken) return;
           back.classList.add('on');
           frames[front].classList.remove('on');
           stopVideo();
           front = 1 - front;
+          if (s.audio) startVoice(s);
           // libera la slide precedente quando la dissolvenza è finita
           const old = frames[1 - front];
           setTimeout(() => { if (token === loadToken && !old.classList.contains('on')) old.removeAttribute('src'); }, 800);
@@ -177,6 +184,7 @@
       (hosted ? Promise.resolve(hosted) : SNS.videos.get(id)).then(v => {
         if (!v) return;
         ++loadToken;
+        stopVoice();
         current = id;
         if (videoURL) { URL.revokeObjectURL(videoURL); videoURL = null; }
         if (v.blob) videoURL = URL.createObjectURL(v.blob);
@@ -201,7 +209,33 @@
         vid.play().then(() => { sound.classList.add('show'); report(); }).catch(() => { tap.classList.add('show'); report(); });
       });
     }
+    function startVoice(s) {
+      voiceSlide = s;
+      if (voice.getAttribute('src') !== s.audio) voice.src = s.audio;
+      voice.muted = false;
+      try { voice.currentTime = 0; } catch (_) {}
+      playVoice();
+    }
+    function playVoice() {
+      tap.classList.remove('show');
+      voice.play().then(() => { syncVoice(); report(); }).catch(() => { tap.classList.add('show'); syncVoice(); report(); });
+    }
+    function stopVoice() {
+      if (!voiceSlide) return;
+      voiceSlide = null;
+      voice.pause();
+    }
+    // il tempo della voce alla slide in onda, che ci appoggia le didascalie
+    function syncVoice() {
+      if (!voiceSlide) return;
+      try { frames[front].contentWindow.postMessage({ type: 'op-audio', t: voice.currentTime, playing: !voice.paused && !voice.ended }, '*'); } catch (_) {}
+    }
+    ['play', 'pause', 'seeked', 'ended', 'timeupdate'].forEach(ev => voice.addEventListener(ev, syncVoice));
+    ['play', 'pause', 'ended', 'loadedmetadata'].forEach(ev => voice.addEventListener(ev, () => report()));
+    setInterval(syncVoice, 500);
+
     function unmute() {
+      if (voiceSlide && voice.paused && !voice.ended) { playVoice(); return; }
       tap.classList.remove('show');
       if (vid.muted) { vid.muted = false; sound.classList.remove('show'); report(); }
       if (current && current.startsWith('video:') && vid.paused) playVideo();
@@ -215,6 +249,13 @@
     function unlockMedia() {
       if (unlocked) return;
       unlocked = true;
+      // anche la voce: senza questo Safari la blocca quando parte dalla console
+      if (voiceSlide) playVoice();
+      else {
+        const a = SNS.SLIDES.find(x => x.audio);
+        if (a && !voice.getAttribute('src')) voice.src = a.audio;
+        const pv = voice.play(); voice.pause(); if (pv) pv.catch(() => {});
+      }
       if (current && current.startsWith('video:')) { unmute(); return; }
       if (!vid.getAttribute('src') && SNS.VIDEOS.length) vid.src = SNS.VIDEOS[0].src;
       vid.muted = false;
@@ -274,6 +315,7 @@
       if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); return; }
       if (e.key === 'a' || e.key === 'A') { outPanel.classList.toggle('show'); return; }
       if (!start.classList.contains('gone') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); begin(); return; }
+      if ((e.key === 'k' || e.key === 'K') && voiceSlide) { voice.paused ? playVoice() : voice.pause(); return; }
       if ((e.key === 'k' || e.key === 'K') && current && current.startsWith('video:')) {
         vid.paused ? playVideo() : vid.pause(); return;
       }
@@ -302,6 +344,13 @@
         case 'prev': prev(); break;
         case 'lang': setLang(m.lang); break;
         case 'video':
+          if (voiceSlide) {                         // stessi comandi per la voce di una slide
+            if (m.op === 'play') playVoice();
+            else if (m.op === 'pause') voice.pause();
+            else if (m.op === 'restart') { voice.currentTime = 0; playVoice(); }
+            else if (m.op === 'seek' && isFinite(m.time)) voice.currentTime = m.time;
+            break;
+          }
           if (!current || !current.startsWith('video:')) break;
           if (m.op === 'play') playVideo();
           else if (m.op === 'pause') vid.pause();
