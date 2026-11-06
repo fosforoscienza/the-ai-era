@@ -22,6 +22,11 @@ const SNS = (function () {
     { id: 'slide:millennium',         src: 'millennium.html',         thumb: 'img/sns/millennium.jpg',         title: 'Una dimostrazione da $1.000.000', sub: 'Navier–Stokes e gli agenti AI' },
     // id usato anche da Jarvis («dammi le news»): non cambiarlo
     { id: 'slide:news', src: 'news.html', thumb: 'img/sns/news.jpg', title: 'News', sub: 'crivellini.it' },
+    // Le 5 notizie AI più importanti (6 settembre – 6 novembre 2026), dalla 5 alla 1
+    { id: 'slide:news-top-1', src: 'news-top.html?p=1', thumb: 'img/sns/news-top-1.jpg', title: 'Top 5 AI · 5 e 4', sub: 'Gemini 4 · Ottobre nero in Borsa' },
+    { id: 'slide:news-top-2', src: 'news-top.html?p=2', thumb: 'img/sns/news-top-2.jpg', title: 'Top 5 AI · 3 e 2', sub: 'Anthropic verso la Borsa · GPT-6' },
+    { id: 'slide:news-top-3', src: 'news-top.html?p=3', thumb: 'img/sns/news-top-3.jpg', title: 'Top 5 AI · 1', sub: 'Navier–Stokes' },
+    { id: 'slide:referendum-midterm', src: 'referendum-midterm.html', thumb: 'img/sns/referendum-midterm.jpg', title: 'Midterm: referendum', sub: 'L’America vota contro i data center' },
     // Dalla presentazione «The AI Era» (Geopolitica della AI)
     // la voce del video intro (0:02–0:28): la suona lo show, la slide mostra le didascalie
     { id: 'slide:fedro-voce', src: 'fedro-voce.html', audio: 'audio/intro-voce.m4a', thumb: 'img/sns/fedro-voce.jpg',

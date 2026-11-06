@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Midterm 2026 — i referendum sui data center</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --accent: #41b7ff; --accent-soft: #8fd2ff; --ink: #02040b; --no: #ff5a6e; --yes: #34d399; --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: var(--ink) !important; overflow: hidden; height: 100%; margin: 0; }
+    body { font-family: inherit; }
+    .stage { position: fixed; inset: 0; overflow: hidden;
+      background: radial-gradient(60% 60% at 30% 45%, rgba(65,183,255,0.10), transparent 70%),
+                  radial-gradient(50% 60% at 85% 100%, rgba(255,90,110,0.07), transparent 70%), var(--ink);
+      display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(24px, 4vw, 80px); align-items: center;
+      padding: clamp(28px, 6vh, 70px) clamp(28px, 5vw, 100px) clamp(60px, 9vh, 100px); }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+    /* ---------- Sinistra: la mappa degli Stati ---------- */
+    .mapbox { position: relative; }
+    .kicker { font-size: clamp(13px, 1.1vw, 19px); font-weight: 700; letter-spacing: .34em; text-transform: uppercase;
+      color: var(--accent-soft); animation: rise .9s .1s var(--ease) both; }
+    .title { margin: clamp(10px, 1.6vh, 18px) 0 clamp(18px, 3vh, 34px); font-size: clamp(40px, 4.6vw, 92px); font-weight: 900;
+      line-height: .95; letter-spacing: -.03em; text-transform: uppercase;
+      background: linear-gradient(180deg, #fff 30%, #8fd2ff 100%); -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent; animation: rise 1s .3s var(--ease) both; }
+    /* mappa a tessere: un quadrato per Stato, al suo posto approssimativo */
+    .tiles { display: grid; grid-template-columns: repeat(11, 1fr); gap: clamp(3px, .4vw, 7px); width: 100%; max-width: 760px; }
+    .tile { aspect-ratio: 1; border-radius: clamp(3px, .4vw, 7px); display: flex; align-items: center; justify-content: center;
+      font-size: clamp(8px, .75vw, 13px); font-weight: 700; letter-spacing: .04em; color: rgba(230,236,245,.32);
+      background: rgba(143,210,255,.06); border: 1px solid rgba(143,210,255,.08);
+      opacity: 0; transform: scale(.6); animation: tileIn .6s var(--ease) forwards; }
+    @keyframes tileIn { to { opacity: 1; transform: none; } }
+    .tile.hit { color: #fff; background: rgba(255,90,110,.22); border-color: rgba(255,90,110,.75);
+      animation: tileIn .6s var(--ease) forwards, hit .9s var(--ease) forwards; }
+    @keyframes hit { 0% { box-shadow: 0 0 0 rgba(255,90,110,0); } 40% { box-shadow: 0 0 34px rgba(255,90,110,.7); transform: scale(1.18); } 100% { box-shadow: 0 0 16px rgba(255,90,110,.35); transform: none; } }
+    .tile.oh { background: rgba(255,90,110,.42); }
+    .legend { margin-top: clamp(12px, 2vh, 20px); display: flex; gap: 22px; flex-wrap: wrap; font-size: clamp(11px, .9vw, 15px);
+      color: rgba(230,236,245,.6); animation: rise 1s 3.2s var(--ease) both; }
+    .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px;
+      background: rgba(255,90,110,.3); border: 1px solid rgba(255,90,110,.8); }
+
+    /* ---------- Destra: i numeri e l'esito ---------- */
+    .facts { display: flex; flex-direction: column; gap: clamp(16px, 2.6vh, 30px); }
+    .big { display: flex; align-items: baseline; gap: 18px; animation: rise 1s 1.2s var(--ease) both; }
+    .big .n { font-size: clamp(90px, 10vw, 200px); font-weight: 900; line-height: .8; letter-spacing: -.05em; color: #fff;
+      text-shadow: 0 0 60px rgba(255,90,110,.45); font-variant-numeric: tabular-nums; }
+    .big .of { font-size: clamp(30px, 3vw, 58px); font-weight: 300; color: rgba(230,236,245,.6); }
+    .big-l { margin-top: -6px; font-size: clamp(18px, 1.7vw, 32px); font-weight: 300; line-height: 1.3; color: #e6ecf5;
+      animation: rise 1s 1.5s var(--ease) both; }
+    .big-l b { color: #fff; font-weight: 700; }
+    .rows { display: grid; gap: clamp(10px, 1.6vh, 16px); }
+    .row { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: baseline;
+      padding-top: clamp(10px, 1.6vh, 16px); border-top: 1px solid rgba(143,210,255,.14); animation: rise .9s var(--ease) both; }
+    .row .k.w { font-size: clamp(14px, 1.1vw, 20px); letter-spacing: .14em; text-transform: uppercase; }
+    .row .k { font-size: clamp(26px, 2.4vw, 46px); font-weight: 900; color: var(--accent-soft); min-width: 3.2ch; letter-spacing: -.02em; }
+    .row .v { font-size: clamp(15px, 1.25vw, 23px); font-weight: 300; line-height: 1.35; color: rgba(226,232,240,.88); }
+    .row .v b { color: #fff; font-weight: 700; }
+    .src { font-size: clamp(10px, .75vw, 13px); letter-spacing: .14em; text-transform: uppercase; color: rgba(143,210,255,.5);
+      animation: rise 1s 4.4s var(--ease) both; }
+
+    @media (max-aspect-ratio: 1/1) {
+      .stage { grid-template-columns: 1fr; align-content: center; overflow-y: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="mapbox">
+      <div class="kicker" id="kicker"></div>
+      <h1 class="title" id="title"></h1>
+      <div class="tiles" id="tiles" aria-hidden="true"></div>
+      <div class="legend"><span><i></i><span id="legend"></span></span></div>
+    </div>
+
+    <div class="facts">
+      <div class="big"><span class="n" id="count">0</span><span class="of" id="of"></span></div>
+      <div class="big-l" id="bigl"></div>
+      <div class="rows" id="rows"></div>
+      <div class="src" id="src"></div>
+    </div>
+  </div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="news-top.html?p=3">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="fedro-voce.html">&#8594;</a>
+
+  <div id="lang-toggle">
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // Elezioni di metà mandato USA, 3 novembre 2026: i referendum locali sui data center.
+    // Dati: analisi Ballotpedia e risultati raccolti da CNBC (4–5 novembre 2026, ancora provvisori);
+    // CNBC Voter Poll. Stati con quesiti: OH, ND, CA, FL, IL, KS, ME, NJ, NV, WI (Ohio: 21).
+    const HIT = ['OH', 'ND', 'CA', 'FL', 'IL', 'KS', 'ME', 'NJ', 'NV', 'WI'];
+    // mappa a tessere degli Stati Uniti (11 colonne × 8 righe)
+    const MAP = [
+      '..........ME',
+      '.....WI...VTNH',
+      'WAIDMTNDMNILMI.NYMA',
+      'ORNVWYSDIAINOHPANJCTRI',
+      'CAUTCONEMOKYWVVAMDDE',
+      '.AZNMKSARTNNCSCDC',
+      '...OKLAMSALGA',
+      'AKHI.TX....FL'
+    ];
+    function parseRow(r) { const out = []; for (let i = 0; i < r.length;) { if (r[i] === '.') { out.push(null); i++; } else { out.push(r.substr(i, 2)); i += 2; } } return out; }
+
+    const TXT = {
+      it: {
+        kicker: 'Elezioni di metà mandato · 3 novembre 2026', title: 'L’America vota contro i data center',
+        legend: '10 Stati con referendum locali sui data center',
+        of: 'su 41', bigl: 'referendum locali vinti da chi <b>voleva fermare o limitare i data center</b> dell’AI',
+        rows: [
+          ['21', 'quesiti nel solo <b>Ohio</b>, più della metà. Unica eccezione: <b>Harwood</b>, in North Dakota'],
+          ['56%', 'degli elettori dice che <b>AI e data center</b> hanno pesato molto sul voto; due su tre hanno scelto i democratici'],
+          ['Esito', '<b>Vittoria democratica</b>: in Ohio Sherrod Brown batte «il volto dei data center» Jon Husted; Bernie Sanders chiede una <b>moratoria nazionale</b>']
+        ],
+        src: 'Fonti: Ballotpedia, CNBC (4–5 novembre 2026) · risultati ancora provvisori'
+      },
+      en: {
+        kicker: 'US midterm elections · November 3, 2026', title: 'America votes against data centers',
+        legend: '10 states with local data center referendums',
+        of: 'of 41', bigl: 'local measures won by those who <b>wanted to stop or limit AI data centers</b>',
+        rows: [
+          ['21', 'measures in <b>Ohio</b> alone, more than half. The only exception: <b>Harwood</b>, North Dakota'],
+          ['56%', 'of voters say <b>AI and data centers</b> weighed heavily on their vote; two in three chose Democrats'],
+          ['Result', '<b>Democratic win</b>: in Ohio Sherrod Brown beats “the face of data centers” Jon Husted; Bernie Sanders calls for a <b>national moratorium</b>']
+        ],
+        src: 'Sources: Ballotpedia, CNBC (Nov 4–5, 2026) · results still provisional'
+      }
+    };
+
+    function buildMap() {
+      const box = document.getElementById('tiles'); box.textContent = '';
+      let k = 0;
+      MAP.forEach(r => {
+        const cells = parseRow(r);
+        for (let c = 0; c < 11; c++) {
+          const st = cells[c] || null, d = document.createElement('div');
+          if (!st) { d.style.visibility = 'hidden'; d.className = 'tile'; box.appendChild(d); continue; }
+          d.className = 'tile' + (HIT.includes(st) ? ' hit' : '') + (st === 'OH' ? ' oh' : '');
+          d.textContent = st;
+          const base = 0.5 + (k++ % 50) * 0.012;
+          d.style.animationDelay = HIT.includes(st) ? `${base}s, ${1.6 + HIT.indexOf(st) * 0.14}s` : base + 's';
+          box.appendChild(d);
+        }
+      });
+    }
+    function countUp(el, to, delay, dur) {
+      const t0 = performance.now() + delay * 1000;
+      requestAnimationFrame(function step(now) {
+        const x = Math.min(1, Math.max(0, (now - t0) / (dur * 1000)));
+        el.textContent = Math.round(to * (1 - Math.pow(1 - x, 3)));
+        if (x < 1) requestAnimationFrame(step);
+      });
+    }
+    function renderTexts() {
+      const t = TXT[lang];
+      document.getElementById('kicker').textContent = t.kicker;
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('legend').textContent = t.legend;
+      document.getElementById('of').textContent = t.of;
+      document.getElementById('bigl').innerHTML = t.bigl;
+      document.getElementById('src').textContent = t.src;
+      document.getElementById('rows').innerHTML = t.rows.map(([k, v], i) =>
+        `<div class="row" style="animation-delay:${(2.2 + i * 0.45).toFixed(2)}s"><span class="k${/^[A-Za-z]/.test(k) ? ' w' : ''}">${k}</span><span class="v">${v}</span></div>`).join('');
+    }
+    function onLangChange() { renderTexts(); }
+
+    initLangToggle();
+    renderTexts();
+    buildMap();
+    countUp(document.getElementById('count'), 40, 1.3, 1.6);
+    initNav();
+  </script>
+</body>
+</html>

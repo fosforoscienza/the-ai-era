@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le 5 notizie AI — settembre/novembre 2026</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --accent: #41b7ff; --accent-soft: #8fd2ff; --ink: #02040b; --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: var(--ink) !important; overflow: hidden; height: 100%; margin: 0; }
+    body { font-family: inherit; }
+    .stage { position: fixed; inset: 0; overflow: hidden;
+      background:
+        radial-gradient(70% 60% at 50% -10%, rgba(65,183,255,0.14), transparent 70%),
+        radial-gradient(50% 50% at 50% 110%, rgba(31,127,209,0.12), transparent 70%), var(--ink);
+      display: flex; flex-direction: column; padding: clamp(28px, 6vh, 70px) clamp(28px, 6vw, 110px) clamp(60px, 9vh, 100px); }
+    /* griglia sottile che scorre, come un terminale di agenzia */
+    .grid { position: absolute; inset: -40px; pointer-events: none; opacity: 0.35;
+      background-image: linear-gradient(rgba(143,210,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(143,210,255,0.06) 1px, transparent 1px);
+      background-size: 60px 60px; animation: grid 30s linear infinite; mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 75%); }
+    @keyframes grid { to { transform: translate(60px, 60px); } }
+
+    .head { position: relative; display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+      animation: rise .9s .1s var(--ease) both; }
+    .head .kicker { font-size: clamp(13px, 1.1vw, 19px); font-weight: 700; letter-spacing: .34em; text-transform: uppercase; color: var(--accent-soft); }
+    .head .period { font-size: clamp(12px, .95vw, 16px); letter-spacing: .2em; text-transform: uppercase; color: rgba(230,236,245,.55); }
+    .head .bar { flex: 1; min-width: 60px; height: 1px; align-self: center;
+      background: linear-gradient(90deg, rgba(143,210,255,.6), transparent); transform-origin: 0 50%; animation: grow 1.2s .4s var(--ease) both; }
+    @keyframes grow { from { transform: scaleX(0); opacity: 0; } to { transform: none; opacity: 1; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+    .list { position: relative; flex: 1; display: grid; gap: clamp(18px, 3vh, 40px); align-content: center; margin-top: clamp(16px, 3vh, 36px); }
+    .list.two { grid-template-rows: 1fr 1fr; }
+    .item { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+      gap: clamp(20px, 3vw, 56px); padding: clamp(18px, 3vh, 36px) clamp(20px, 2.6vw, 48px);
+      border-radius: 22px; border: 1px solid rgba(143,210,255,.16);
+      background: linear-gradient(110deg, rgba(10,24,44,.75), rgba(4,10,20,.55)); overflow: hidden;
+      opacity: 0; transform: translateX(60px); animation: slideIn 1s var(--ease) forwards; }
+    @keyframes slideIn { to { opacity: 1; transform: none; } }
+    /* lama di luce che attraversa la scheda all'ingresso */
+    .item::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(105deg, transparent 40%, rgba(143,210,255,.18) 50%, transparent 60%);
+      background-size: 260% 100%; background-position: 130% 0; animation: sheen 1.6s var(--ease) forwards; animation-delay: inherit; }
+    @keyframes sheen { to { background-position: -30% 0; } }
+
+    .rank { font-size: clamp(90px, 10vw, 190px); font-weight: 900; line-height: .8; letter-spacing: -.05em;
+      min-width: .62em; text-align: center; }
+    /* il gradiente sta sul numero stesso: sul contenitore non segue l'elemento animato */
+    .rank .roll { display: inline-block; padding: 0 .04em;
+      background: linear-gradient(180deg, #fff 25%, #41b7ff 100%); -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      animation: roll .9s var(--ease) both; animation-delay: inherit; }
+    @keyframes roll { from { transform: translateY(-.6em) scale(1.25); opacity: 0; filter: blur(12px); } to { transform: none; opacity: 1; filter: blur(0); } }
+
+    .body { min-width: 0; }
+    .meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: clamp(8px, 1.2vh, 14px); }
+    .chip { padding: 4px 11px; border-radius: 999px; font-size: clamp(11px, .85vw, 14px); font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      color: #cfe9ff; background: rgba(65,183,255,.14); border: 1px solid rgba(65,183,255,.4); }
+    .chip.date { background: transparent; border-color: rgba(230,236,245,.2); color: rgba(230,236,245,.7); }
+    .title { margin: 0; font-size: clamp(26px, 2.5vw, 48px); font-weight: 800; line-height: 1.08; letter-spacing: -.015em; color: #fff; }
+    .text { margin: clamp(8px, 1.2vh, 14px) 0 0; font-size: clamp(16px, 1.35vw, 25px); font-weight: 300; line-height: 1.38; color: rgba(226,232,240,.85); max-width: 60ch; }
+    .src { margin-top: clamp(8px, 1.2vh, 12px); font-size: clamp(10px, .75vw, 13px); letter-spacing: .14em; text-transform: uppercase; color: rgba(143,210,255,.55); }
+
+    .stat { text-align: right; min-width: 6ch; }
+    .stat .n { display: block; font-size: clamp(40px, 4.4vw, 86px); font-weight: 900; line-height: .95; letter-spacing: -.03em; color: #fff;
+      text-shadow: 0 0 40px rgba(65,183,255,.45); font-variant-numeric: tabular-nums; }
+    .stat .l { display: block; margin-top: 6px; font-size: clamp(11px, .9vw, 15px); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-soft); max-width: 18ch; margin-left: auto; }
+
+    /* la numero 1: da sola, più grande */
+    .list.one .item { grid-template-columns: auto 1fr; grid-template-rows: auto auto; padding: clamp(26px, 5vh, 60px) clamp(26px, 3.4vw, 64px); }
+    .list.one .rank { font-size: clamp(160px, 19vw, 360px); grid-row: span 2; }
+    .list.one .title { font-size: clamp(34px, 3.6vw, 70px); }
+    .list.one .text { font-size: clamp(18px, 1.6vw, 30px); max-width: 52ch; }
+    .list.one .stat { grid-column: 2; text-align: left; display: flex; gap: clamp(24px, 3vw, 60px); margin-top: clamp(14px, 2.4vh, 28px); }
+    .list.one .stat > div .l { margin-left: 0; }
+    .list.one .item { border-color: rgba(65,183,255,.45); box-shadow: 0 0 80px rgba(65,183,255,.12) inset; }
+
+    @media (max-aspect-ratio: 1/1) {
+      .item { grid-template-columns: auto 1fr; }
+      .stat { grid-column: 2; text-align: left; }
+      .stat .l { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid"></div>
+    <div class="head"><span class="kicker" id="kicker"></span><span class="bar"></span><span class="period" id="period"></span></div>
+    <div class="list" id="list"></div>
+  </div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="news.html">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="news-top.html?p=2">&#8594;</a>
+
+  <div id="lang-toggle">
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // Le 5 notizie AI più importanti dal 6 settembre al 6 novembre 2026 (scelta editoriale).
+    // Fonti verificate il 6/11/2026: blog Google, AP/CNBC, Reuters via CNBC, TechCrunch, The Next Web/Axios.
+    // Pagine: ?p=1 → 5 e 4 · ?p=2 → 3 e 2 · ?p=3 → la numero 1.
+    const NEWS = {
+      5: { tag: 'Modelli', it: {
+            date: 'Ottobre', title: 'Google lancia Gemini 4',
+            text: 'Gemini 4 Argon arriva a sviluppatori, aziende e utenti. Due settimane dopo Google annuncia Carbon, ancora più potente: per ora solo in test con il governo USA e gli esperti di cybersicurezza.',
+            stat: [['2', 'modelli di punta in due settimane']] },
+          en: {
+            date: 'October', title: 'Google launches Gemini 4',
+            text: 'Gemini 4 Argon reaches developers, businesses and users. Two weeks later Google announces the even stronger Carbon — for now only in testing with the US government and cyber defenders.',
+            stat: [['2', 'frontier models in two weeks']] },
+          src: 'Fonte: Google, 2 novembre 2026' },
+      4: { tag: 'Mercati', it: {
+            date: '31 ottobre', title: 'Ottobre nero per i titoli dell’AI',
+            text: 'Wall Street dubita che i miliardi spesi in data center rendano: il Nasdaq chiude il mese con il calo peggiore da marzo 2025, e l’ultimo giorno perde quasi il 3%.',
+            stat: [['−5,3%', 'Nasdaq nel mese di ottobre']] },
+          en: {
+            date: 'October 31', title: 'A black October for AI stocks',
+            text: 'Wall Street doubts the billions poured into data centers will pay off: the Nasdaq ends the month with its worst drop since March 2025, losing almost 3% on the last day.',
+            stat: [['−5.3%', 'Nasdaq in October']] },
+          src: 'Fonti: AP, CNBC' },
+      3: { tag: 'Aziende', it: {
+            date: '29 settembre', title: 'Anthropic verso la Borsa',
+            text: 'Nel prospetto per la quotazione, secondo Reuters, un terzo delle pagine è dedicato ai rischi: compreso un «rischio catastrofico o esistenziale per l’umanità».',
+            stat: [['2.000 mld $', 'la valutazione cercata']] },
+          en: {
+            date: 'September 29', title: 'Anthropic heads to Wall Street',
+            text: 'According to Reuters, a third of its IPO prospectus is about risks — including a “catastrophic or existential risk to humanity”.',
+            stat: [['$2 trillion', 'target valuation']] },
+          src: 'Fonte: Reuters, via CNBC' },
+      2: { tag: 'Modelli', it: {
+            date: 'Settembre – ottobre', title: 'Arriva GPT-6',
+            text: 'OpenAI presenta Astra, il suo modello più potente, poi Sol e Luna: la metà degli errori del predecessore a metà prezzo. Da ottobre GPT-6 è in ChatGPT per tutti.',
+            stat: [['½', 'errori e prezzo rispetto a GPT-5.6']] },
+          en: {
+            date: 'September – October', title: 'GPT-6 arrives',
+            text: 'OpenAI unveils Astra, its most powerful model, then Sol and Luna: half the errors of their predecessor at half the price. From October GPT-6 is in ChatGPT for everyone.',
+            stat: [['½', 'errors and price vs GPT-5.6']] },
+          src: 'Fonti: TechCrunch, 9to5Mac' },
+      1: { tag: 'Scienza', it: {
+            date: '8 – 9 settembre', title: 'Un’AI attacca un Problema del Millennio',
+            text: 'Un modello interno di OpenAI produce una dimostrazione sulle equazioni di Navier–Stokes: un fluido può sviluppare una singolarità in tempo finito. È pubblicata e verificabile in Lean, ma attende il giudizio dei matematici e non concorre al premio da un milione.',
+            stat: [['10.000', 'agenti AI al lavoro'], ['88 ore', 'di calcolo'], ['$1M', 'premio non rivendicato']] },
+          en: {
+            date: 'September 8 – 9', title: 'An AI takes on a Millennium Problem',
+            text: 'An internal OpenAI model produces a proof on the Navier–Stokes equations: a fluid can develop a singularity in finite time. It is published and checkable in Lean, but awaits mathematicians’ judgement and does not claim the million-dollar prize.',
+            stat: [['10,000', 'AI agents at work'], ['88 hours', 'of compute'], ['$1M', 'prize not claimed']] },
+          src: 'Fonti: OpenAI, The Next Web, Axios' }
+    };
+    const SETS = { 1: [5, 4], 2: [3, 2], 3: [1] };
+    const pg = Math.min(3, Math.max(1, parseInt(new URLSearchParams(location.search).get('p'), 10) || 1));
+    const TXT = {
+      it: { kicker: pg === 3 ? 'La notizia AI più importante' : 'Le 5 notizie AI più importanti', period: '6 settembre – 6 novembre 2026' },
+      en: { kicker: pg === 3 ? 'The most important AI story' : 'The 5 most important AI stories', period: 'September 6 – November 6, 2026' }
+    };
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    function renderTexts() {
+      document.getElementById('kicker').textContent = TXT[lang].kicker;
+      document.getElementById('period').textContent = TXT[lang].period;
+      const list = document.getElementById('list');
+      list.className = 'list ' + (SETS[pg].length === 1 ? 'one' : 'two');
+      list.innerHTML = SETS[pg].map((n, i) => {
+        const it = NEWS[n], t = it[lang];
+        const d = (0.5 + i * 0.55).toFixed(2) + 's';
+        return `<article class="item" style="animation-delay:${d}">
+          <div class="rank" style="animation-delay:${d}"><span class="roll" style="animation-delay:${d}">${n}</span></div>
+          <div class="body">
+            <div class="meta"><span class="chip">${esc(it.tag)}</span><span class="chip date">${esc(t.date)}</span></div>
+            <h2 class="title">${esc(t.title)}</h2>
+            <p class="text">${esc(t.text)}</p>
+            <div class="src">${esc(it.src)}</div>
+          </div>
+          <div class="stat">${t.stat.map(([v, l]) => `<div><span class="n">${esc(v)}</span><span class="l">${esc(l)}</span></div>`).join('')}</div>
+        </article>`;
+      }).join('');
+    }
+    function onLangChange() { renderTexts(); }
+
+    document.getElementById('nav-prev').href = pg === 1 ? 'news.html' : 'news-top.html?p=' + (pg - 1);
+    document.getElementById('nav-next').href = pg === 3 ? 'referendum-midterm.html' : 'news-top.html?p=' + (pg + 1);
+    initLangToggle();
+    renderTexts();
+    initNav();
+  </script>
+</body>
+</html>
