@@ -1,6 +1,8 @@
 {
+  "redirects": [
+    { "source": "/", "destination": "/show", "permanent": false }
+  ],
   "rewrites": [
-    { "source": "/", "destination": "/sns-show.html" },
     { "source": "/show", "destination": "/sns-show.html" },
     { "source": "/console", "destination": "/sns-console.html" }
   ]
