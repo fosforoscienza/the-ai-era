@@ -14,12 +14,28 @@
       position: fixed; inset: 0;
       background:
         radial-gradient(60% 80% at 50% 0%, rgba(139,92,246,0.16), transparent 60%),
-        radial-gradient(40% 50% at 50% 100%, rgba(139,92,246,0.10), transparent 70%),
-        #000;
+        radial-gradient(40% 50% at 50% 100%, rgba(139,92,246,0.10), transparent 70%);
+      z-index: 1;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       padding: clamp(28px, 5vh, 60px) clamp(36px, 6vw, 100px);
       box-sizing: border-box;
+    }
+
+    /* ---------- Foto delle slide Palantir dietro, scurita per leggere il testo ---------- */
+    .bgphoto {
+      position: fixed; inset: 0; z-index: 0;
+      background: url('img/palantir.png') no-repeat center center; background-size: cover;
+      transform: scale(1.06); transform-origin: 50% 45%;
+      animation: bgIn 1.4s ease both, kenburns 26s ease-in-out 1.4s infinite alternate;
+    }
+    @keyframes bgIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes kenburns { from { transform: scale(1.06); } to { transform: scale(1.12) translate(-1%, -1.2%); } }
+    .bgscrim {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(70% 70% at 50% 50%, rgba(3,4,12,0.76) 0%, rgba(3,4,12,0.64) 55%, rgba(3,4,12,0.84) 100%),
+        linear-gradient(180deg, rgba(3,4,12,0.55), rgba(3,4,12,0.2) 40%, rgba(3,4,12,0.7));
     }
 
     /* ---------- Intestazione ---------- */
@@ -108,6 +124,8 @@
 </head>
 <body>
 
+  <div class="bgphoto"></div>
+  <div class="bgscrim"></div>
   <div class="stage">
     <div class="head">
       <div class="eyebrow" id="eyebrow"></div>
