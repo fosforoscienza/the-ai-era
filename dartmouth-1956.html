@@ -218,16 +218,17 @@
     }
     function onLangChange() { renderTexts(); }
 
-    // Coordinate nel riquadro 1920×1080. at: punto sulla persona; tag: centro
-    // dell'etichetta; via: gomito facoltativo della linea. In ordine di comparsa.
+    // Coordinate nel riquadro 1920×1080. at: punto sulla persona (spalla o petto,
+    // mai sul volto); tag: centro dell'etichetta; via: gomito facoltativo della
+    // linea. In ordine di comparsa.
     const PEOPLE = [
-      { name: 'Oliver Selfridge',    role: 'MIT Lincoln Lab',  at: [338, 262],  tag: [200, 168] },
-      { name: 'Nathaniel Rochester', role: 'IBM',              at: [547, 166],  tag: [547, 122], core: true },
-      { name: 'Ray Solomonoff',      role: 'Technical Research Group', at: [637, 408], tag: [612, 552] },
-      { name: 'Marvin Minsky',       role: 'Harvard',          at: [858, 236],  tag: [880, 160], core: true },
-      { name: 'Peter Milner',        role: 'McGill',           at: [992, 470],  tag: [1060, 640] },
-      { name: 'John McCarthy',       role: 'Dartmouth',        at: [1170, 262], tag: [1520, 200], via: [1300, 200], core: true },
-      { name: 'Claude Shannon',      role: 'Bell Labs',        at: [1332, 386], tag: [1590, 386], core: true }
+      { name: 'Oliver Selfridge',    role: 'MIT Lincoln Lab',  at: [299, 391],  tag: [200, 168] },
+      { name: 'Nathaniel Rochester', role: 'IBM',              at: [484, 318],  tag: [547, 122], core: true },
+      { name: 'Ray Solomonoff',      role: 'Technical Research Group', at: [625, 474], tag: [612, 552] },
+      { name: 'Marvin Minsky',       role: 'Harvard',          at: [925, 368],  tag: [880, 160], core: true },
+      { name: 'Peter Milner',        role: 'McGill',           at: [966, 527],  tag: [1060, 640] },
+      { name: 'John McCarthy',       role: 'Dartmouth',        at: [1200, 341], tag: [1520, 200], via: [1300, 200], core: true },
+      { name: 'Claude Shannon',      role: 'Bell Labs',        at: [1370, 479], tag: [1590, 386], core: true }
     ];
 
     function buildPeople() {
@@ -260,9 +261,11 @@
         // dal bordo dell'etichetta più vicino alla persona, al pallino
         const [ax, ay] = p.at;
         const from = p.via || [ax, ay];
-        let sx = cx, sy = cy;
-        if (Math.abs(from[0] - cx) > w / 2) sx = cx + Math.sign(from[0] - cx) * w / 2;
-        else sy = cy + Math.sign(from[1] - cy) * H / 2;
+        // la linea parte dal punto del bordo più vicino: dritta, senza passare sui volti
+        const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+        let sx, sy;
+        if (Math.abs(from[0] - cx) > w / 2) { sx = cx + Math.sign(from[0] - cx) * w / 2; sy = clamp(from[1], cy - H / 2 + 14, cy + H / 2 - 14); }
+        else { sy = cy + Math.sign(from[1] - cy) * H / 2; sx = clamp(from[0], cx - w / 2 + 18, cx + w / 2 - 18); }
         const path = `M${sx} ${sy}` + (p.via ? ` L${p.via[0]} ${p.via[1]}` : '') + ` L${ax} ${ay}`;
         g.insertBefore(el('path', { class: 'lead shadow', d: path, pathLength: 1, style: `animation-delay:${d + 0.2}s` }, g), tag);
         g.insertBefore(el('path', { class: 'lead line', d: path, pathLength: 1, style: `animation-delay:${d + 0.2}s` }, g), tag);
