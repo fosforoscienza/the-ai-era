@@ -49,9 +49,11 @@ const SNS = (function () {
     { id: 'slide:palantir-intro-2', src: 'palantir-intro-2.html', thumb: 'img/sns/palantir-intro-2.jpg', title: "Che cos'è un Palantír", sub: 'The AI Era' },
     { id: 'slide:palantir',         src: 'palantir.html',         thumb: 'img/sns/palantir.jpg',         title: 'Palantir',             sub: 'The AI Era' },
     { id: 'slide:paypal-mafia-2',   src: 'paypal-mafia-2.html',   thumb: 'img/sns/paypal-mafia-2.jpg',   title: 'PayPal Mafia',         sub: 'The AI Era' },
-    { id: 'slide:paypal-mafia-3',   src: 'paypal-mafia-3.html',   thumb: 'img/sns/paypal-mafia-3.jpg',   title: 'PayPal Mafia — foto',  sub: 'The AI Era' }
+    { id: 'slide:paypal-mafia-3',   src: 'paypal-mafia-3.html',   thumb: 'img/sns/paypal-mafia-3.jpg',   title: 'PayPal Mafia — foto',  sub: 'The AI Era' },
+    { id: 'slide:paypal-mafia-4',   src: 'paypal-mafia-4.html',   thumb: 'img/sns/paypal-mafia-4.jpg',   title: 'PayPal Mafia — chi ha creato cosa', sub: 'Foto con i nomi' }
   ].concat(quizSlides(), [
-    { id: 'slide:grazie',           src: 'grazie.html',           thumb: 'img/sns/grazie.jpg',           title: 'Grazie',               sub: 'Chiusura · social e Fosforo' }
+    { id: 'slide:grazie',           src: 'grazie.html',           thumb: 'img/sns/grazie.jpg',           title: 'Grazie',               sub: 'Chiusura · social e Fosforo' },
+    { id: 'slide:instagram',        src: 'instagram.html',        thumb: 'img/sns/instagram.jpg',        title: 'Instagram',            sub: '@mattia_crivellini · QR code' }
   ]);
   const ORDER_BASE = SLIDES.map(x => x.id).join('|');
   // Un ordine salvato resta valido anche quando la scaletta predefinita cambia:

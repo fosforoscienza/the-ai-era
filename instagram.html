@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram — Saturday Night Science</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --ig1: #feda75; --ig2: #fa7e1e; --ig3: #d62976; --ig4: #962fbf; --ig5: #4f5bd5;
+            --ig: linear-gradient(45deg, #feda75 0%, #fa7e1e 22%, #d62976 50%, #962fbf 76%, #4f5bd5 100%);
+            --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: #05030b !important; overflow: hidden; height: 100%; margin: 0; }
+    body { font-family: inherit; color: #fff; }
+
+    /* ---------- Fondo: nebulose nei colori di Instagram che si muovono piano ---------- */
+    .blob { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; opacity: 0.55; }
+    .b1 { width: 70vw; height: 70vw; left: -22vw; top: -30vw; background: radial-gradient(closest-side, rgba(150,47,191,0.55), transparent); animation: drift1 22s ease-in-out infinite alternate; }
+    .b2 { width: 60vw; height: 60vw; left: -10vw; bottom: -34vw; background: radial-gradient(closest-side, rgba(250,126,30,0.45), transparent); animation: drift2 26s ease-in-out infinite alternate; }
+    .b3 { width: 55vw; height: 55vw; right: -18vw; top: 10vh; background: radial-gradient(closest-side, rgba(214,41,118,0.42), transparent); animation: drift3 24s ease-in-out infinite alternate; }
+    @keyframes drift1 { to { transform: translate(8vw, 10vh) scale(1.1); } }
+    @keyframes drift2 { to { transform: translate(10vw, -8vh) scale(0.92); } }
+    @keyframes drift3 { to { transform: translate(-8vw, 6vh) scale(1.12); } }
+    .grain { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+      background: radial-gradient(120% 90% at 30% 50%, transparent 40%, rgba(5,3,11,0.85) 100%); }
+
+    /* ---------- Telefono con la schermata «QR code» del profilo ---------- */
+    .stage { position: fixed; z-index: 2; left: 9vw; top: 50%; transform: translateY(-50%); height: 82vh; aspect-ratio: 9 / 18.6; }
+    .phone { position: absolute; inset: 0; border-radius: 6.2vh; padding: 1.25vh;
+      background: linear-gradient(160deg, #3a3a44, #121218 40%, #2a2a33);
+      box-shadow: 0 4vh 10vh rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12) inset, 0 0 12vh rgba(214,41,118,0.28);
+      animation: phoneIn 1.4s var(--ease) both, float 7s ease-in-out 1.4s infinite; }
+    @keyframes phoneIn { from { opacity: 0; transform: translateY(8vh) rotate(-8deg) scale(0.92); } to { opacity: 1; transform: rotate(-4deg); } }
+    @keyframes float { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(-3deg) translateY(-1.6vh); } }
+    .screen { position: relative; width: 100%; height: 100%; border-radius: 5.2vh; overflow: hidden; background: var(--ig);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .screen::before { content: ''; position: absolute; inset: -30%; background: conic-gradient(from 0deg, rgba(255,255,255,0.0), rgba(255,255,255,0.18), rgba(255,255,255,0)); animation: spin 14s linear infinite; }
+    .notch { position: absolute; top: 1.4vh; left: 50%; transform: translateX(-50%); width: 30%; height: 3.2vh; border-radius: 2vh; background: #0b0b10; z-index: 3; }
+    .card { position: relative; z-index: 2; width: 74%; background: #fff; border-radius: 3vh; padding: 7vh 2.4vh 2.6vh;
+      display: flex; flex-direction: column; align-items: center; box-shadow: 0 2vh 5vh rgba(60,0,60,0.35);
+      animation: cardIn 1s var(--ease) 0.7s both; }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(3vh) scale(0.94); } to { opacity: 1; transform: none; } }
+    .avatar { position: absolute; top: -5.5vh; left: 50%; transform: translateX(-50%); width: 11vh; height: 11vh; border-radius: 50%; }
+    .avatar::before { content: ''; position: absolute; inset: -0.55vh; border-radius: 50%; background: conic-gradient(var(--ig1), var(--ig2), var(--ig3), var(--ig4), var(--ig5), var(--ig1)); animation: spin 6s linear infinite; }
+    .avatar img { position: relative; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 0.5vh solid #fff; display: block; box-sizing: border-box; }
+    .qr { position: relative; width: 100%; aspect-ratio: 1; }
+    .qr img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+    .qr .scan { position: absolute; left: -4%; right: -4%; height: 14%; top: 0;
+      background: linear-gradient(180deg, rgba(214,41,118,0), rgba(214,41,118,0.14) 50%, rgba(214,41,118,0));
+      animation: scan 3.2s ease-in-out 2s infinite; opacity: 0; }
+    @keyframes scan { 0% { top: -10%; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: 96%; opacity: 0; } }
+    .card .h { margin-top: 1.8vh; font-size: 2.35vh; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
+      background: var(--ig); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; white-space: nowrap; }
+    .screen .hint { position: relative; z-index: 2; margin-top: 2.4vh; font-size: 1.7vh; font-weight: 600; color: rgba(255,255,255,0.92); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* cuori che salgono dal telefono */
+    .hearts { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+    .heart { position: absolute; bottom: 12%; width: 4.2vh; height: 4.2vh; opacity: 0; animation: rise 4.6s ease-out infinite; }
+    .heart svg { width: 100%; height: 100%; }
+    @keyframes rise { 0% { opacity: 0; transform: translate(0, 0) scale(0.4); } 12% { opacity: 1; transform: translate(0, -4vh) scale(1); }
+                      100% { opacity: 0; transform: translate(var(--dx), -62vh) scale(0.8) rotate(var(--rot)); } }
+
+    /* ---------- Testo a destra ---------- */
+    .side { position: fixed; z-index: 2; left: 48vw; right: 5vw; top: 50%; transform: translateY(-50%); }
+    .brand { display: flex; align-items: center; gap: 1.4vw; animation: up 0.9s var(--ease) 0.5s both; }
+    .glyph { width: clamp(56px, 5.4vw, 104px); height: clamp(56px, 5.4vw, 104px); border-radius: 28%; background: var(--ig);
+      display: grid; place-items: center; box-shadow: 0 1.5vh 5vh rgba(214,41,118,0.45); }
+    .glyph svg { width: 62%; height: 62%; fill: #fff; }
+    .brand span { font-size: clamp(22px, 2.4vw, 46px); font-weight: 700; letter-spacing: 0.01em; }
+    .follow { margin: 4vh 0 0; font-size: clamp(30px, 3.4vw, 64px); font-weight: 300; color: rgba(255,255,255,0.85); animation: up 0.9s var(--ease) 0.8s both; }
+    .handle { margin-top: 1vh; font-weight: 900; letter-spacing: -0.03em; line-height: 1;
+      font-size: min(5.6vw, 11vh); width: max-content; white-space: nowrap; padding-right: 0.05em; padding-bottom: 0.12em;
+      background: linear-gradient(90deg, #feda75, #fa7e1e 18%, #d62976 45%, #962fbf 72%, #4f5bd5 100%);
+      background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+      animation: up 1s var(--ease) 1s both, sheen 8s ease-in-out 2s infinite alternate; }
+    @keyframes sheen { to { background-position: 100% 0; } }
+    .scanme { margin-top: 5vh; display: flex; align-items: center; gap: 1.2vw; font-size: clamp(18px, 1.8vw, 34px); color: rgba(255,255,255,0.8);
+      animation: up 0.9s var(--ease) 1.4s both; }
+    .scanme .arrow { width: clamp(40px, 4vw, 76px); height: auto; stroke: #fff; animation: nudge 1.6s ease-in-out 2.4s infinite; }
+    @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-1vw); } }
+    .url { margin-top: 2.2vh; font-size: clamp(16px, 1.45vw, 28px); color: rgba(255,255,255,0.55); letter-spacing: 0.02em; animation: up 0.9s var(--ease) 1.6s both; }
+
+    @keyframes up { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } .heart { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="grain"></div>
+
+  <div class="stage">
+    <div class="phone">
+      <div class="screen">
+        <div class="notch"></div>
+        <div class="card">
+          <div class="avatar"><img src="img/instagram/avatar.jpg" alt="" /></div>
+          <div class="qr"><img src="img/instagram/qr-mattia-crivellini.svg" alt="QR code del profilo Instagram @mattia_crivellini" /><span class="scan"></span></div>
+          <div class="h">@mattia_crivellini</div>
+        </div>
+        <div class="hint" id="hint">Inquadra per seguire</div>
+      </div>
+    </div>
+    <div class="hearts" id="hearts"></div>
+  </div>
+
+  <div class="side">
+    <div class="brand">
+      <div class="glyph"><svg viewBox="0 0 24 24"><path d="M12 7.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2zM17.1 5.8a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2zM12 2.5c-2.6 0-2.9 0-3.9.1-3.5.2-5.4 2.1-5.6 5.6-.1 1-.1 1.3-.1 3.8s0 2.9.1 3.9c.2 3.5 2.1 5.4 5.6 5.6 1 .1 1.3.1 3.9.1s2.9 0 3.9-.1c3.5-.2 5.4-2.1 5.6-5.6.1-1 .1-1.3.1-3.9s0-2.8-.1-3.8c-.2-3.5-2.1-5.4-5.6-5.6-1-.1-1.3-.1-3.9-.1zm0 1.7c2.5 0 2.8 0 3.8.1 2.6.1 3.8 1.3 3.9 3.9.1 1 .1 1.3.1 3.8s0 2.8-.1 3.8c-.1 2.6-1.3 3.8-3.9 3.9-1 .1-1.3.1-3.8.1s-2.8 0-3.8-.1c-2.6-.1-3.8-1.3-3.9-3.9-.1-1-.1-1.3-.1-3.8s0-2.8.1-3.8c.1-2.6 1.3-3.8 3.9-3.9 1-.1 1.3-.1 3.8-.1z"/></svg></div>
+      <span>Instagram</span>
+    </div>
+    <div class="follow" id="follow">Seguimi su Instagram</div>
+    <div class="handle">@mattia_crivellini</div>
+    <div class="scanme">
+      <svg class="arrow" viewBox="0 0 64 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M62 12H4M14 2 4 12l10 10"/></svg>
+      <span id="scanme">Inquadra il QR code con la fotocamera</span>
+    </div>
+    <div class="url">instagram.com/mattia_crivellini</div>
+  </div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="#">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="#">&#8594;</a>
+
+  <div id="lang-toggle">
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    const TXT = {
+      it: { follow: 'Seguimi su Instagram', scanme: 'Inquadra il QR code con la fotocamera', hint: 'Inquadra per seguire' },
+      en: { follow: 'Follow me on Instagram', scanme: 'Scan the QR code with your camera', hint: 'Scan to follow' }
+    };
+    function renderTexts() { Object.entries(TXT[lang]).forEach(([id, t]) => { document.getElementById(id).textContent = t; }); }
+    function onLangChange() { renderTexts(); }
+
+    // cuori che salgono, a ritmo sfalsato
+    const HEART = '<svg viewBox="0 0 24 24"><defs><linearGradient id="hg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#fa7e1e"/><stop offset=".5" stop-color="#d62976"/><stop offset="1" stop-color="#962fbf"/></linearGradient></defs><path fill="url(#hg)" d="M12 21s-7.5-4.6-10-9.3C.4 8.5 2.2 4.5 6 4.5c2.2 0 3.6 1.3 4.4 2.5h3.2c.8-1.2 2.2-2.5 4.4-2.5 3.8 0 5.6 4 4 7.2C19.5 16.4 12 21 12 21z"/></svg>';
+    const hearts = document.getElementById('hearts');
+    for (let i = 0; i < 9; i++) {
+      const h = document.createElement('span');
+      h.className = 'heart'; h.innerHTML = HEART;
+      h.style.left = (96 + Math.random() * 22) + '%';
+      h.style.animationDelay = (2 + i * 0.52 + Math.random() * 0.3).toFixed(2) + 's';
+      h.style.setProperty('--dx', (Math.random() * 16 - 4).toFixed(1) + 'vw');
+      h.style.setProperty('--rot', (Math.random() * 40 - 20).toFixed(0) + 'deg');
+      hearts.appendChild(h);
+    }
+
+    initLangToggle();
+    renderTexts();
+    initNav();
+
+    // ?t=… blocca le animazioni a quell'istante (miniature)
+    const T = parseFloat(new URLSearchParams(location.search).get('t'));
+    if (isFinite(T)) document.getAnimations().forEach(a => { a.pause(); a.currentTime = T * 1000; });
+  </script>
+</body>
+</html>

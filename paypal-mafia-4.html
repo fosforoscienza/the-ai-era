@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PayPal Mafia — Chi ha creato cosa — Geopolitica della AI</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    :root { --accent: #06b6d4; --accent-soft: #67e8f9; --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: #000 !important; overflow: hidden; height: 100%; margin: 0; }
+    body { font-family: inherit; color: #fff; }
+    .bg { position: fixed; inset: 0; background: radial-gradient(60% 60% at 50% 50%, rgba(6,182,212,0.10), transparent 70%), #000; }
+
+    /* ---------- Titolo ---------- */
+    .head { position: fixed; top: 2.6vh; left: 0; right: 0; text-align: center; z-index: 3; animation: up 0.9s var(--ease) both; }
+    .head .eyebrow { font-size: clamp(11px, 0.9vw, 16px); font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--accent-soft); }
+    .head h1 { margin: 0.6vh 0 0; font-size: clamp(26px, 2.6vw, 50px); font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase;
+      background: linear-gradient(180deg, #fff 30%, #a5f3fc 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+
+    /* ---------- Foto al centro con i numeri sulle persone ---------- */
+    .photo { position: fixed; z-index: 1; left: 50%; top: 12.5vh; height: 76vh; aspect-ratio: 1440 / 1191; transform: translateX(-50%);
+      animation: photoIn 1.2s var(--ease) both; }
+    .photo img { width: 100%; height: 100%; display: block; filter: brightness(0.78) saturate(0.9); border-radius: 6px;
+      box-shadow: 0 2vh 6vh rgba(0,0,0,0.6), 0 0 0 1px rgba(103,232,249,0.15); }
+    @keyframes photoIn { from { opacity: 0; transform: translateX(-50%) scale(1.03); } to { opacity: 1; transform: translateX(-50%); } }
+    .pin { position: absolute; width: 3.4vh; height: 3.4vh; margin: -1.7vh 0 0 -1.7vh; border-radius: 50%;
+      display: grid; place-items: center; font-size: 1.75vh; font-weight: 800; color: #00131a;
+      background: var(--accent-soft); box-shadow: 0 0 0 0.35vh rgba(0,0,0,0.55), 0 0 2.4vh rgba(103,232,249,0.7);
+      animation: pop 0.6s var(--ease) both; transition: transform 0.35s var(--ease), background 0.35s; }
+    .pin::after { content: ''; position: absolute; inset: -0.6vh; border-radius: 50%; border: 2px solid var(--accent-soft); opacity: 0; }
+    .pin.on { transform: scale(1.35); background: #fff; }
+    .pin.on::after { animation: ring 1.4s ease-out infinite; }
+    @keyframes pop { from { opacity: 0; transform: scale(0.2); } to { opacity: 1; transform: none; } }
+    @keyframes ring { from { opacity: 0.9; transform: scale(0.8); } to { opacity: 0; transform: scale(2); } }
+
+    /* ---------- Legende ai lati ---------- */
+    .legend { position: fixed; z-index: 2; top: 12.5vh; height: 76vh; display: flex; flex-direction: column; justify-content: space-between;
+      width: calc((100vw - 76vh * 1440 / 1191) / 2 - 5.6vw); }
+    .legend.l { left: 4.2vw; }
+    .legend.r { right: 4.2vw; }
+    .item { display: flex; gap: 0.8vw; align-items: flex-start; padding: 0.9vh 0.8vw; border-radius: 10px;
+      border: 1px solid transparent; animation: up 0.6s var(--ease) both; transition: background 0.35s, border-color 0.35s; }
+    .item.on { background: rgba(6,182,212,0.12); border-color: rgba(103,232,249,0.35); }
+    .item .n { flex: none; width: 3vh; height: 3vh; border-radius: 50%; display: grid; place-items: center; margin-top: 0.2vh;
+      font-size: 1.55vh; font-weight: 800; color: #00131a; background: var(--accent-soft); }
+    .item b { display: block; font-size: clamp(14px, 1.15vw, 23px); font-weight: 800; line-height: 1.15; }
+    .item span { display: block; margin-top: 0.4vh; font-size: clamp(11px, 0.86vw, 17px); line-height: 1.3; color: #cbd5e1; }
+    .item span em { font-style: normal; color: var(--accent-soft); font-weight: 600; }
+
+    /* ---------- Piede ---------- */
+    .foot { position: fixed; bottom: 6.4vh; left: 0; right: 0; text-align: center; z-index: 3; font-size: clamp(12px, 1vw, 19px); color: #94a3b8;
+      animation: up 0.9s var(--ease) 5.6s both; }
+    .foot b { color: #fff; }
+
+    @keyframes up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <div class="head">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="title"></h1>
+  </div>
+
+  <div class="photo" id="photo"><img src="img/paypal-mafia-photo.webp" alt="" /></div>
+  <div class="legend l" id="leg-l"></div>
+  <div class="legend r" id="leg-r"></div>
+
+  <div class="foot" id="foot"></div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="#">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="#">&#8594;</a>
+
+  <div id="lang-toggle">
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // Nomi e posizioni dalla didascalia di Fortune (ott. 2007): fila dietro 1–4, seconda fila 5–13, da sinistra.
+    // x, y = punto sul petto, in % della foto (mai sul volto). side = colonna della legenda.
+    const PEOPLE = [
+      { x: 13.2, y: 39.5, side: 'l', name: 'Jawed Karim',      it: 'Co-fondatore di <em>YouTube</em> · ha caricato il primo video · fondo YVentures',                 en: 'Co-founder of <em>YouTube</em> · uploaded its first video · YVentures fund' },
+      { x: 32.4, y: 37.5, side: 'l', name: 'Jeremy Stoppelman', it: 'Co-fondatore di <em>Yelp</em>',                                                                   en: 'Co-founder of <em>Yelp</em>' },
+      { x: 75.6, y: 37.0, side: 'r', name: 'Andrew McCormack', it: 'Co-fondatore di <em>Valar Ventures</em>, il fondo fintech nato con Thiel',                         en: 'Co-founder of <em>Valar Ventures</em>, the fintech fund started with Thiel' },
+      { x: 88.6, y: 38.0, side: 'r', name: 'Premal Shah',      it: 'Presidente fondatore di <em>Kiva</em>, microcredito online',                                       en: 'Founding president of <em>Kiva</em>, online microlending' },
+      { x:  6.4, y: 57.0, side: 'l', name: 'Luke Nosek',       it: 'Co-fondatore di <em>Founders Fund</em> e Gigafund · grande investitore in <em>SpaceX</em>',          en: 'Co-founder of <em>Founders Fund</em> and Gigafund · major <em>SpaceX</em> investor' },
+      { x: 16.6, y: 55.5, side: 'l', name: 'Ken Howery',       it: 'Co-fondatore di <em>Founders Fund</em> · poi ambasciatore USA in Svezia',                          en: 'Co-founder of <em>Founders Fund</em> · later US ambassador to Sweden' },
+      { x: 22.6, y: 62.0, side: 'l', name: 'David Sacks',      it: '<em>Yammer</em> (venduta a Microsoft) · <em>Craft Ventures</em> · zar di AI e cripto alla Casa Bianca', en: '<em>Yammer</em> (sold to Microsoft) · <em>Craft Ventures</em> · White House AI & crypto czar' },
+      { x: 34.2, y: 71.0, side: 'l', name: 'Peter Thiel',      it: '<em>Palantir</em> · <em>Founders Fund</em> · primo investitore esterno di <em>Facebook</em>',        en: '<em>Palantir</em> · <em>Founders Fund</em> · first outside investor in <em>Facebook</em>' },
+      { x: 47.4, y: 64.0, side: 'l', name: 'Keith Rabois',     it: 'Dirigente in LinkedIn e Square · co-fondatore di <em>Opendoor</em> · investitore (Khosla, Founders Fund)', en: 'Executive at LinkedIn and Square · co-founder of <em>Opendoor</em> · investor (Khosla, Founders Fund)' },
+      { x: 55.6, y: 52.5, side: 'r', name: 'Reid Hoffman',     it: 'Fondatore di <em>LinkedIn</em> · <em>Greylock</em> · co-fondatore di <em>Inflection AI</em> · tra i primi in Facebook', en: 'Founder of <em>LinkedIn</em> · <em>Greylock</em> · co-founder of <em>Inflection AI</em> · early Facebook backer' },
+      { x: 66.0, y: 72.0, side: 'r', name: 'Max Levchin',      it: 'Co-fondatore di <em>PayPal</em> · <em>Slide</em> · fondatore e CEO di <em>Affirm</em>',             en: 'Co-founder of <em>PayPal</em> · <em>Slide</em> · founder and CEO of <em>Affirm</em>' },
+      { x: 72.6, y: 56.5, side: 'r', name: 'Roelof Botha',     it: '<em>Sequoia Capital</em>: ha guidato l’investimento in <em>YouTube</em>',                      en: '<em>Sequoia Capital</em>: led the investment in <em>YouTube</em>' },
+      { x: 87.0, y: 60.5, side: 'r', name: 'Russel Simmons',   it: 'Co-fondatore e CTO di <em>Yelp</em>',                                                              en: 'Co-founder and CTO of <em>Yelp</em>' }
+    ];
+    const TXT = {
+      it: { eyebrow: 'Fortune · Tosca Cafe, San Francisco · 2007', title: 'La PayPal Mafia: chi ha creato cosa',
+            foot: 'Assente alla foto: <b>Elon Musk</b> — Tesla, SpaceX, xAI · Foto di Robyn Twomey' },
+      en: { eyebrow: 'Fortune · Tosca Cafe, San Francisco · 2007', title: 'The PayPal Mafia: who built what',
+            foot: 'Missing from the photo: <b>Elon Musk</b> — Tesla, SpaceX, xAI · Photo by Robyn Twomey' }
+    };
+
+    const photo = document.getElementById('photo');
+    const pins = PEOPLE.map((p, i) => {
+      const el = document.createElement('div');
+      el.className = 'pin'; el.textContent = i + 1;
+      el.style.left = p.x + '%'; el.style.top = p.y + '%';
+      el.style.animationDelay = (1 + i * 0.32).toFixed(2) + 's';
+      photo.appendChild(el);
+      return el;
+    });
+    let items = [];
+    function renderTexts() {
+      const t = TXT[lang];
+      document.getElementById('eyebrow').textContent = t.eyebrow;
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('foot').innerHTML = t.foot;
+      ['l', 'r'].forEach(s => document.getElementById('leg-' + s).textContent = '');
+      items = PEOPLE.map((p, i) => {
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `<div class="n">${i + 1}</div><div><b>${p.name}</b><span>${p[lang]}</span></div>`;
+        el.style.animationDelay = (1.1 + i * 0.32).toFixed(2) + 's';
+        document.getElementById('leg-' + p.side).appendChild(el);
+        return el;
+      });
+    }
+    function onLangChange() { renderTexts(); }
+
+    // a giro, una persona alla volta: numero sulla foto e riga della legenda si accendono insieme
+    let k = -1;
+    function spot() {
+      pins.forEach(p => p.classList.remove('on')); items.forEach(it => it.classList.remove('on'));
+      k = (k + 1) % PEOPLE.length;
+      pins[k].classList.add('on'); items[k].classList.add('on');
+    }
+
+    initLangToggle();
+    renderTexts();
+    initNav();
+
+    const T = parseFloat(new URLSearchParams(location.search).get('t'));   // ?t=… per le miniature
+    if (isFinite(T)) document.getAnimations().forEach(a => { a.pause(); a.currentTime = T * 1000; });
+    else setTimeout(() => { spot(); setInterval(spot, 3200); }, 6000);
+  </script>
+</body>
+</html>

@@ -43,13 +43,13 @@ const DEFAULT_PAGES = [
   'timeline.html', 'napa-valley.html', 'musk-page.html', 'musk-page-2.html', 'musk-altman.html', 'paesi.html', 'leader.html',
   'trump-amodei.html', 'anthropic-usa-1.html', 'anthropic-usa-2.html', 'anthropic-usa-3.html', 'anthropic-usa-4.html',
   'llm-occidentali.html', 'llm-asiatici.html', 'llm-russi.html',
-  'thiel.html', 'palantir-intro.html', 'palantir-intro-2.html', 'palantir.html', 'paypal-mafia.html', 'paypal-mafia-2.html', 'paypal-mafia-3.html',
+  'thiel.html', 'palantir-intro.html', 'palantir-intro-2.html', 'palantir.html', 'paypal-mafia.html', 'paypal-mafia-2.html', 'paypal-mafia-3.html', 'paypal-mafia-4.html',
   'epistemia.html', 'pappagallo.html',
   'alba-transformer.html',
   'quiz-emoji-1.html', 'quiz-emoji-2.html', 'quiz-emoji-3.html', 'quiz-emoji-4.html', 'quiz-emoji-5.html', 'quiz-emoji-6.html', 'quiz-emoji-7.html', 'quiz-emoji-8.html', 'quiz-emoji-9.html', 'quiz-emoji-10.html',
   'quiz-trama-1.html', 'quiz-trama-2.html', 'quiz-trama-3.html', 'quiz-trama-4.html', 'quiz-trama-5.html', 'quiz-trama-6.html',
   'fosforo-web.html', 'fosforo-dashboard.html',
-  'tom-brad.html', 'tre-fattori.html', 'confronto-ai.html', 'grazie.html'
+  'tom-brad.html', 'tre-fattori.html', 'confronto-ai.html', 'grazie.html', 'instagram.html'
 ];
 
 // Mutable runtime list — dashboard can reorder and hide entries.
