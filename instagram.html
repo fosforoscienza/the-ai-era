@@ -15,70 +15,92 @@
     /* ---------- Fondo: nebulose nei colori di Instagram che si muovono piano ---------- */
     .blob { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; opacity: 0.55; }
     .b1 { width: 70vw; height: 70vw; left: -22vw; top: -30vw; background: radial-gradient(closest-side, rgba(150,47,191,0.55), transparent); animation: drift1 22s ease-in-out infinite alternate; }
-    .b2 { width: 60vw; height: 60vw; left: -10vw; bottom: -34vw; background: radial-gradient(closest-side, rgba(250,126,30,0.45), transparent); animation: drift2 26s ease-in-out infinite alternate; }
-    .b3 { width: 55vw; height: 55vw; right: -18vw; top: 10vh; background: radial-gradient(closest-side, rgba(214,41,118,0.42), transparent); animation: drift3 24s ease-in-out infinite alternate; }
+    .b2 { width: 60vw; height: 60vw; left: -10vw; bottom: -34vw; background: radial-gradient(closest-side, rgba(250,126,30,0.42), transparent); animation: drift2 26s ease-in-out infinite alternate; }
+    .b3 { width: 55vw; height: 55vw; right: -18vw; top: 10vh; background: radial-gradient(closest-side, rgba(214,41,118,0.40), transparent); animation: drift3 24s ease-in-out infinite alternate; }
     @keyframes drift1 { to { transform: translate(8vw, 10vh) scale(1.1); } }
     @keyframes drift2 { to { transform: translate(10vw, -8vh) scale(0.92); } }
     @keyframes drift3 { to { transform: translate(-8vw, 6vh) scale(1.12); } }
-    .grain { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+    .vignette { position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background: radial-gradient(120% 90% at 30% 50%, transparent 40%, rgba(5,3,11,0.85) 100%); }
 
-    /* ---------- Telefono con la schermata «QR code» del profilo ---------- */
-    .stage { position: fixed; z-index: 2; left: 9vw; top: 50%; transform: translateY(-50%); height: 82vh; aspect-ratio: 9 / 18.6; }
-    .phone { position: absolute; inset: 0; border-radius: 6.2vh; padding: 1.25vh;
+    /* ---------- Telefono con il profilo e i reel veri ---------- */
+    .stage { position: fixed; z-index: 2; left: 8vw; top: 50%; transform: translateY(-50%); height: 86vh; aspect-ratio: 9 / 15.6; }
+    .phone { position: absolute; inset: 0; border-radius: 6vh; padding: 1.2vh;
       background: linear-gradient(160deg, #3a3a44, #121218 40%, #2a2a33);
-      box-shadow: 0 4vh 10vh rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12) inset, 0 0 12vh rgba(214,41,118,0.28);
+      box-shadow: 0 4vh 10vh rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12) inset, 0 0 14vh rgba(214,41,118,0.30);
       animation: phoneIn 1.4s var(--ease) both, float 7s ease-in-out 1.4s infinite; }
-    @keyframes phoneIn { from { opacity: 0; transform: translateY(8vh) rotate(-8deg) scale(0.92); } to { opacity: 1; transform: rotate(-4deg); } }
-    @keyframes float { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(-3deg) translateY(-1.6vh); } }
-    .screen { position: relative; width: 100%; height: 100%; border-radius: 5.2vh; overflow: hidden; background: var(--ig);
-      display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .screen::before { content: ''; position: absolute; inset: -30%; background: conic-gradient(from 0deg, rgba(255,255,255,0.0), rgba(255,255,255,0.18), rgba(255,255,255,0)); animation: spin 14s linear infinite; }
-    .notch { position: absolute; top: 1.4vh; left: 50%; transform: translateX(-50%); width: 30%; height: 3.2vh; border-radius: 2vh; background: #0b0b10; z-index: 3; }
-    .card { position: relative; z-index: 2; width: 74%; background: #fff; border-radius: 3vh; padding: 7vh 2.4vh 2.6vh;
-      display: flex; flex-direction: column; align-items: center; box-shadow: 0 2vh 5vh rgba(60,0,60,0.35);
-      animation: cardIn 1s var(--ease) 0.7s both; }
-    @keyframes cardIn { from { opacity: 0; transform: translateY(3vh) scale(0.94); } to { opacity: 1; transform: none; } }
-    .avatar { position: absolute; top: -5.5vh; left: 50%; transform: translateX(-50%); width: 11vh; height: 11vh; border-radius: 50%; }
-    .avatar::before { content: ''; position: absolute; inset: -0.55vh; border-radius: 50%; background: conic-gradient(var(--ig1), var(--ig2), var(--ig3), var(--ig4), var(--ig5), var(--ig1)); animation: spin 6s linear infinite; }
-    .avatar img { position: relative; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 0.5vh solid #fff; display: block; box-sizing: border-box; }
-    .qr { position: relative; width: 100%; aspect-ratio: 1; }
-    .qr img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
-    .qr .scan { position: absolute; left: -4%; right: -4%; height: 14%; top: 0;
-      background: linear-gradient(180deg, rgba(214,41,118,0), rgba(214,41,118,0.14) 50%, rgba(214,41,118,0));
-      animation: scan 3.2s ease-in-out 2s infinite; opacity: 0; }
-    @keyframes scan { 0% { top: -10%; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: 96%; opacity: 0; } }
-    .card .h { margin-top: 1.8vh; font-size: 2.35vh; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
-      background: var(--ig); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; white-space: nowrap; }
-    .screen .hint { position: relative; z-index: 2; margin-top: 2.4vh; font-size: 1.7vh; font-weight: 600; color: rgba(255,255,255,0.92); }
+    @keyframes phoneIn { from { opacity: 0; transform: translateY(8vh) rotate(-7deg) scale(0.92); } to { opacity: 1; transform: rotate(-3deg); } }
+    @keyframes float { 0%, 100% { transform: rotate(-3deg) translateY(0); } 50% { transform: rotate(-2deg) translateY(-1.4vh); } }
+    .screen { position: relative; width: 100%; height: 100%; border-radius: 5vh; overflow: hidden; background: #0b0c12;
+      display: flex; flex-direction: column; }
+    .notch { position: absolute; top: 1.2vh; left: 50%; transform: translateX(-50%); width: 28%; height: 2.9vh; border-radius: 2vh; background: #000; z-index: 3; }
+
+    /* intestazione del profilo */
+    .profile { padding: 5.6vh 2.2vh 1.6vh; display: grid; grid-template-columns: auto 1fr; gap: 0.6vh 1.8vh; align-items: center;
+      animation: fadeIn 0.8s ease 0.8s both; }
+    .avatar { grid-row: span 2; position: relative; width: 9vh; height: 9vh; border-radius: 50%; }
+    .avatar::before { content: ''; position: absolute; inset: -0.45vh; border-radius: 50%;
+      background: conic-gradient(var(--ig1), var(--ig2), var(--ig3), var(--ig4), var(--ig5), var(--ig1)); animation: spin 6s linear infinite; }
+    .avatar img { position: relative; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 0.45vh solid #0b0c12; box-sizing: border-box; display: block; }
+    .who b { display: block; font-size: 2.1vh; font-weight: 700; }
+    .who small { display: block; margin-top: 0.3vh; font-size: 1.45vh; color: rgba(255,255,255,0.6); letter-spacing: 0.04em; }
+    .follow-btn { justify-self: start; padding: 0.7vh 2.6vh; border-radius: 1vh; background: #0095f6; font-size: 1.6vh; font-weight: 700;
+      animation: pulse 2.4s ease-in-out 2.4s infinite; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,149,246,0.6); } 50% { box-shadow: 0 0 0 1vh rgba(0,149,246,0); } }
+
+    /* griglia dei reel (screenshot) con una selezione che passa da un reel all'altro */
+    .reels { position: relative; flex: none; width: 100%; aspect-ratio: 1320 / 1684; animation: rise 1s var(--ease) 1s both; }
+    .reels img { width: 100%; height: 100%; display: block; }
+    .pick { position: absolute; width: 33.33%; height: 46.1%; box-sizing: border-box; border: 0.4vh solid #fff; border-radius: 0.6vh;
+      box-shadow: 0 0 3vh rgba(255,255,255,0.45), inset 0 0 3vh rgba(255,255,255,0.18); opacity: 0;
+      transition: left 0.6s var(--ease), top 0.6s var(--ease), opacity 0.4s; }
+    .pick.on { opacity: 1; }
+    .shine { position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.10) 48%, transparent 60%);
+      background-size: 250% 100%; animation: shine 6s ease-in-out 2.5s infinite; }
+    @keyframes shine { from { background-position: 130% 0; } to { background-position: -30% 0; } }
+    /* barra in basso dell'app */
+    .tabbar { margin-top: auto; display: flex; justify-content: space-around; align-items: center; padding: 1.4vh 1vh 2.4vh;
+      border-top: 1px solid rgba(255,255,255,0.08); animation: fadeIn 0.8s ease 1.2s both; }
+    .tabbar svg { width: 2.8vh; height: 2.8vh; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .tabbar .me { width: 3vh; height: 3vh; border-radius: 50%; object-fit: cover; border: 0.25vh solid #fff; box-sizing: border-box; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(3vh); } to { opacity: 1; transform: none; } }
 
-    /* cuori che salgono dal telefono */
+    /* cuori che salgono accanto al telefono */
     .hearts { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
-    .heart { position: absolute; bottom: 12%; width: 4.2vh; height: 4.2vh; opacity: 0; animation: rise 4.6s ease-out infinite; }
+    .heart { position: absolute; bottom: 12%; width: 4.2vh; height: 4.2vh; opacity: 0; animation: up-heart 4.6s ease-out infinite; }
     .heart svg { width: 100%; height: 100%; }
-    @keyframes rise { 0% { opacity: 0; transform: translate(0, 0) scale(0.4); } 12% { opacity: 1; transform: translate(0, -4vh) scale(1); }
-                      100% { opacity: 0; transform: translate(var(--dx), -62vh) scale(0.8) rotate(var(--rot)); } }
+    @keyframes up-heart { 0% { opacity: 0; transform: translate(0, 0) scale(0.4); } 12% { opacity: 1; transform: translate(0, -4vh) scale(1); }
+                          100% { opacity: 0; transform: translate(var(--dx), -62vh) scale(0.8) rotate(var(--rot)); } }
 
-    /* ---------- Testo a destra ---------- */
-    .side { position: fixed; z-index: 2; left: 48vw; right: 5vw; top: 50%; transform: translateY(-50%); }
-    .brand { display: flex; align-items: center; gap: 1.4vw; animation: up 0.9s var(--ease) 0.5s both; }
-    .glyph { width: clamp(56px, 5.4vw, 104px); height: clamp(56px, 5.4vw, 104px); border-radius: 28%; background: var(--ig);
+    /* ---------- Testo e QR a destra ---------- */
+    .side { position: fixed; z-index: 2; left: 46vw; right: 4.5vw; top: 50%; transform: translateY(-50%); }
+    .brand { display: flex; align-items: center; gap: 1.2vw; animation: up 0.9s var(--ease) 0.5s both; }
+    .glyph { width: clamp(50px, 4.6vw, 90px); height: clamp(50px, 4.6vw, 90px); border-radius: 28%; background: var(--ig);
       display: grid; place-items: center; box-shadow: 0 1.5vh 5vh rgba(214,41,118,0.45); }
     .glyph svg { width: 62%; height: 62%; fill: #fff; }
-    .brand span { font-size: clamp(22px, 2.4vw, 46px); font-weight: 700; letter-spacing: 0.01em; }
-    .follow { margin: 4vh 0 0; font-size: clamp(30px, 3.4vw, 64px); font-weight: 300; color: rgba(255,255,255,0.85); animation: up 0.9s var(--ease) 0.8s both; }
-    .handle { margin-top: 1vh; font-weight: 900; letter-spacing: -0.03em; line-height: 1;
-      font-size: min(5.6vw, 11vh); width: max-content; white-space: nowrap; padding-right: 0.05em; padding-bottom: 0.12em;
+    .brand span { font-size: clamp(20px, 2.1vw, 40px); font-weight: 700; }
+    .follow { margin: 3.4vh 0 0; font-size: clamp(28px, 3vw, 58px); font-weight: 300; color: rgba(255,255,255,0.85); animation: up 0.9s var(--ease) 0.8s both; }
+    .handle { margin-top: 0.8vh; font-weight: 900; letter-spacing: -0.03em; line-height: 1;
+      font-size: min(5.5vw, 10.5vh); width: max-content; white-space: nowrap; padding-right: 0.05em; padding-bottom: 0.12em;
       background: linear-gradient(90deg, #feda75, #fa7e1e 18%, #d62976 45%, #962fbf 72%, #4f5bd5 100%);
       background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
       animation: up 1s var(--ease) 1s both, sheen 8s ease-in-out 2s infinite alternate; }
     @keyframes sheen { to { background-position: 100% 0; } }
-    .scanme { margin-top: 5vh; display: flex; align-items: center; gap: 1.2vw; font-size: clamp(18px, 1.8vw, 34px); color: rgba(255,255,255,0.8);
-      animation: up 0.9s var(--ease) 1.4s both; }
-    .scanme .arrow { width: clamp(40px, 4vw, 76px); height: auto; stroke: #fff; animation: nudge 1.6s ease-in-out 2.4s infinite; }
-    @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-1vw); } }
-    .url { margin-top: 2.2vh; font-size: clamp(16px, 1.45vw, 28px); color: rgba(255,255,255,0.55); letter-spacing: 0.02em; animation: up 0.9s var(--ease) 1.6s both; }
+    .about { margin-top: 1.6vh; font-size: clamp(16px, 1.6vw, 30px); color: rgba(255,255,255,0.78); animation: up 0.9s var(--ease) 1.2s both; }
+    .about b { color: #fff; }
+
+    .scan { margin-top: 4.6vh; display: flex; align-items: center; gap: 2.2vw; animation: up 0.9s var(--ease) 1.5s both; }
+    .qrcard { position: relative; flex: none; width: 25vh; height: 25vh; padding: 1.8vh; box-sizing: border-box; background: #fff; border-radius: 2.4vh;
+      box-shadow: 0 2vh 6vh rgba(0,0,0,0.5), 0 0 0 0.5vh rgba(255,255,255,0.08); }
+    .qrcard::before { content: ''; position: absolute; inset: -0.6vh; border-radius: 2.9vh; background: var(--ig); z-index: -1; filter: blur(2vh); opacity: 0.6; }
+    .qrcard img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+    .scan .txt b { display: block; font-size: clamp(20px, 2vw, 38px); font-weight: 800; }
+    .scan .txt span { display: block; margin-top: 1vh; font-size: clamp(14px, 1.3vw, 24px); color: rgba(255,255,255,0.6); }
+    .scan .arrow { display: block; margin-bottom: 1.6vh; width: clamp(40px, 3.6vw, 70px); stroke: #fff; animation: nudge 1.6s ease-in-out 2.4s infinite; }
+    @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-0.9vw); } }
 
     @keyframes up { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } .heart { display: none; } }
@@ -86,18 +108,29 @@
 </head>
 <body>
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-  <div class="grain"></div>
+  <div class="vignette"></div>
 
   <div class="stage">
     <div class="phone">
       <div class="screen">
         <div class="notch"></div>
-        <div class="card">
+        <div class="profile">
           <div class="avatar"><img src="img/instagram/avatar.jpg" alt="" /></div>
-          <div class="qr"><img src="img/instagram/qr-mattia-crivellini.svg" alt="QR code del profilo Instagram @mattia_crivellini" /><span class="scan"></span></div>
-          <div class="h">@mattia_crivellini</div>
+          <div class="who"><b>mattia_crivellini</b><small id="role">Divulgatore tecnologico</small></div>
+          <div class="follow-btn" id="followbtn">Segui</div>
         </div>
-        <div class="hint" id="hint">Inquadra per seguire</div>
+        <div class="reels" id="reels">
+          <img src="img/instagram/reels.jpg" alt="I reel del profilo Instagram di Mattia Crivellini" />
+          <div class="pick" id="pick"></div>
+          <div class="shine"></div>
+        </div>
+        <div class="tabbar">
+          <svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></svg>
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M3 8h18M8 3l3 5M14 3l3 5M10 11.5v5l4.5-2.5z"/></svg>
+          <img class="me" src="img/instagram/avatar.jpg" alt="" />
+        </div>
       </div>
     </div>
     <div class="hearts" id="hearts"></div>
@@ -110,11 +143,16 @@
     </div>
     <div class="follow" id="follow">Seguimi su Instagram</div>
     <div class="handle">@mattia_crivellini</div>
-    <div class="scanme">
-      <svg class="arrow" viewBox="0 0 64 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M62 12H4M14 2 4 12l10 10"/></svg>
-      <span id="scanme">Inquadra il QR code con la fotocamera</span>
+    <div class="about" id="about">Reel brevi su <b>AI</b>, <b>tecnologia</b> e <b>scienza</b></div>
+
+    <div class="scan">
+      <div class="qrcard"><img src="img/instagram/qr-mattia-crivellini.svg" alt="QR code del profilo Instagram @mattia_crivellini" /></div>
+      <div class="txt">
+        <svg class="arrow" viewBox="0 0 64 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M62 12H4M14 2 4 12l10 10"/></svg>
+        <b id="scanme">Inquadra con la fotocamera</b>
+        <span>instagram.com/mattia_crivellini</span>
+      </div>
     </div>
-    <div class="url">instagram.com/mattia_crivellini</div>
   </div>
 
   <div id="nav-dots"></div>
@@ -129,32 +167,48 @@
   <script src="js/common.js"></script>
   <script>
     const TXT = {
-      it: { follow: 'Seguimi su Instagram', scanme: 'Inquadra il QR code con la fotocamera', hint: 'Inquadra per seguire' },
-      en: { follow: 'Follow me on Instagram', scanme: 'Scan the QR code with your camera', hint: 'Scan to follow' }
+      it: { follow: 'Seguimi su Instagram', scanme: 'Inquadra con la fotocamera', followbtn: 'Segui', role: 'Divulgatore tecnologico',
+            about: 'Reel brevi su <b>AI</b>, <b>tecnologia</b> e <b>scienza</b>' },
+      en: { follow: 'Follow me on Instagram', scanme: 'Scan with your camera', followbtn: 'Follow', role: 'Tech communicator',
+            about: 'Short reels on <b>AI</b>, <b>technology</b> and <b>science</b>' }
     };
-    function renderTexts() { Object.entries(TXT[lang]).forEach(([id, t]) => { document.getElementById(id).textContent = t; }); }
+    function renderTexts() {
+      const t = TXT[lang];
+      ['follow', 'scanme', 'followbtn', 'role'].forEach(id => { document.getElementById(id).textContent = t[id]; });
+      document.getElementById('about').innerHTML = t.about;
+    }
     function onLangChange() { renderTexts(); }
 
-    // cuori che salgono, a ritmo sfalsato
+    // cuori che salgono dal bordo destro del telefono
     const HEART = '<svg viewBox="0 0 24 24"><defs><linearGradient id="hg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#fa7e1e"/><stop offset=".5" stop-color="#d62976"/><stop offset="1" stop-color="#962fbf"/></linearGradient></defs><path fill="url(#hg)" d="M12 21s-7.5-4.6-10-9.3C.4 8.5 2.2 4.5 6 4.5c2.2 0 3.6 1.3 4.4 2.5h3.2c.8-1.2 2.2-2.5 4.4-2.5 3.8 0 5.6 4 4 7.2C19.5 16.4 12 21 12 21z"/></svg>';
     const hearts = document.getElementById('hearts');
     for (let i = 0; i < 9; i++) {
       const h = document.createElement('span');
       h.className = 'heart'; h.innerHTML = HEART;
-      h.style.left = (96 + Math.random() * 22) + '%';
+      h.style.left = (100 + Math.random() * 10) + '%';
       h.style.animationDelay = (2 + i * 0.52 + Math.random() * 0.3).toFixed(2) + 's';
-      h.style.setProperty('--dx', (Math.random() * 16 - 4).toFixed(1) + 'vw');
+      h.style.setProperty('--dx', (Math.random() * 6 - 3).toFixed(1) + 'vw');
       h.style.setProperty('--rot', (Math.random() * 40 - 20).toFixed(0) + 'deg');
       hearts.appendChild(h);
+    }
+
+    // una cornice passa da un reel all'altro, come scorrendo il profilo
+    // (righe dei reel nello screenshot: dopo la barra delle schede, due file da tre)
+    const CELLS = [[0, 7.7], [33.33, 7.7], [66.67, 7.7], [0, 53.9], [33.33, 53.9], [66.67, 53.9]];
+    const pick = document.getElementById('pick');
+    let c = 0;
+    function step() {
+      const [x, y] = CELLS[c]; pick.style.left = x + '%'; pick.style.top = y + '%'; pick.classList.add('on');
+      c = (c + 1) % CELLS.length;
     }
 
     initLangToggle();
     renderTexts();
     initNav();
 
-    // ?t=… blocca le animazioni a quell'istante (miniature)
-    const T = parseFloat(new URLSearchParams(location.search).get('t'));
-    if (isFinite(T)) document.getAnimations().forEach(a => { a.pause(); a.currentTime = T * 1000; });
+    const T = parseFloat(new URLSearchParams(location.search).get('t'));   // ?t=… per le miniature
+    if (isFinite(T)) { document.getAnimations().forEach(a => { a.pause(); a.currentTime = T * 1000; }); c = 1; step(); }
+    else setTimeout(() => { step(); setInterval(step, 1800); }, 2600);
   </script>
 </body>
 </html>
