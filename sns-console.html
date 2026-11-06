@@ -229,6 +229,11 @@
     let lang = localStorage.getItem('geopolitica-lang') || 'it';
 
     // ── Slide: anteprime statiche, nell'ordine della scaletta ──
+    // Dentro lo show (tasto C): scegliere una slide la manda in onda e riporta alla presentazione;
+    // C, Esc o il pulsante in alto tornano allo show senza cambiare slide.
+    const EMBED = window.self !== window.top;
+    function backToShow() { try { window.parent.postMessage({ type: 'sns-console', op: 'close' }, '*'); } catch (_) {} }
+    function goTo(id) { SNS.send({ t: 'go', id }); if (EMBED) backToShow(); }
     const ORDER_KEY = 'sns-console-order-2';   // -2: ordine del 31/10 sera
     const GRIP = '<svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><circle cx="6" cy="4" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="6" cy="9" r="1.6"/><circle cx="12" cy="9" r="1.6"/><circle cx="6" cy="14" r="1.6"/><circle cx="12" cy="14" r="1.6"/></svg>';
     // Slide eliminate (× sulla scheda): escono dalla sequenza dello show e
@@ -306,7 +311,7 @@
         const s = SNS.SLIDES.find(x => x.id === id);
         const card = document.createElement('div');
         card.className = 'card' + (s.video ? ' is-video' : ''); card.dataset.id = s.id; card.setAttribute('role', 'button'); card.tabIndex = 0;
-        card.addEventListener('keydown', e => { if (e.key === 'Enter') SNS.send({ t: 'go', id: s.id }); });
+        card.addEventListener('keydown', e => { if (e.key === 'Enter') goTo(s.id); });
         card.innerHTML = `<div class="thumb"><span class="num">${i + 1}</span><span class="badge">IN ONDA</span>
           <img alt="" decoding="async"></div>
           <div class="meta"><div><strong></strong><small></small></div>
@@ -318,7 +323,7 @@
         if (s.solution) card.querySelector('small').classList.add('sol');
         const del = card.querySelector('.del');
         del.addEventListener('click', e => { e.stopPropagation(); deleteSlide(s.id); });
-        card.addEventListener('click', () => { if (Date.now() > noClickUntil) SNS.send({ t: 'go', id: s.id }); });
+        card.addEventListener('click', () => { if (Date.now() > noClickUntil) goTo(s.id); });
         card.addEventListener('pointerdown', e => pressCard(card, e));
         card.addEventListener('contextmenu', e => e.preventDefault());
         const grip = card.querySelector('.grip');
@@ -510,8 +515,8 @@
           ve.src = urls.get(v.id) + '#t=0.5';
           ve.addEventListener('loadedmetadata', () => { card.querySelector('small').textContent = v.sub + ' · ' + fmt(ve.duration); });
         }
-        card.addEventListener('click', () => SNS.send({ t: 'go', id: v.id }));
-        card.addEventListener('keydown', e => { if (e.key === 'Enter') SNS.send({ t: 'go', id: v.id }); });
+        card.addEventListener('click', () => goTo(v.id));
+        card.addEventListener('keydown', e => { if (e.key === 'Enter') goTo(v.id); });
         if (!v.fixed) card.querySelector('.del').addEventListener('click', e => {
           e.stopPropagation();
           if (!confirm('Eliminare «' + v.name + '» da questo browser?')) return;
@@ -630,12 +635,16 @@
       if (show && show.dur) SNS.send({ t: 'video', op: 'seek', time: $('v-seek').value / 1000 * show.dur });
     });
     // finestra separata, da trascinare sullo schermo del proiettore
-    $('open-show').addEventListener('click', () => window.open('sns-show.html', 'sns-show', 'popup,width=1280,height=720'));
+    if (EMBED) {
+      $('open-show').textContent = '← Torna alla presentazione (C)';
+      $('open-show').addEventListener('click', backToShow);
+    } else $('open-show').addEventListener('click', () => window.open('sns-show.html', 'sns-show', 'popup,width=1280,height=720'));
 
     // Il telecomando funziona anche se la finestra attiva è la console
     document.addEventListener('keydown', e => {
       const tag = (e.target && e.target.tagName) || '';
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (EMBED && !e.metaKey && !e.ctrlKey && !e.altKey && (e.key === 'c' || e.key === 'C' || e.key === 'Escape')) { e.preventDefault(); backToShow(); return; }
       if ((e.key === ' ' || e.key === 'Enter') && tag === 'BUTTON') return;   // attiva il bottone col focus
       if (SNS.isNext(e)) { e.preventDefault(); SNS.send({ t: 'next' }); }
       else if (SNS.isPrev(e)) { e.preventDefault(); SNS.send({ t: 'prev' }); }

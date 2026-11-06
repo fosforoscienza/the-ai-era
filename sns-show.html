@@ -66,6 +66,11 @@
     #link { position: fixed; top: 10px; right: 10px; z-index: 40; width: 8px; height: 8px; border-radius: 50%;
       background: #34d399; opacity: 0; transition: opacity .4s; pointer-events: none; }
     body:not(.idle) #link.show { opacity: .7; }
+
+    /* Console in sovrimpressione (tasto C): lo show resta sotto, a schermo intero */
+    #console-layer { position: fixed; inset: 0; z-index: 60; border: 0; width: 100%; height: 100%; background: #070b14;
+      opacity: 0; visibility: hidden; transform: scale(0.985); transition: opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+    #console-layer.on { opacity: 1; visibility: visible; transform: none; transition: opacity .25s ease, transform .25s ease, visibility 0s; }
   </style>
 </head>
 <body>
@@ -76,7 +81,7 @@
   <div id="start" role="button" tabindex="0">
     <div class="btn"></div>
     <p>Avvia a tutto schermo</p>
-    <small>Frecce / telecomando per le slide · F schermo intero · la console comanda da un'altra finestra</small>
+    <small>Frecce / telecomando per le slide · F schermo intero · C apre e chiude la console</small>
   </div>
   <div id="link" title="Console collegata"></div>
   <button id="out-btn" title="Suoni (A)">Suoni</button>
@@ -86,6 +91,7 @@
   </div>
   <div id="sound" role="button">Audio disattivato dal browser — tocca lo schermo per attivarlo</div>
   <div id="tap" role="button"><div class="btn"></div><p>Tocca per avviare il video</p></div>
+  <iframe id="console-layer" title="Console"></iframe>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script>
   <script src="js/sns-config.js"></script>
@@ -313,7 +319,18 @@
     start.addEventListener('click', begin);
 
     // ── Tastiera / telecomando ──
+    // ── Console dentro lo show (C): si apre sopra le slide e si richiude con C, Esc o il pulsante ──
+    const consoleLayer = document.getElementById('console-layer');
+    function toggleConsole(open) {
+      const on = open === undefined ? !consoleLayer.classList.contains('on') : open;
+      if (on && !consoleLayer.getAttribute('src')) consoleLayer.src = 'sns-console.html?embed=1';
+      consoleLayer.classList.toggle('on', on);
+      if (on) setTimeout(() => { try { consoleLayer.contentWindow.focus(); } catch (_) {} }, 50);
+      else { consoleLayer.blur(); window.focus(); }
+    }
+
     document.addEventListener('keydown', e => {
+      if ((e.key === 'c' || e.key === 'C') && !e.metaKey && !e.ctrlKey && !e.altKey) { toggleConsole(); return; }
       if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); return; }
       if (e.key === 'a' || e.key === 'A') { outPanel.classList.toggle('show'); return; }
       if (!start.classList.contains('gone') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); begin(); return; }
@@ -328,6 +345,7 @@
     window.addEventListener('message', e => {
       const d = e.data || {};
       if (d.type === 'op-nav') d.dir === 'next' ? next() : prev();
+      else if (d.type === 'sns-console') toggleConsole(d.op === 'close' ? false : d.op === 'open' ? true : undefined);
     });
 
     // ── Comandi dalla console ──

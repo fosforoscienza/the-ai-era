@@ -284,6 +284,10 @@ async function loadSchede(folder) {
     const tag = (e.target && e.target.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
     const k = e.key, c = e.code;
+    if ((k === 'c' || k === 'C') && !e.metaKey && !e.ctrlKey && !e.altKey) {   // show SNS: apre la console
+      try { window.parent.postMessage({ type: 'sns-console', op: 'toggle' }, '*'); } catch (_) {}
+      return;
+    }
     const isNext = k === 'ArrowRight' || c === 'ArrowRight' || k === 'ArrowDown' || c === 'ArrowDown' ||
                    k === 'PageDown' || c === 'PageDown' || k === ' ' || k === 'Spacebar' || c === 'Space' ||
                    k === 'Enter' || c === 'Enter';
