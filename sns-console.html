@@ -54,8 +54,6 @@
     .onair .fx button.on { border-color: var(--live); background: rgba(255,77,94,0.18); color: #fff; }
     .onair .fx button.missing { opacity: .55; }
     .onair .fx small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
-    .onair .out { grid-column: 1 / -1; order: 9; font-size: 13px; color: var(--muted); margin-top: -6px; }
-    .onair.off .out { display: none; }
     .onair .what { font-size: 20px; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .nav { display: flex; gap: 8px; }
     .nav .btn { min-width: 48px; font-size: 18px; }
@@ -155,8 +153,6 @@
     .onair .fx button.on { border-color: var(--live); background: rgba(255,77,94,0.18); color: #fff; }
     .onair .fx button.missing { opacity: .55; }
     .onair .fx small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
-    .onair .out { grid-column: 1 / -1; order: 9; font-size: 13px; color: var(--muted); margin-top: -6px; }
-    .onair.off .out { display: none; }
     .onair .what { white-space: normal; font-size: 18px; }
       .vctl { flex-wrap: wrap; }
       .vctl input[type=range] { flex-basis: 100%; order: 3; }
@@ -177,7 +173,6 @@
     <section class="onair off" id="onair">
       <span class="tag"><i></i><span id="onair-tag">FUORI ONDA</span></span>
       <span class="what" id="onair-what">Apri lo show per iniziare</span>
-      <span class="out" id="onair-out"></span>
       <div class="nav">
         <button class="btn" id="prev" title="Precedente (←)">←</button>
         <button class="btn" id="next" title="Successiva (→)">→</button>
@@ -552,12 +547,9 @@
       $('onair-tag').textContent = alive ? 'IN ONDA' : 'FUORI ONDA';
       $('onair-what').textContent = !alive ? 'Apri lo show per iniziare'
         : show.blocked ? nameOf(show.id) + ' — bloccato: tocca lo schermo dello show'
-        : (show.jack === false && show.id && show.id.startsWith('video:')) ? nameOf(show.id) + ' — muto: jack non trovato sullo show'
         : (show.muted && show.id && show.id.startsWith('video:')) ? nameOf(show.id) + ' — senza audio: tocca lo schermo dello show'
         : nameOf(show.id);
-      $('onair-out').textContent = alive && show.out ? 'Audio dei video: ' + show.out : '';
       paintFx(alive);
-      $('onair-out').style.color = alive && show.jack === false ? 'var(--live)' : '';
       if (alive && show.id && show.id.startsWith('video:')) {
         $('v-play').textContent = show.playing ? 'Pausa' : 'Play';
         const t = show.playing ? Math.min(show.dur || 0, show.time + (Date.now() - (show.at || Date.now())) / 1000) : show.time;
@@ -587,7 +579,7 @@
     setInterval(() => { const net = ++ticks % 5 === 0; SNS.send({ t: 'hello', net }, !net); paint(); }, 2000);
     SNS.send({ t: 'hello', net: true });
 
-    // ── Suoni (es. Star Wars): suonano sullo show, dal jack ──
+    // ── Suoni (es. Star Wars): suonano sullo show ──
     SNS.SOUNDS.forEach(def => {
       const b = document.createElement('button');
       b.dataset.id = def.id;
@@ -605,8 +597,7 @@
         b.classList.toggle('on', on);
         b.classList.toggle('missing', missing);
         b.querySelector('span').textContent = (on ? '■ ' : '') + def.title;
-        b.querySelector('small').textContent = missing ? 'da caricare: trascina il file sullo show'
-          : (alive && show.jack === false) ? 'jack non trovato sullo show' : def.sub;
+        b.querySelector('small').textContent = missing ? 'da caricare: trascina il file sullo show' : def.sub;
       });
     }
 
