@@ -16,23 +16,38 @@ const SNS = (function () {
     // di Dartmouth). Stesso id della galleria video.
     { id: 'video:che-cose-il-machine-learning', video: true, thumb: 'img/che-cose-il-machine-learning-poster.jpg',
       title: "Che cos'è il machine learning", sub: 'Video · Cicerone AI' },
-    { id: 'slide:ospite-benvenuto', src: 'ospite.html?id=benvenuto', thumb: 'img/sns/ospite-benvenuto.jpg', title: 'Federico Benvenuto', sub: 'Intervista · DIMA' },
-    { id: 'slide:ospite-villa',     src: 'ospite.html?id=villa',     thumb: 'img/sns/ospite-villa.jpg',     title: 'Silvia Villa',      sub: 'Intervista · DIMA' },
-    { id: 'slide:ospite-rosasco',   src: 'ospite.html?id=rosasco',   thumb: 'img/sns/ospite-rosasco.jpg',   title: 'Lorenzo Rosasco',   sub: 'Intervista · DIBRIS' },
     { id: 'slide:adozione-trasporti', src: 'adozione-trasporti.html', thumb: 'img/sns/adozione-trasporti.jpg', title: 'Decenni',  sub: 'Tempi di adozione · Trasporti' },
     { id: 'slide:adozione-llm',       src: 'adozione-llm.html',       thumb: 'img/sns/adozione-llm.jpg',       title: 'Mesi',     sub: 'Tempi di adozione · LLM' },
     { id: 'slide:millennium',         src: 'millennium.html',         thumb: 'img/sns/millennium.jpg',         title: 'Una dimostrazione da $1.000.000', sub: 'Navier–Stokes e gli agenti AI' },
     // id usato anche da Jarvis («dammi le news»): non cambiarlo
-    { id: 'slide:news', src: 'news.html', thumb: 'img/sns/news.jpg', title: 'News', sub: 'crivellini.it' }
+    { id: 'slide:news', src: 'news.html', thumb: 'img/sns/news.jpg', title: 'News', sub: 'crivellini.it' },
+    // Dalla presentazione «The AI Era» (Geopolitica della AI)
+    { id: 'video:intro', video: true, thumb: 'img/intro-poster.jpg', title: 'Intro The AI Era', sub: 'Video · The AI Era' },
+    { id: 'slide:scrittura',        src: 'scrittura.html',        thumb: 'img/sns/scrittura.jpg',        title: 'Citazione',            sub: 'The AI Era' },
+    { id: 'slide:fotografia',       src: 'fotografia.html',       thumb: 'img/sns/fotografia.jpg',       title: 'Fotografia',           sub: 'The AI Era' },
+    { id: 'slide:napa-valley',      src: 'napa-valley.html',      thumb: 'img/sns/napa-valley.jpg',      title: 'Napa Valley',          sub: 'The AI Era' },
+    { id: 'slide:musk-page',        src: 'musk-page.html',        thumb: 'img/sns/musk-page.jpg',        title: 'Musk e Larry Page',    sub: 'The AI Era' },
+    { id: 'slide:musk-page-2',      src: 'musk-page-2.html',      thumb: 'img/sns/musk-page-2.jpg',      title: "Musk e Page — due visioni dell'AI", sub: 'The AI Era' },
+    { id: 'slide:musk-altman',      src: 'musk-altman.html',      thumb: 'img/sns/musk-altman.jpg',      title: 'Musk e Sam Altman',    sub: 'The AI Era' },
+    { id: 'slide:llm-occidentali',  src: 'llm-occidentali.html',  thumb: 'img/sns/llm-occidentali.jpg',  title: 'LLM occidentali',      sub: 'The AI Era' },
+    { id: 'slide:llm-asiatici',     src: 'llm-asiatici.html',     thumb: 'img/sns/llm-asiatici.jpg',     title: 'LLM asiatici',         sub: 'The AI Era' },
+    { id: 'slide:llm-russi',        src: 'llm-russi.html',        thumb: 'img/sns/llm-russi.jpg',        title: 'LLM russi',            sub: 'The AI Era' },
+    { id: 'slide:thiel',            src: 'thiel.html',            thumb: 'img/sns/thiel.jpg',            title: 'Peter Thiel',          sub: 'The AI Era' },
+    { id: 'slide:palantir-intro',   src: 'palantir-intro.html',   thumb: 'img/sns/palantir-intro.jpg',   title: 'Palantír',             sub: 'The AI Era' },
+    { id: 'slide:palantir-intro-2', src: 'palantir-intro-2.html', thumb: 'img/sns/palantir-intro-2.jpg', title: "Che cos'è un Palantír", sub: 'The AI Era' },
+    { id: 'slide:palantir',         src: 'palantir.html',         thumb: 'img/sns/palantir.jpg',         title: 'Palantir',             sub: 'The AI Era' },
+    { id: 'slide:paypal-mafia-2',   src: 'paypal-mafia-2.html',   thumb: 'img/sns/paypal-mafia-2.jpg',   title: 'PayPal Mafia',         sub: 'The AI Era' },
+    { id: 'slide:paypal-mafia-3',   src: 'paypal-mafia-3.html',   thumb: 'img/sns/paypal-mafia-3.jpg',   title: 'PayPal Mafia — foto',  sub: 'The AI Era' }
   ].concat(quizSlides());
   // Se cambia l'ordine predefinito (qui sopra), gli ordini salvati prima non valgono più
   const ORDER_BASE = SLIDES.map(x => x.id).join('|');
 
   // Quiz film (js/film-quiz-data.js): la soluzione compare sulla scheda della console.
+  // Nello show SNS solo i quiz trama (gli emoji restano per dashboard e onepage).
   function quizSlides() {
     if (typeof FILM_QUIZ === 'undefined') return [];
     const out = [];
-    [['emoji', 'Quiz emoji'], ['trama', 'Quiz trama']].forEach(([kind, label]) => {
+    [['trama', 'Quiz trama']].forEach(([kind, label]) => {
       FILM_QUIZ[kind].forEach((q, i) => out.push({
         id: 'slide:quiz-' + kind + '-' + (i + 1), src: 'quiz-' + kind + '-' + (i + 1) + '.html',
         thumb: 'img/sns/quiz-' + kind + '-' + (i + 1) + '.jpg',
@@ -46,7 +61,9 @@ const SNS = (function () {
   const VIDEOS = [
     { id: 'video:che-cose-il-machine-learning', src: 'video/che-cose-il-machine-learning.mp4',
       poster: 'img/che-cose-il-machine-learning-poster.jpg',
-      title: "Che cos'è il machine learning", sub: 'Cicerone AI', dur: 138 }
+      title: "Che cos'è il machine learning", sub: 'Cicerone AI', dur: 138 },
+    { id: 'video:intro', src: 'video/intro.m4v', poster: 'img/intro-poster.jpg',
+      title: 'Intro The AI Era', sub: 'The AI Era', dur: 60 }
   ];
 
   // ── Trasporto ──
