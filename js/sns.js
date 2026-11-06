@@ -25,7 +25,11 @@ const SNS = (function () {
     // Le 5 notizie AI più importanti (6 settembre – 6 novembre 2026), dalla 5 alla 1
     { id: 'slide:news-top-1', src: 'news-top.html?p=1', thumb: 'img/sns/news-top-1.jpg', title: 'Top 5 AI · 5 e 4', sub: 'Gemini 4 · Ottobre nero in Borsa' },
     { id: 'slide:news-top-2', src: 'news-top.html?p=2', thumb: 'img/sns/news-top-2.jpg', title: 'Top 5 AI · 3 e 2', sub: 'Anthropic verso la Borsa · GPT-6' },
-    { id: 'slide:news-top-3', src: 'news-top.html?p=3', thumb: 'img/sns/news-top-3.jpg', title: 'Top 5 AI · 1', sub: 'Navier–Stokes' },
+    // Rassegne stampa (rassegna.html + js/rassegna-data.js): titoli e prime pagine vere
+    { id: 'slide:rassegna-anthropic', src: 'rassegna.html?id=anthropic', thumb: 'img/sns/rassegna-anthropic.jpg', title: 'Anthropic verso la Borsa', sub: 'Rassegna stampa · n. 3' },
+    { id: 'slide:news-top-3', src: 'rassegna.html?id=navier', thumb: 'img/sns/news-top-3.jpg', title: 'Top 5 AI · 1', sub: 'Navier–Stokes · rassegna stampa' },
+    { id: 'slide:rassegna-frigo', src: 'rassegna.html?id=frigo', thumb: 'img/sns/rassegna-frigo.jpg', title: 'Frigoriferi hackerati', sub: 'Rassegna stampa · prime pagine 3 nov.' },
+    { id: 'slide:rassegna-php', src: 'rassegna.html?id=php', thumb: 'img/sns/rassegna-php.jpg', title: 'PHP2Shell', sub: 'Rassegna stampa · la falla trovata dall’AI' },
     { id: 'slide:referendum-midterm', src: 'referendum-midterm.html', thumb: 'img/sns/referendum-midterm.jpg', title: 'Midterm: referendum', sub: 'L’America vota contro i data center' },
     // Dalla presentazione «The AI Era» (Geopolitica della AI)
     // la voce del video intro (0:02–0:28): la suona lo show, la slide mostra le didascalie

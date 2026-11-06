@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rassegna stampa — SNS</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --accent: #41b7ff; --accent-soft: #8fd2ff; --ink: #02040b; --paper: #efe9dc; --print: #1b1b1b; --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: var(--ink) !important; overflow: hidden; height: 100%; margin: 0; }
+    body { font-family: inherit; }
+    .stage { position: fixed; inset: 0; overflow: hidden; display: grid; grid-template-columns: 1.25fr 1fr;
+      background: radial-gradient(70% 80% at 30% 50%, rgba(65,183,255,0.10), transparent 70%), var(--ink); }
+
+    /* ---------- Il tavolo con i giornali ---------- */
+    .desk { position: relative; overflow: hidden; }
+    .desk::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(60% 60% at 45% 50%, transparent 40%, rgba(2,4,11,.85) 100%); }
+    .pile { position: absolute; inset: 0; animation: drift 40s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+    @keyframes drift { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.06) translate(-1.5%, -1%); } }
+
+    .paper { position: absolute; transform-origin: 50% 50%; opacity: 0;
+      box-shadow: 0 30px 60px rgba(0,0,0,.55), 0 4px 10px rgba(0,0,0,.35);
+      animation: drop .9s var(--ease) forwards; }
+    @keyframes drop {
+      from { opacity: 0; transform: translate(var(--fx, 0), -40vh) rotate(calc(var(--r) * 3)) scale(1.15); }
+      to   { opacity: 1; transform: rotate(var(--r)); }
+    }
+    /* prima pagina vera (immagine) */
+    .paper.front img { display: block; width: 100%; height: auto; filter: sepia(.12) contrast(1.02); }
+    .paper.front .mark { position: absolute; border: 4px solid rgba(255,214,0,.0); border-radius: 6px; pointer-events: none;
+      animation: ring 1s var(--ease) forwards; }
+    @keyframes ring { to { border-color: rgba(255,214,0,.95); box-shadow: 0 0 24px rgba(255,214,0,.55), inset 0 0 0 9999px rgba(255,214,0,.10); } }
+    .paper.front .tag { position: absolute; left: 0; right: 0; bottom: -2.2em; text-align: center; font-size: clamp(10px, .75vw, 13px);
+      letter-spacing: .14em; text-transform: uppercase; color: rgba(230,236,245,.7); }
+
+    /* ritaglio di un articolo: carta di giornale, testata, data, titolo */
+    .paper.clip { width: var(--clipw, min(31vw, 540px)); padding: clamp(14px, 1.6vw, 26px) clamp(16px, 1.8vw, 30px) clamp(16px, 1.8vw, 28px);
+      color: var(--print); font-family: Georgia, 'Times New Roman', serif;
+      background-color: var(--paper);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+        linear-gradient(160deg, rgba(255,255,255,.35), rgba(120,100,60,.12));
+      clip-path: polygon(0 2%, 3% 0, 18% 1.5%, 33% 0, 51% 1.2%, 67% 0, 84% 1.6%, 100% 0, 99% 22%, 100% 47%, 98.8% 73%, 100% 100%, 82% 98.6%, 64% 100%, 47% 98.4%, 30% 100%, 13% 98.7%, 0 100%, 1.2% 76%, 0 51%, 1.4% 25%); }
+    .clip .masthead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+      border-bottom: 2px solid var(--print); padding-bottom: 6px; margin-bottom: 10px; }
+    .clip .masthead b { font-size: calc(clamp(15px, 1.35vw, 24px) * var(--k, 1)); font-weight: 700; letter-spacing: .02em; font-variant: small-caps; }
+    .clip .masthead span { font-family: 'Segoe UI', system-ui, sans-serif; font-size: clamp(9px, .7vw, 12px); letter-spacing: .14em; text-transform: uppercase; color: #555; white-space: nowrap; }
+    .clip h3 { margin: 0; font-size: calc(clamp(19px, 1.75vw, 32px) * var(--k, 1)); line-height: 1.12; font-weight: 700; position: relative; }
+    .clip h3 .hl { background-image: linear-gradient(transparent 55%, rgba(255,214,0,.75) 55%, rgba(255,214,0,.75) 92%, transparent 92%);
+      background-repeat: no-repeat; background-size: 0% 100%; animation: marker .8s ease-out forwards; }
+    @keyframes marker { to { background-size: 100% 100%; } }
+    .clip .lines { margin-top: 10px; height: 2.6em; opacity: .25;
+      background: repeating-linear-gradient(transparent 0 .62em, var(--print) .62em .7em); }
+
+    /* ---------- La notizia ---------- */
+    .copy { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: center;
+      padding: clamp(28px, 6vh, 70px) clamp(28px, 4.6vw, 90px) clamp(60px, 10vh, 110px) clamp(10px, 2vw, 40px); }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+    .kicker { font-size: clamp(12px, 1vw, 18px); font-weight: 700; letter-spacing: .32em; text-transform: uppercase; color: var(--accent-soft);
+      animation: rise .9s .2s var(--ease) both; }
+    .rank { display: inline-block; margin-right: 12px; padding: 2px 10px; border-radius: 999px; background: rgba(65,183,255,.18); border: 1px solid rgba(65,183,255,.5); letter-spacing: .1em; }
+    .title { margin: clamp(10px, 1.6vh, 18px) 0 6px; font-size: clamp(38px, 4vw, 80px); font-weight: 900; line-height: .98; letter-spacing: -.025em;
+      background: linear-gradient(180deg, #fff 30%, #8fd2ff 100%); -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent; animation: rise 1s .4s var(--ease) both; }
+    .date { font-size: clamp(12px, .95vw, 16px); letter-spacing: .2em; text-transform: uppercase; color: rgba(230,236,245,.55); animation: rise 1s .6s var(--ease) both; }
+    .lead { margin: clamp(16px, 2.6vh, 28px) 0 0; font-size: clamp(17px, 1.45vw, 27px); font-weight: 300; line-height: 1.4; color: #e2e8f0; animation: rise 1s .8s var(--ease) both; }
+    .lead b { color: #fff; font-weight: 700; }
+    .facts { display: flex; flex-wrap: wrap; gap: clamp(18px, 2.4vw, 44px); margin-top: clamp(20px, 3.4vh, 38px); }
+    .fact { animation: rise .9s var(--ease) both; }
+    .fact .n { display: block; font-size: clamp(32px, 3.3vw, 64px); font-weight: 900; line-height: 1; letter-spacing: -.03em; color: #fff; text-shadow: 0 0 36px rgba(65,183,255,.45); }
+    .fact .l { display: block; margin-top: 6px; font-size: clamp(11px, .85vw, 14px); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-soft); max-width: 16ch; }
+    .note { margin-top: clamp(18px, 3vh, 30px); font-size: clamp(10px, .75vw, 13px); letter-spacing: .12em; text-transform: uppercase; color: rgba(143,210,255,.5); animation: rise 1s 3.6s var(--ease) both; }
+
+    @media (max-aspect-ratio: 1/1) {
+      .stage { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+      .paper.clip { width: 70vw; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="desk"><div class="pile" id="pile"></div></div>
+    <div class="copy">
+      <div class="kicker" id="kicker"></div>
+      <h1 class="title" id="title"></h1>
+      <div class="date" id="date"></div>
+      <p class="lead" id="lead"></p>
+      <div class="facts" id="facts"></div>
+      <div class="note" id="note"></div>
+    </div>
+  </div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="#">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="#">&#8594;</a>
+
+  <div id="lang-toggle">
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/rassegna-data.js"></script>
+  <script>
+    // Rassegna stampa: rassegna.html?id=<chiave di RASSEGNA in js/rassegna-data.js>.
+    // Titoli e testate sono quelli veri degli articoli; le prime pagine sono immagini vere.
+    const key = new URLSearchParams(location.search).get('id') || Object.keys(RASSEGNA)[0];
+    const R = RASSEGNA[key];
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    // posizioni sul tavolo (% del riquadro), rotazione, larghezza per le prime pagine
+    // a cascata: ogni ritaglio copre solo le righe di testo di quello sotto, mai il titolo
+    const SPOTS = [
+      { x: 4,  y: 3,  r: -3 }, { x: 24, y: 17, r: 2.5 }, { x: 6,  y: 31, r: -2 },
+      { x: 26, y: 45, r: 3 },  { x: 5,  y: 59, r: -2.5 }, { x: 23, y: 73, r: 2 }, { x: 10, y: 86, r: -1 }
+    ];
+    function buildPile() {
+      const pile = document.getElementById('pile'); pile.textContent = '';
+      R.items.forEach((it, i) => {
+        const s = it.at || SPOTS[i % SPOTS.length], d = 0.6 + i * 0.42;
+        const el = document.createElement('div');
+        el.style.left = s.x + '%'; el.style.top = s.y + '%';
+        el.style.setProperty('--r', s.r + 'deg'); el.style.setProperty('--fx', (i % 2 ? 8 : -8) + 'vw');
+        el.style.animationDelay = d + 's'; el.style.zIndex = 10 + i;
+        if (it.img) {                                   // prima pagina vera
+          el.className = 'paper front'; el.style.width = (it.w || 26) + 'vw';
+          el.innerHTML = `<img src="${esc(it.img)}" alt="${esc(it.paper + ', ' + it.date)}"><span class="tag">${esc(it.paper)} · ${esc(it.date)}</span>` +
+            (it.box ? `<span class="mark" style="left:${it.box[0]}%;top:${it.box[1]}%;width:${it.box[2]}%;height:${it.box[3]}%;animation-delay:${(d + 0.9).toFixed(2)}s"></span>` : '');
+        } else {                                        // ritaglio dell'articolo
+          el.className = 'paper clip';
+          el.innerHTML = `<div class="masthead"><b>${esc(it.paper)}</b><span>${esc(it.date)}</span></div>
+            <h3><span class="hl" style="animation-delay:${(d + 0.8).toFixed(2)}s">${esc(it.headline)}</span></h3><div class="lines"></div>`;
+        }
+        pile.appendChild(el);
+      });
+      layoutClips();
+    }
+    // Ritagli a cascata: ognuno parte subito sotto il titolo del precedente, così
+    // copre solo le righe di testo; se non ci stanno, il testo si riduce un po'.
+    function layoutClips() {
+      const pile = document.getElementById('pile'), H = pile.clientHeight;
+      const clips = [...pile.querySelectorAll('.paper.clip')];
+      if (!clips.length) return;
+      if (R.clipW) pile.style.setProperty('--clipw', R.clipW);
+      const X = R.clipX || [4, 22], Y0 = R.clipTop || 0.035;
+      for (let k = 1; k >= 0.6; k -= 0.05) {
+        pile.style.setProperty('--k', k.toFixed(2));
+        let y = H * Y0;
+        clips.forEach((el, i) => {
+          el.style.top = y + 'px';
+          el.style.left = X[i % 2] + '%';
+          const h3 = el.querySelector('h3');
+          y += h3.offsetTop + h3.offsetHeight + 14;
+        });
+        const last = clips[clips.length - 1];
+        if (parseFloat(last.style.top) + last.offsetHeight <= H * 0.97) break;
+      }
+    }
+    addEventListener('resize', layoutClips);
+    function renderTexts() {
+      const t = R[lang] || R.it;
+      document.getElementById('kicker').innerHTML = (R.rank ? `<span class="rank">N. ${R.rank}</span>` : '') + esc(t.kicker);
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('date').textContent = t.date;
+      document.getElementById('lead').innerHTML = t.lead;
+      document.getElementById('note').textContent = t.note || '';
+      document.getElementById('facts').innerHTML = t.facts.map(([n, l], i) =>
+        `<div class="fact" style="animation-delay:${(1.4 + i * 0.3).toFixed(2)}s"><span class="n">${esc(n)}</span><span class="l">${esc(l)}</span></div>`).join('');
+    }
+    function onLangChange() { renderTexts(); }
+
+    initLangToggle();
+    buildPile();
+    renderTexts();
+    initNav();
+  </script>
+</body>
+</html>

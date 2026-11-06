@@ -181,7 +181,7 @@
     function onLangChange() { renderTexts(); }
 
     document.getElementById('nav-prev').href = pg === 1 ? 'news.html' : 'news-top.html?p=' + (pg - 1);
-    document.getElementById('nav-next').href = pg === 3 ? 'referendum-midterm.html' : 'news-top.html?p=' + (pg + 1);
+    document.getElementById('nav-next').href = pg === 2 ? 'rassegna.html?id=anthropic' : pg === 3 ? 'referendum-midterm.html' : 'news-top.html?p=' + (pg + 1);
     initLangToggle();
     renderTexts();
     initNav();
