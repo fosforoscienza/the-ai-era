@@ -90,8 +90,6 @@
   <div class="stage">
     <div class="head">
       <div class="eyebrow" id="eyebrow"></div>
-      <h1 class="name" id="name"></h1>
-      <p class="lead" id="lead"></p>
     </div>
 
     <div class="cols">
@@ -102,7 +100,7 @@
   </div>
 
   <div id="nav-dots"></div>
-  <a class="nav-arrow" id="nav-prev" href="dartmouth-1956.html">&#8592;</a>
+  <a class="nav-arrow" id="nav-prev" href="dartmouth-1956-voce.html">&#8592;</a>
   <a class="nav-arrow" id="nav-next" href="timeline.html">&#8594;</a>
 
   <div id="lang-toggle">
@@ -115,14 +113,10 @@
     const TXT = {
       it: {
         eyebrow: 'Dartmouth College · Estate 1956',
-        name: 'La nascita dell\'AI',
-        lead: '<span class="accent">«Ogni aspetto dell\'apprendimento e dell\'intelligenza può essere descritto così precisamente che una macchina potrà simularlo»</span>',
         h1: '<b>scienziati</b> firmano la proposta', h2: '<b>settimane</b> di lavoro', h3: '<b>parola nuova</b>: «Artificial Intelligence»'
       },
       en: {
         eyebrow: 'Dartmouth College · Summer 1956',
-        name: 'The birth of AI',
-        lead: '<span class="accent">“Every aspect of learning or any other feature of intelligence can be so precisely described that a machine can be made to simulate it”</span>',
         h1: '<b>scientists</b> sign the proposal', h2: '<b>weeks</b> of work', h3: '<b>new phrase</b>: “Artificial Intelligence”'
       }
     };
@@ -130,7 +124,7 @@
     function set(id, html){ document.getElementById(id).innerHTML = html; }
     function renderTexts() {
       const t = TXT[lang];
-      ['eyebrow','name','lead','h1','h2','h3'].forEach(k => set(k, t[k]));
+      ['eyebrow','h1','h2','h3'].forEach(k => set(k, t[k]));
     }
     function onLangChange() { renderTexts(); }
 

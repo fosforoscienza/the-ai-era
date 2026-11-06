@@ -10,7 +10,8 @@ const SNS = (function () {
   // esauriscono la memoria dei telefoni). Si rigenera dopo ogni modifica.
   const SLIDES = [
     { id: 'slide:saturday-night-science', src: 'saturday-night-science.html', thumb: 'img/sns/saturday-night-science.jpg', title: 'The AI Era',             sub: 'Copertina · CICAP Fest' },
-    { id: 'slide:dartmouth-1956-2',       src: 'dartmouth-1956-2.html', thumb: 'img/sns/dartmouth-1956-2.jpg',       title: "La nascita dell'AI",     sub: 'Proposta · Pionieri · Promessa' },
+    { id: 'slide:dartmouth-1956-voce',    src: 'dartmouth-1956-voce.html', thumb: 'img/sns/dartmouth-1956-voce.jpg', title: "La nascita dell'AI",     sub: 'La voce della proposta' },
+    { id: 'slide:dartmouth-1956-2',       src: 'dartmouth-1956-2.html', thumb: 'img/sns/dartmouth-1956-2.jpg',       title: '4 · 8 · 1',              sub: 'Firmatari · Settimane · Una parola nuova' },
     { id: 'slide:dartmouth-1956',         src: 'dartmouth-1956.html', thumb: 'img/sns/dartmouth-1956.jpg',         title: 'Dartmouth 1956',         sub: 'Copertina' },
     // Il video sul machine learning fa parte della sequenza (quarto, dopo la foto
     // di Dartmouth). Stesso id della galleria video.

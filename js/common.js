@@ -39,7 +39,7 @@ function initLangToggle() {
 const DEFAULT_PAGES = [
   'saturday-night-science.html', 'index.html', 'video.html', 'scrittura.html', 'fotografia.html',
   'pechino-1.html', 'pechino-2.html', 'pechino-3.html',
-  'dartmouth-1956.html', 'dartmouth-1956-2.html',
+  'dartmouth-1956.html', 'dartmouth-1956-voce.html', 'dartmouth-1956-2.html',
   'timeline.html', 'napa-valley.html', 'musk-page.html', 'musk-page-2.html', 'musk-altman.html', 'paesi.html', 'leader.html',
   'trump-amodei.html', 'anthropic-usa-1.html', 'anthropic-usa-2.html', 'anthropic-usa-3.html', 'anthropic-usa-4.html',
   'llm-occidentali.html', 'llm-asiatici.html', 'llm-russi.html',
