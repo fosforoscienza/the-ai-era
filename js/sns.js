@@ -13,6 +13,7 @@ const SNS = (function () {
     { id: 'slide:dartmouth-1956-voce',    src: 'dartmouth-1956-voce.html', thumb: 'img/sns/dartmouth-1956-voce.jpg', title: "La nascita dell'AI",     sub: 'La voce della proposta' },
     { id: 'slide:dartmouth-1956-2',       src: 'dartmouth-1956-2.html', thumb: 'img/sns/dartmouth-1956-2.jpg',       title: '4 · 8 · 1',              sub: 'Firmatari · Settimane · Una parola nuova' },
     { id: 'slide:dartmouth-1956',         src: 'dartmouth-1956.html', thumb: 'img/sns/dartmouth-1956.jpg',         title: 'Dartmouth 1956',         sub: 'Copertina' },
+    { id: 'slide:cos-e-ai',              src: 'cos-e-ai.html', thumb: 'img/sns/cos-e-ai.jpg',                     title: "Cos'è l'AI?",            sub: 'AI · ML · reti neurali · deep learning · generativa' },
     // Il video sul machine learning fa parte della sequenza (quarto, dopo la foto
     // di Dartmouth). Stesso id della galleria video.
     { id: 'video:che-cose-il-machine-learning', video: true, thumb: 'img/che-cose-il-machine-learning-poster.jpg',

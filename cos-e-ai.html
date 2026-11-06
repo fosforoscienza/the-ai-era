@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cos'è l'AI — Saturday Night Science</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --accent: #41b7ff; --accent-soft: #8fd2ff; --ease: cubic-bezier(0.16,1,0.3,1);
+            --c0: #ff5468; --c1: #8fd2ff; --c2: #5cc3ff; --c3: #2f9cf0; --c4: #41e0ff; }
+    html, body { background: #02040b !important; overflow: hidden; height: 100%; margin: 0; }
+    body { font-family: inherit; color: #fff; }
+    .bg { position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(55% 70% at 70% 60%, rgba(65,183,255,0.12), transparent 70%),
+                  radial-gradient(40% 50% at 10% 10%, rgba(255,84,104,0.06), transparent 70%); }
+
+    /* ---------- Colonna sinistra: titolo e i cinque livelli ---------- */
+    .left { position: fixed; z-index: 2; left: 6vw; top: 50%; transform: translateY(-50%); width: 36vw; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 12px; font-size: clamp(12px, 0.95vw, 17px); font-weight: 700; letter-spacing: 0.34em;
+      text-transform: uppercase; color: var(--accent-soft); animation: up 0.8s var(--ease) 0.2s both; }
+    .eyebrow::before { content: ''; width: 34px; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+    h1 { margin: 1.6vh 0 0; font-size: clamp(48px, 5.4vw, 104px); font-weight: 900; letter-spacing: -0.03em; line-height: 0.95;
+      width: max-content; padding-right: 0.05em;
+      background: linear-gradient(180deg, #fff 35%, #cfe9ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+      animation: up 0.9s var(--ease) 0.35s both; }
+    .lead { margin: 1.4vh 0 4vh; font-size: clamp(18px, 1.7vw, 32px); font-weight: 300; font-style: italic; color: rgba(255,255,255,0.75); animation: up 0.9s var(--ease) 0.5s both; }
+    .lead b { font-style: normal; font-weight: 700; color: #fff; }
+    .list { display: grid; gap: 1vh; }
+    .it { display: grid; grid-template-columns: auto 1fr; gap: 0 1vw; align-items: start; padding: 1.1vh 1vw; border-radius: 12px; border: 1px solid transparent;
+      animation: up 0.7s var(--ease) both; transition: background 0.4s, border-color 0.4s, opacity 0.4s; }
+    .it .dot { width: 1.6vh; height: 1.6vh; margin-top: 0.7vh; border-radius: 50%; background: var(--c); box-shadow: 0 0 1.4vh var(--c); }
+    .it .nm { display: block; font-size: clamp(16px, 1.45vw, 28px); font-weight: 800; }
+    .it span { display: block; margin-top: 0.4vh; font-size: clamp(12px, 1vw, 19px); line-height: 1.35; color: #b8c7da; }
+    .it span em { font-style: normal; color: var(--accent-soft); }
+    .it span b { color: #fff; font-weight: 700; }
+    .list.cycling .it:not(.on) > * { opacity: 0.42; transition: opacity 0.4s; }
+    .list.cycling .it.on { opacity: 1; background: rgba(65,183,255,0.09); border-color: rgba(143,210,255,0.28); }
+
+    /* ---------- Destra: cerchi annidati, uno dentro l'altro ---------- */
+    .viz { position: fixed; z-index: 1; right: 3vw; top: 50%; transform: translateY(-50%); height: 88vh; aspect-ratio: 1000 / 900; }
+    .viz svg { width: 100%; height: 100%; overflow: visible; }
+    .ring { fill: var(--c); fill-opacity: 0; stroke: var(--c); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1;
+      animation: draw 1.4s var(--ease) both, fillIn 1s ease both; transition: stroke-width 0.4s, filter 0.4s, fill-opacity 0.4s; }
+    .ring.on { stroke-width: 6; filter: drop-shadow(0 0 14px var(--c)); }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes fillIn { to { fill-opacity: var(--fo); } }
+    .tag { opacity: 0; animation: pop 0.7s var(--ease) both; transform-box: fill-box; transform-origin: center; }
+    .tag rect { fill: #02040b; stroke: var(--c); stroke-width: 2; }
+    .tag text { fill: #fff; font-weight: 800; font-size: 34px; letter-spacing: 0.01em; }
+    .tag.on rect { fill: var(--c); }
+    .tag.on text { fill: #02040b; }
+    @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(0.9); } to { opacity: 1; transform: none; } }
+    @keyframes up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } .tag { opacity: 1; } .ring { stroke-dashoffset: 0; fill-opacity: var(--fo); } }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <div class="left">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="title"></h1>
+    <div class="lead" id="lead"></div>
+    <div class="list" id="list"></div>
+  </div>
+
+  <div class="viz"><svg id="viz" viewBox="0 0 1000 900"></svg></div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="#">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="#">&#8594;</a>
+  <div id="lang-toggle">
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // Dal più grande al più piccolo: ogni insieme sta dentro il precedente.
+    const LEVELS = [
+      { c: 'var(--c0)', fo: 0.04, it: ['Intelligenza artificiale', 'Macchine che svolgono compiti che per noi richiedono intelligenza. Anche con regole scritte a mano: <em>il computer che gioca a scacchi</em>.'],
+                                   en: ['Artificial intelligence', 'Machines doing tasks that take intelligence for us. Even with hand-written rules: <em>the chess-playing computer</em>.'] },
+      { c: 'var(--c1)', fo: 0.06, it: ['Machine learning', 'Non regole scritte: la macchina <b>impara dagli esempi</b>. <em>Il filtro antispam</em>.'],
+                                   en: ['Machine learning', 'No hand-written rules: the machine <b>learns from examples</b>. <em>The spam filter</em>.'] },
+      { c: 'var(--c2)', fo: 0.08, it: ['Reti neurali', 'Tanti «neuroni» artificiali collegati, ispirati al cervello. <em>Leggere le cifre scritte a mano</em>.'],
+                                   en: ['Neural networks', 'Many artificial «neurons» wired together, inspired by the brain. <em>Reading handwritten digits</em>.'] },
+      { c: 'var(--c3)', fo: 0.12, it: ['Deep learning', 'Reti con <b>molti strati</b>, addestrate su enormi quantità di dati. <em>Riconoscere volti, tradurre</em>.'],
+                                   en: ['Deep learning', 'Networks with <b>many layers</b>, trained on huge amounts of data. <em>Recognising faces, translating</em>.'] },
+      { c: 'var(--c4)', fo: 0.30, it: ['AI generativa', '<b>Crea</b> contenuti nuovi: testi, immagini, voci, codice. <em>ChatGPT, Claude, Gemini</em>.'],
+                                   en: ['Generative AI', '<b>Creates</b> new content: text, images, voices, code. <em>ChatGPT, Claude, Gemini</em>.'] }
+    ];
+    const TXT = {
+      it: { eyebrow: 'Prima di tutto', title: "Cos'è l'AI?", lead: 'Facciamo un po’ di <b>ordine</b>' },
+      en: { eyebrow: 'First things first', title: 'What is AI?', lead: 'Let’s put things in <b>order</b>' }
+    };
+
+    // geometria: ellissi che poggiano tutte quasi sullo stesso fondo, come una scodella
+    const NS = 'http://www.w3.org/2000/svg', svg = document.getElementById('viz');
+    const G = LEVELS.map((_, k) => { const rx = 470 - 75 * k, ry = 420 - 78 * k, bottom = 890 - 14 * k; return { cx: 500, cy: bottom - ry, rx, ry }; });
+    const rings = G.map((g, k) => {
+      const e = document.createElementNS(NS, 'ellipse');
+      ['cx', 'cy', 'rx', 'ry'].forEach(a => e.setAttribute(a, g[a]));
+      e.setAttribute('pathLength', '1'); e.setAttribute('class', 'ring');
+      e.style.setProperty('--c', LEVELS[k].c); e.style.setProperty('--fo', LEVELS[k].fo);
+      e.style.animationDelay = `${0.6 + k * 0.45}s, ${0.9 + k * 0.45}s`;
+      svg.appendChild(e); return e;
+    });
+    let tags = [];
+    function drawTags() {
+      tags.forEach(t => t.remove());
+      tags = G.map((g, k) => {
+        const grp = document.createElementNS(NS, 'g'); grp.setAttribute('class', 'tag'); grp.style.setProperty('--c', LEVELS[k].c);
+        grp.style.animationDelay = (1.2 + k * 0.45).toFixed(2) + 's';
+        const r = document.createElementNS(NS, 'rect'), t = document.createElementNS(NS, 'text');
+        t.textContent = LEVELS[k][lang][0]; t.setAttribute('text-anchor', 'middle'); t.setAttribute('dominant-baseline', 'central');
+        const y = g.cy - g.ry + (k === 4 ? 70 : 52);
+        t.setAttribute('x', 500); t.setAttribute('y', y);
+        grp.appendChild(r); grp.appendChild(t); svg.appendChild(grp);
+        const w = t.getComputedTextLength() + 44;
+        r.setAttribute('x', 500 - w / 2); r.setAttribute('y', y - 28); r.setAttribute('width', w); r.setAttribute('height', 56); r.setAttribute('rx', 10);
+        return grp;
+      });
+    }
+
+    let items = [];
+    function renderTexts() {
+      const t = TXT[lang];
+      document.getElementById('eyebrow').textContent = t.eyebrow;
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('lead').innerHTML = t.lead;
+      const list = document.getElementById('list'); list.textContent = '';
+      items = LEVELS.map((L, k) => {
+        const el = document.createElement('div'); el.className = 'it'; el.style.setProperty('--c', L.c);
+        el.style.animationDelay = (0.9 + k * 0.45).toFixed(2) + 's';
+        el.innerHTML = `<i class="dot"></i><div><b class="nm">${L[lang][0]}</b><span>${L[lang][1]}</span></div>`;
+        list.appendChild(el); return el;
+      });
+      drawTags();
+      if (cur >= 0) light(cur);
+    }
+    function onLangChange() { renderTexts(); }
+
+    // poi, un livello alla volta: anello, etichetta e riga della lista si accendono insieme
+    let cur = -1;
+    function light(k) {
+      rings.forEach((r, i) => r.classList.toggle('on', i === k));
+      tags.forEach((t, i) => t.classList.toggle('on', i === k));
+      items.forEach((it, i) => it.classList.toggle('on', i === k));
+    }
+
+    initLangToggle();
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(renderTexts);
+    initNav();
+    setTimeout(() => { document.getElementById('list').classList.add('cycling'); cur = 0; light(0);
+      setInterval(() => { cur = (cur + 1) % LEVELS.length; light(cur); }, 3200); }, 3800);
+  </script>
+</body>
+</html>
