@@ -99,6 +99,10 @@
     .grip:hover { color: var(--text); background: rgba(143,210,255,0.08); }
     .grip svg { width: 18px; height: 18px; }
     .card.placeholder { opacity: 0.25; border-style: dashed; }
+    /* la scheda intera si trascina: niente selezione né menu del tocco lungo */
+    #slides .card { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+    #slides .card img { -webkit-user-drag: none; pointer-events: none; }
+    #slides .card.pressing { transform: scale(0.97); border-color: var(--accent); transition: transform .3s, border-color .3s; }
     .card.ghost { position: fixed; z-index: 100; pointer-events: none; margin: 0; opacity: 0.95;
       transform: scale(1.03) rotate(-0.6deg); box-shadow: 0 24px 60px rgba(0,0,0,0.55); border-color: var(--accent); }
     body.dragging { cursor: grabbing; -webkit-user-select: none; user-select: none; }
@@ -201,7 +205,7 @@
     </details>
 
     <section>
-      <h2>Slide <span>tocca per mandarla in onda · trascina ⠿ per riordinare · × per eliminare</span><button class="reset" id="reset-order" hidden>Ordine iniziale</button></h2>
+      <h2>Slide <span>tocca per mandarla in onda · trascinala per riordinare (col dito: tieni premuto, poi sposta) · × per eliminare</span><button class="reset" id="reset-order" hidden>Ordine iniziale</button></h2>
       <div class="grid" id="slides"></div>
       <div class="trash" id="trash" hidden><span class="lbl">Eliminate</span></div>
     </section>
@@ -304,10 +308,16 @@
         if (s.solution) card.querySelector('small').classList.add('sol');
         const del = card.querySelector('.del');
         del.addEventListener('click', e => { e.stopPropagation(); deleteSlide(s.id); });
-        card.addEventListener('click', () => SNS.send({ t: 'go', id: s.id }));
+        card.addEventListener('click', () => { if (Date.now() > noClickUntil) SNS.send({ t: 'go', id: s.id }); });
+        card.addEventListener('pointerdown', e => pressCard(card, e));
+        card.addEventListener('contextmenu', e => e.preventDefault());
         const grip = card.querySelector('.grip');
         grip.addEventListener('click', e => e.stopPropagation());
-        grip.addEventListener('pointerdown', e => startDrag(card, grip, e));
+        grip.addEventListener('pointerdown', e => {
+          if (e.button > 0) return;
+          e.preventDefault(); e.stopPropagation();
+          startDrag(card, e.clientX, e.clientY, e.pointerId);
+        });
         $('slides').appendChild(card);
       });
       $('reset-order').hidden = order.join() === defaultOrder().join();
@@ -318,33 +328,68 @@
       $('slides').querySelectorAll('.card').forEach((c, i) => { c.querySelector('.num').textContent = i + 1; });
     }
 
-    // Trascinamento con il dito o il mouse, dalla maniglia ⠿
-    let drag = null;
-    function startDrag(card, grip, e) {
-      if (e.button > 0) return;
-      e.preventDefault(); e.stopPropagation();
+    // Manipolazione diretta: si sposta la scheda stessa (o la maniglia ⠿).
+    // Mouse: basta muoverla di qualche pixel. Dito: tieni premuto un attimo e
+    // poi sposta; uno strisciare veloce fa scorrere la pagina come sempre.
+    const MOUSE_SLOP = 6, TOUCH_SLOP = 10, HOLD_MS = 300;
+    let drag = null, press = null, noClickUntil = 0;
+    function pressCard(card, e) {
+      if (drag || press || e.button > 0 || e.target.closest('.del, .grip')) return;
+      press = { card, pid: e.pointerId, x: e.clientX, y: e.clientY, touch: e.pointerType !== 'mouse', timer: 0 };
+      if (press.touch) {
+        card.classList.add('pressing');
+        press.timer = setTimeout(() => {
+          if (!press) return;
+          const p = press; clearPress();
+          if (navigator.vibrate) try { navigator.vibrate(12); } catch (_) {}
+          startDrag(p.card, p.x, p.y, p.pid);
+        }, HOLD_MS);
+      }
+    }
+    function clearPress() {
+      if (!press) return;
+      clearTimeout(press.timer);
+      press.card.classList.remove('pressing');
+      press = null;
+    }
+    addEventListener('pointermove', e => {
+      if (!press || e.pointerId !== press.pid) return;
+      const d = Math.hypot(e.clientX - press.x, e.clientY - press.y);
+      if (press.touch) { if (d > TOUCH_SLOP) clearPress(); return; }   // il dito sta scorrendo la pagina
+      if (d > MOUSE_SLOP) {
+        const p = press; clearPress();
+        startDrag(p.card, p.x, p.y, p.pid);
+        moveDrag(e);
+      }
+    });
+    ['pointerup', 'pointercancel'].forEach(t => addEventListener(t, e => { if (press && e.pointerId === press.pid) clearPress(); }));
+    // durante il trascinamento col dito la pagina non deve scorrere
+    document.addEventListener('touchmove', e => { if (drag) e.preventDefault(); }, { passive: false });
+
+    function startDrag(card, x, y, pid) {
+      if (drag) return;
       const r = card.getBoundingClientRect();
       const ghost = card.cloneNode(true);
-      ghost.classList.add('ghost'); ghost.classList.remove('live');
+      ghost.classList.add('ghost'); ghost.classList.remove('live', 'pressing');
       Object.assign(ghost.style, { width: r.width + 'px', left: r.left + 'px', top: r.top + 'px' });
       document.body.appendChild(ghost);
       card.classList.add('placeholder');
       document.body.classList.add('dragging');
-      try { grip.setPointerCapture(e.pointerId); } catch (_) {}
-      drag = { card, grip, ghost, dx: e.clientX - r.left, dy: e.clientY - r.top, x: e.clientX, y: e.clientY, raf: 0 };
-      grip.addEventListener('pointermove', moveDrag);
-      grip.addEventListener('pointerup', endDrag);
-      grip.addEventListener('pointercancel', endDrag);
+      try { card.setPointerCapture(pid); } catch (_) {}
+      drag = { card, ghost, pid, dx: x - r.left, dy: y - r.top, x, y, raf: 0 };
+      addEventListener('pointermove', moveDrag);
+      addEventListener('pointerup', endDrag);
+      addEventListener('pointercancel', endDrag);
       drag.raf = requestAnimationFrame(autoScroll);
     }
     function moveDrag(e) {
-      if (!drag) return;
+      if (!drag || e.pointerId !== drag.pid) return;
       drag.x = e.clientX; drag.y = e.clientY;
       drag.ghost.style.left = (e.clientX - drag.dx) + 'px';
       drag.ghost.style.top = (e.clientY - drag.dy) + 'px';
       // la scheda più vicina al dito decide il nuovo posto
       let best = null, bestD = Infinity;
-      $('slides').querySelectorAll('.card').forEach(c => {
+      $('slides').querySelectorAll('.card:not(.drop)').forEach(c => {
         if (c === drag.card) return;
         const r = c.getBoundingClientRect();
         const d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
@@ -365,16 +410,17 @@
       else if (drag.y > innerHeight - edge) window.scrollBy(0, Math.ceil((drag.y - innerHeight + edge) / 6));
       drag.raf = requestAnimationFrame(autoScroll);
     }
-    function endDrag() {
-      if (!drag) return;
+    function endDrag(e) {
+      if (!drag || (e && e.pointerId !== drag.pid)) return;
       cancelAnimationFrame(drag.raf);
-      drag.grip.removeEventListener('pointermove', moveDrag);
-      drag.grip.removeEventListener('pointerup', endDrag);
-      drag.grip.removeEventListener('pointercancel', endDrag);
+      removeEventListener('pointermove', moveDrag);
+      removeEventListener('pointerup', endDrag);
+      removeEventListener('pointercancel', endDrag);
       drag.ghost.remove();
       drag.card.classList.remove('placeholder');
       document.body.classList.remove('dragging');
       drag = null;
+      noClickUntil = Date.now() + 400;          // il rilascio non manda in onda la scheda
       const ids = [...$('slides').querySelectorAll('.card')].map(c => c.dataset.id);
       if (ids.join() !== order.join()) { order = ids; saveOrder(true); paint(); }
     }
