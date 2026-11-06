@@ -109,8 +109,10 @@
     let order = SNS.SLIDES.slice();
     let deleted = [];               // slide eliminate dalla console: fuori dalla sequenza
     try { const d = JSON.parse(localStorage.getItem(DELETED_KEY)); if (Array.isArray(d)) deleted = d; } catch (_) {}
-    function setOrder(ids, del) {
+    let orderRev = 0;               // quando è stata fatta l'ultima modifica in console: vince la più recente
+    function setOrder(ids, del, rev) {
       if (!Array.isArray(ids)) return false;
+      if (rev) orderRev = Math.max(orderRev, +rev || 0);
       if (Array.isArray(del)) {
         deleted = del;
         try { localStorage.setItem(DELETED_KEY, JSON.stringify(deleted)); } catch (_) {}
@@ -122,12 +124,12 @@
       order = next;
       const cur = order.findIndex(x => x.id === current);
       if (cur >= 0) slideIdx = cur;
-      try { localStorage.setItem(ORDER_KEY, JSON.stringify({ base: SNS.ORDER_BASE, ids: order.map(x => x.id) })); } catch (_) {}
+      try { localStorage.setItem(ORDER_KEY, JSON.stringify({ base: SNS.ORDER_BASE, ids: order.map(x => x.id), rev: orderRev })); } catch (_) {}
       return changed;
     }
     try {                                     // resta valido anche se la scaletta predefinita cambia
       const saved = JSON.parse(localStorage.getItem(ORDER_KEY));
-      if (saved && Array.isArray(saved.ids)) setOrder(saved.ids);
+      if (saved && Array.isArray(saved.ids)) setOrder(saved.ids, undefined, saved.rev);
     } catch (_) {}
     let videoURL = null;
     let lang = localStorage.getItem('geopolitica-lang') || 'it';
@@ -138,7 +140,7 @@
       return { t: 'state', id: current, lang, media,
         playing: media ? !m.paused && !m.ended : false,
         time: m.currentTime || 0, dur: isFinite(m.duration) ? m.duration : 0,
-        fs: !!document.fullscreenElement, order: order.map(x => x.id), base: SNS.ORDER_BASE, deleted, blocked: tap.classList.contains('show'), muted: vid.muted, sound: soundNow, sounds: soundsLoaded, at: Date.now() };
+        fs: !!document.fullscreenElement, order: order.map(x => x.id), base: SNS.ORDER_BASE, rev: orderRev, deleted, blocked: tap.classList.contains('show'), muted: vid.muted, sound: soundNow, sounds: soundsLoaded, at: Date.now() };
     }
     function report(local) { SNS.send(state(), local); }
 
@@ -357,7 +359,10 @@
           else if (m.op === 'restart') { vid.currentTime = 0; playVideo(); }
           else if (m.op === 'seek' && isFinite(m.time)) vid.currentTime = m.time;
           break;
-        case 'order': if (setOrder(m.ids, m.deleted)) report(); break;
+        case 'order':                          // una scaletta più vecchia di quella in onda non la sostituisce
+          if (m.rev && +m.rev < orderRev) report();
+          else if (setOrder(m.ids, m.deleted, m.rev) || m.rev) report();
+          break;
         case 'sound': toggleSound(m.id, m.op); break;
         case 'hello': report(!m.net); break;   // risponde sullo stesso canale del ping
       }

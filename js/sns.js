@@ -50,7 +50,9 @@ const SNS = (function () {
     { id: 'slide:palantir',         src: 'palantir.html',         thumb: 'img/sns/palantir.jpg',         title: 'Palantir',             sub: 'The AI Era' },
     { id: 'slide:paypal-mafia-2',   src: 'paypal-mafia-2.html',   thumb: 'img/sns/paypal-mafia-2.jpg',   title: 'PayPal Mafia',         sub: 'The AI Era' },
     { id: 'slide:paypal-mafia-3',   src: 'paypal-mafia-3.html',   thumb: 'img/sns/paypal-mafia-3.jpg',   title: 'PayPal Mafia — foto',  sub: 'The AI Era' }
-  ].concat(quizSlides());
+  ].concat(quizSlides(), [
+    { id: 'slide:grazie',           src: 'grazie.html',           thumb: 'img/sns/grazie.jpg',           title: 'Grazie',               sub: 'Chiusura · social e Fosforo' }
+  ]);
   const ORDER_BASE = SLIDES.map(x => x.id).join('|');
   // Un ordine salvato resta valido anche quando la scaletta predefinita cambia:
   // si tengono le slide note e non eliminate, quelle nuove (o ripristinate)

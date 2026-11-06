@@ -238,18 +238,32 @@
     try { const d = JSON.parse(localStorage.getItem(DELETED_KEY)); if (Array.isArray(d)) deleted = d; } catch (_) {}
     const defaultOrder = () => SNS.SLIDES.map(x => x.id).filter(id => !deleted.includes(id));
     let order = defaultOrder(), orderSaved = false;
+    // rev = quando è stata fatta l'ultima modifica (riordino, eliminazione, ripristino).
+    // Fra console e show vince sempre la modifica più recente, ovunque sia stata fatta.
+    let rev = 0;
     // Tiene solo le slide note e non eliminate; quelle mancanti (nuove o
     // ripristinate) tornano al loro posto naturale, dopo la vicina che le precede.
     const normalize = ids => SNS.normalize(ids, deleted);
     try {                                     // resta valido anche se la scaletta predefinita cambia
       const saved = JSON.parse(localStorage.getItem(ORDER_KEY));
-      if (saved && Array.isArray(saved.ids)) { order = normalize(saved.ids); orderSaved = true; }
+      if (saved && Array.isArray(saved.ids)) { order = normalize(saved.ids); orderSaved = true; rev = +saved.rev || 0; }
     } catch (_) {}
+    function store() {
+      try { localStorage.setItem(ORDER_KEY, JSON.stringify({ base: SNS.ORDER_BASE, ids: order, rev })); localStorage.setItem(DELETED_KEY, JSON.stringify(deleted)); } catch (_) {}
+    }
+    function sendOrder() { SNS.send({ t: 'order', ids: order, deleted, rev }); }
     function saveOrder(send) {
-      orderSaved = true;
-      try { localStorage.setItem(ORDER_KEY, JSON.stringify({ base: SNS.ORDER_BASE, ids: order })); localStorage.setItem(DELETED_KEY, JSON.stringify(deleted)); } catch (_) {}
+      orderSaved = true; rev = Date.now();
+      store();
       $('reset-order').hidden = order.join() === defaultOrder().join();
-      if (send) { SNS.send({ t: 'order', ids: order, deleted }); flashSaved(); }
+      if (send) { sendOrder(); flashSaved(); }
+    }
+    // Scaletta più recente arrivata da un'altra console o dallo show: la si adotta e la si salva qui
+    function adoptOrder(ids, del, r) {
+      if (drag) return;                       // non si cambia la griglia sotto il dito: ci pensa il prossimo ping
+      if (Array.isArray(del)) deleted = del.filter(id => SNS.SLIDES.some(x => x.id === id));
+      order = normalize(ids); rev = r || rev; orderSaved = true;
+      store(); renderSlides(); paint();
     }
     // conferma discreta: la nuova scaletta è salvata qui e mandata allo show
     let savedTimer = null;
@@ -566,14 +580,16 @@
         // ordine diverso sullo show: se qui è stato scelto, o se lo show ne ha uno nato da
         // un ordine predefinito vecchio, si manda il nostro; altrimenti si adotta il suo
         if (Array.isArray(m.order) && m.order.join() !== order.join()) {
-          if (orderSaved || m.base !== SNS.ORDER_BASE) SNS.send({ t: 'order', ids: order, deleted });
-          else {
-            if (Array.isArray(m.deleted)) deleted = m.deleted.filter(id => SNS.SLIDES.some(x => x.id === id));
-            order = normalize(m.order); renderSlides();
-          }
+          const theirs = +m.rev || 0;
+          if (theirs > rev) adoptOrder(m.order, m.deleted, theirs);           // lo show ha una modifica più nuova
+          else if (rev > theirs) sendOrder();                                  // la nostra è più nuova
+          else if (orderSaved || m.base !== SNS.ORDER_BASE) sendOrder();
+          else adoptOrder(m.order, m.deleted, theirs);
         }
         paint();
       }
+      // un'altra console ha riordinato, eliminato o ripristinato
+      else if (m.t === 'order' && Array.isArray(m.ids) && (+m.rev || 0) > rev) adoptOrder(m.ids, m.deleted, +m.rev);
       else if (m.t === 'show-ready') SNS.send({ t: 'hello', net: true });
     });
     // Ping: ogni 2 s nello stesso browser, ogni 10 s sulla rete

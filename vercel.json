@@ -1,4 +1,5 @@
 {
+  "buildCommand": "sh scripts/sns-config.sh",
   "redirects": [
     { "source": "/", "destination": "/show", "permanent": false }
   ],
