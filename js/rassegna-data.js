@@ -101,5 +101,53 @@ const RASSEGNA = {
       { paper: 'Fanpage', date: 'ottobre 2026', headline: 'Tempesta di attacchi informatici in tutto il mondo: IA svela falla critica nei siti in PHP e gli hacker ne approfittano' },
       { paper: 'ICT Business', date: 'ottobre 2026', headline: 'Vulnerabilità di Php scoperte con l’AI, tra le più gravi della storia del software' }
     ]
+  },
+
+  // Buone notizie dalla medicina (titoli verificati il 7 novembre 2026)
+  medicina: {
+    it: {
+      kicker: 'Medicina · rassegna stampa', title: 'Buone notizie dalla medicina', date: 'Ottobre 2026',
+      lead: 'Un’AI che risolve casi clinici difficili meglio dei medici generalisti, un vaccino a mRNA <b>su misura</b> contro il melanoma, i primi virus progettati dall’AI per curare un’infezione resistente agli antibiotici. Risultati iniziali, ma la direzione è chiara.',
+      facts: [['83%', 'casi difficili risolti dall’AI (medici: 36%)'], ['−42%', 'recidive di melanoma col vaccino mRNA'], ['1°', 'paziente curato con virus progettati dall’AI']],
+      note: 'Titoli originali · Corriere Nazionale, Hardware Upgrade, TechCrunch, Affaritaliani, Il Fatto Quotidiano, ANSA'
+    },
+    en: {
+      kicker: 'Medicine · press review', title: 'Good news from medicine', date: 'October 2026',
+      lead: 'An AI that solves hard clinical cases better than generalist doctors, a <b>personalised</b> mRNA vaccine against melanoma, the first AI-designed viruses used to treat an antibiotic-resistant infection. Early results, but the direction is clear.',
+      facts: [['83%', 'hard cases solved by AI (doctors: 36%)'], ['−42%', 'melanoma recurrence with the mRNA vaccine'], ['1st', 'patient treated with AI-designed viruses']],
+      note: 'Original headlines · Corriere Nazionale, Hardware Upgrade, TechCrunch, Affaritaliani, Il Fatto Quotidiano, ANSA'
+    },
+    items: [
+      { paper: 'Corriere Nazionale', date: '20 ottobre 2026', headline: 'Virus progettato dall’Ai e somministrato a un essere umano per guarirlo' },
+      { paper: 'Hardware Upgrade', date: '22 ottobre 2026', headline: 'Per la prima volta un virus progettato dall’IA è stato somministrato a un paziente' },
+      { paper: 'TechCrunch', date: '22 ottobre 2026', headline: 'Microsoft’s Mustafa Suleyman says its AI outperforms doctors on hard cases as he chases ‘medical superintelligence’' },
+      { paper: 'Il Fatto Quotidiano', date: '23 ottobre 2026', headline: 'Melanoma, «il vaccino a mRNA personalizzato riduce del 42% il rischio di recidiva o morte»' },
+      { paper: 'Affaritaliani', date: '25 ottobre 2026', headline: 'L’intelligenza artificiale di Microsoft supera i medici nei test: diagnosi corrette nell’80% dei casi, lo studio' },
+      { paper: 'ANSA', date: '25 ottobre 2026', headline: 'Melanoma, il primo vaccino ‘su misura’ riduce il rischio di recidiva del 42%' }
+    ]
+  },
+
+  // Il furto a Binance (titoli verificati il 7 novembre 2026)
+  binance: {
+    it: {
+      kicker: 'Criptovalute · rassegna stampa', title: 'Il furto del secolo', date: '29 ottobre 2026',
+      lead: 'In una notte spariscono <b>6,3 miliardi di dollari</b> in criptovalute da Binance, il più grande exchange del mondo. L’FBI accusa gli hacker della Corea del Nord. Tutto è partito da un finto colloquio di lavoro con un dipendente.',
+      facts: [['6,3 mld $', 'rubati: il furto crypto più grande di sempre'], ['20 minuti', 'per svuotare i portafogli'], ['1', 'finto colloquio di lavoro per entrare']],
+      note: 'Titoli originali · CNBC, Al Jazeera, Milano Finanza, Cybersecurity360, Hardware Upgrade, Fox Business'
+    },
+    en: {
+      kicker: 'Crypto · press review', title: 'The heist of the century', date: 'October 29, 2026',
+      lead: 'In one night <b>$6.3 billion</b> in crypto vanishes from Binance, the world’s largest exchange. The FBI blames North Korean hackers. It all started with a fake job interview with an employee.',
+      facts: [['$6.3B', 'stolen: the largest crypto theft ever'], ['20 minutes', 'to drain the wallets'], ['1', 'fake job interview to get in']],
+      note: 'Original headlines · CNBC, Al Jazeera, Milano Finanza, Cybersecurity360, Hardware Upgrade, Fox Business'
+    },
+    items: [
+      { paper: 'CNBC', date: '29 ottobre 2026', headline: '$6.3 billion Binance hack is largest crypto theft on record' },
+      { paper: 'Al Jazeera', date: '30 ottobre 2026', headline: 'Binance says $6.3bn stolen in biggest crypto heist in history: What we know' },
+      { paper: 'Milano Finanza', date: '30 ottobre 2026', headline: 'La Corea del Nord sospettata di essere dietro al maxi furto di criptovalute da 6,3 miliardi di dollari su Binance' },
+      { paper: 'Cybersecurity360', date: '30 ottobre 2026', headline: 'Attacco a Binance: in 20 minuti la Nord Corea compie il furto cripto del secolo' },
+      { paper: 'Hardware Upgrade', date: '3 novembre 2026', headline: 'Furto da 6,3 miliardi di dollari a Binance: l’hack più grande della storia è opera della Corea del Nord' },
+      { paper: 'Fox Business', date: '3 novembre 2026', headline: 'Binance details how a fake job interview led to a $6.3B crypto heist' }
+    ]
   }
 };

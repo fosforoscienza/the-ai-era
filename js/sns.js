@@ -35,6 +35,8 @@ const SNS = (function () {
     { id: 'slide:rassegna-anthropic', src: 'rassegna.html?id=anthropic', thumb: 'img/sns/rassegna-anthropic.jpg', title: 'Anthropic verso la Borsa', sub: 'Rassegna stampa · n. 3' },
     { id: 'slide:news-top-3', src: 'rassegna.html?id=navier', thumb: 'img/sns/news-top-3.jpg', title: 'Top 5 AI · 1', sub: 'Navier–Stokes · rassegna stampa' },
     { id: 'slide:rassegna-frigo', src: 'rassegna.html?id=frigo', thumb: 'img/sns/rassegna-frigo.jpg', title: 'Frigoriferi hackerati', sub: 'Rassegna stampa · prime pagine 3 nov.' },
+    { id: 'slide:rassegna-medicina', src: 'rassegna.html?id=medicina', thumb: 'img/sns/rassegna-medicina.jpg', title: 'Buone notizie dalla medicina', sub: 'Rassegna stampa · ottobre 2026' },
+    { id: 'slide:rassegna-binance', src: 'rassegna.html?id=binance', thumb: 'img/sns/rassegna-binance.jpg', title: 'Il furto del secolo', sub: 'Rassegna stampa · Binance, 6,3 mld $' },
     { id: 'slide:rassegna-php', src: 'rassegna.html?id=php', thumb: 'img/sns/rassegna-php.jpg', title: 'PHP2Shell', sub: 'Rassegna stampa · la falla trovata dall’AI' },
     { id: 'slide:referendum-midterm', src: 'referendum-midterm.html', thumb: 'img/sns/referendum-midterm.jpg', title: 'Midterm: referendum', sub: 'L’America vota contro i data center' },
     // Dalla presentazione «The AI Era» (Geopolitica della AI)
