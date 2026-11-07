@@ -283,11 +283,20 @@
       if (i >= 0) showSlide(i);
       else if (id && id.startsWith('video:')) showVideo(id);
     }
+    // Una slide può rivelare i suoi elementi un passo alla volta: se espone
+    // window.__snsStep(dir) e restituisce true, il comando resta a lei.
+    function slideStep(dir) {
+      if (!current || current.startsWith('video:')) return false;
+      try { const w = frames[front].contentWindow; return !!(w && typeof w.__snsStep === 'function' && w.__snsStep(dir)); }
+      catch (_) { return false; }
+    }
     function next() {
+      if (slideStep('next')) return;
       if (current && current.startsWith('video:')) showSlide(Math.min(slideIdx + 1, order.length - 1));
       else showSlide(slideIdx + 1);
     }
     function prev() {
+      if (slideStep('prev')) return;
       // video lanciato dalla galleria: si torna alla slide di prima;
       // video della sequenza: si torna all'elemento che lo precede
       if (current && current.startsWith('video:') && !(order[slideIdx] && order[slideIdx].id === current)) showSlide(slideIdx);

@@ -164,10 +164,9 @@
     // ── step-reveal ──────────────────────────────────────
     const STEPS = 4;                              // 0 = eyebrow; 1..4 reveal title/foto + 3 fattori
     const EMBED = window.self !== window.top;
-    // Nello show SNS (o con ?auto=1) i fattori entrano da soli, uno dopo l'altro: frecce,
-    // telecomando e console passano direttamente alla slide successiva.
-    let AUTO = new URLSearchParams(location.search).has('auto');
-    try { AUTO = AUTO || /sns-show|\/show/.test(window.parent.location.pathname); } catch (_) {}
+    // Con ?auto=1 i fattori entrano da soli. Nello show SNS si rivelano un passo alla
+    // volta: la console e il telecomando chiamano window.__snsStep (vedi sns-show.html).
+    const AUTO = new URLSearchParams(location.search).has('auto');
     if (EMBED && !AUTO) window.__opSelfNav = true;  // tell the onepage shell: I handle my own nav
     let step = 0;
     const hint = document.getElementById('tf-hint');
@@ -193,6 +192,11 @@
       const pi = currentPageIndex() - 1;
       if (pi >= 0 && PAGES[pi]) window.location.href = hrefFor(pi);
     }
+    window.__snsStep = dir => {
+      if (dir === 'next' && step < STEPS) { step++; applyStep(); return true; }
+      if (dir === 'prev' && step > 0) { step--; applyStep(); return true; }
+      return false;
+    };
     function forward() { if (step < STEPS) { step++; applyStep(); } else { goNext(); } }
     function backward() { if (step > 0) { step--; applyStep(); } else { goPrev(); } }
 

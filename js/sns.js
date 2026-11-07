@@ -40,7 +40,8 @@ const SNS = (function () {
     // Dalla presentazione «The AI Era» (Geopolitica della AI)
     // la voce del video intro (0:02–0:28): la suona lo show, la slide mostra le didascalie
     { id: 'slide:fedro-voce', src: 'fedro-voce.html', audio: 'audio/intro-voce.m4a', thumb: 'img/sns/fedro-voce.jpg',
-      title: 'Platone · Fedro', sub: 'La voce · didascalie' },
+      title: 'La voce', sub: 'Didascalie · senza fonte' },
+    { id: 'slide:platone-fedro',  src: 'platone-fedro.html',  thumb: 'img/sns/platone-fedro.jpg',  title: 'Platone · Fedro',      sub: 'Il mito di Theuth · la fonte' },
     { id: 'slide:scrittura',        src: 'scrittura.html',        thumb: 'img/sns/scrittura.jpg',        title: 'Citazione',            sub: 'The AI Era' },
     { id: 'slide:fotografia',       src: 'fotografia.html',       thumb: 'img/sns/fotografia.jpg',       title: 'Fotografia',           sub: 'The AI Era' },
     { id: 'slide:napa-valley',      src: 'napa-valley.html',      thumb: 'img/sns/napa-valley.jpg',      title: 'Napa Valley',          sub: 'The AI Era' },

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platone · Fedro — la fonte</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --accent: #41b7ff; --accent-soft: #8fd2ff; --ink: #02040b; --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: var(--ink) !important; overflow: hidden; height: 100%; margin: 0; }
+    body { font-family: inherit; }
+    .stage { position: fixed; inset: 0; overflow: hidden; background: var(--ink); }
+
+    /* atmosfera, come nella slide della voce */
+    .beam {
+      position: absolute; right: -20vw; top: -30vh; width: 95vw; height: 160vh; pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, rgba(65,183,255,0.09) 35%, rgba(143,210,255,0.14) 50%, rgba(65,183,255,0.07) 65%, transparent 100%);
+      transform: rotate(24deg); transform-origin: 50% 0; mix-blend-mode: screen; opacity: 0;
+      animation: fade 2.4s 0.2s ease both;
+    }
+    .fog { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(40px); opacity: 0; }
+    .fog.f1 { left: -10vw; bottom: -20vh; width: 70vw; height: 60vh;
+      background: radial-gradient(closest-side, rgba(31,127,209,0.22), transparent);
+      animation: fade 3s 0.4s ease both, drift 22s ease-in-out infinite alternate; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes drift { to { transform: translate(6vw, -3vh); } }
+    .vignette { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 240px 60px rgba(0,0,0,0.8); }
+
+    .copy { position: absolute; z-index: 3; left: 9vw; right: 9vw; top: 50%; transform: translateY(-50%); }
+    .eyebrow {
+      font-size: clamp(14px, 1.4vw, 24px); font-weight: 700; letter-spacing: 0.34em;
+      text-transform: uppercase; color: var(--accent-soft); animation: rise 1s 0.3s var(--ease) both;
+    }
+    .name {
+      margin: clamp(10px, 1.6vh, 18px) 0 0; line-height: 0.92;
+      font-size: clamp(64px, 10vw, 200px); font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase;
+    }
+    .name .ch {
+      display: inline-block;
+      background: linear-gradient(180deg, #ffffff 30%, #8fd2ff 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+      animation: chIn 1s var(--ease) both;
+    }
+    @keyframes chIn { from { opacity: 0; transform: translateY(0.35em); filter: blur(14px); } to { opacity: 1; transform: none; filter: blur(0); } }
+    .work {
+      margin-top: clamp(8px, 1.4vh, 16px); font-size: clamp(26px, 3vw, 58px); font-weight: 300; color: #dbe6f3;
+      animation: rise 1s 1.2s var(--ease) both;
+    }
+    .work b { font-weight: 700; color: #fff; }
+    .work span { color: var(--accent-soft); font-size: 0.6em; letter-spacing: 0.06em; margin-left: 0.5em; }
+    .rule {
+      width: min(420px, 30vw); height: 1px; margin: clamp(24px, 4vh, 44px) 0;
+      background: linear-gradient(90deg, rgba(143,210,255,0.7), transparent);
+      transform-origin: 0 50%; animation: grow 1.2s 1.6s var(--ease) both;
+    }
+    @keyframes grow { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+    .myth { margin: 0; max-width: 62ch; font-size: clamp(22px, 2.3vw, 44px); line-height: 1.4; font-weight: 300; color: #c9d7e8;
+      animation: rise 1.1s 2s var(--ease) both; }
+    .myth .hl { font-weight: 600; color: #fff; text-shadow: 0 0 26px rgba(65,183,255,0.7); }
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+    @media (max-aspect-ratio: 1/1) {
+      .copy { left: 8vw; right: 8vw; }
+      .name { font-size: 15vw; }
+      .work { font-size: 6vw; }
+      .myth { font-size: 4.6vw; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stage">
+    <div class="beam"></div>
+    <div class="fog f1"></div>
+    <div class="vignette"></div>
+
+    <div class="copy">
+      <div class="eyebrow" id="eyebrow"></div>
+      <h1 class="name" id="name"></h1>
+      <div class="work" id="work"></div>
+      <div class="rule"></div>
+      <p class="myth" id="myth"></p>
+    </div>
+  </div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="#">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="#">&#8594;</a>
+
+  <div id="lang-toggle">
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script>
+    // La fonte delle parole ascoltate nella slide precedente (fedro-voce.html).
+    const TXT = {
+      it: {
+        eyebrow: 'Le parole che avete ascoltato',
+        name: 'Platone',
+        work: '<b>Fedro</b><span>275a–b · IV secolo a.C.</span>',
+        myth: 'Il dio Theuth offre al re Thamus una nuova invenzione, «farmaco della memoria e della sapienza». '
+            + 'Il re la rifiuta: è la <span class="hl">scrittura</span>.'
+      },
+      en: {
+        eyebrow: 'The words you just heard',
+        name: 'Plato',
+        work: '<b>Phaedrus</b><span>275a–b · 4th century BC</span>',
+        myth: 'The god Theuth offers King Thamus a new invention, “a remedy for memory and wisdom”. '
+            + 'The king rejects it: it is <span class="hl">writing</span>.'
+      }
+    };
+
+    function renderTexts() {
+      const t = TXT[lang];
+      document.getElementById('eyebrow').textContent = t.eyebrow;
+      document.getElementById('work').innerHTML = t.work;
+      document.getElementById('myth').innerHTML = t.myth;
+      const name = document.getElementById('name'); name.textContent = '';
+      name.setAttribute('aria-label', t.name);
+      [...t.name.toUpperCase()].forEach((c, i) => {
+        const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; s.setAttribute('aria-hidden', 'true');
+        s.style.animationDelay = (0.5 + i * 0.06).toFixed(2) + 's';
+        name.appendChild(s);
+      });
+    }
+    function onLangChange() { renderTexts(); }
+
+    initLangToggle();
+    renderTexts();
+    initNav();
+  </script>
+</body>
+</html>

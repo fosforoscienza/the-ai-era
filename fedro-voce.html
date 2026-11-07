@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Platone, Fedro — la voce</title>
+  <title>La voce — l'invenzione</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
     :root { --accent: #41b7ff; --accent-soft: #8fd2ff; --ink: #02040b; --ease: cubic-bezier(0.16,1,0.3,1); }
@@ -55,6 +55,7 @@
       color: var(--accent-soft); animation: rise 1s 0.8s var(--ease) both; }
     .eyebrow::after { content: ''; display: block; width: 90px; height: 1px; margin-top: 16px;
       background: linear-gradient(90deg, rgba(143,210,255,0.7), transparent); }
+    .eyebrow:empty, .who:empty { display: none; }
     @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
     .caps { position: relative; min-height: 4.2em; font-size: clamp(34px, 3.7vw, 72px); }
@@ -172,7 +173,7 @@
 
   <script src="js/common.js"></script>
   <script>
-    // Platone, Fedro 275a–b: il re Thamus risponde al dio Theuth (senza nominare l'invenzione).
+    // Testo dal Fedro di Platone (275a–b), mostrato senza fonte: la rivela la slide platone-fedro.html.
     // Tempi (s) della voce in audio/intro-voce.m4a (video intro da 0:02 a 0:28).
     // Ogni frase è un blocco; le righe compaiono parola per parola mentre sono dette.
     // *parola* = in evidenza.
@@ -191,8 +192,8 @@
     ];
     const END = 25.8;
     const TXT = {
-      it: { eyebrow: 'Platone · Fedro', who: '— Il re Thamus al dio Theuth · Platone, Fedro 275a–b' },
-      en: { eyebrow: 'Plato · Phaedrus', who: '— King Thamus to the god Theuth · Plato, Phaedrus 275a–b' }
+      it: { eyebrow: '', who: '' },
+      en: { eyebrow: '', who: '' }
     };
     // volume della voce ogni 50 ms (0–9), per le onde e la luce sul volto
     const ENV = '00000000000000000000000000000222234420499655430366366366435555513615655610555545545553054431566656204432005766665443100000000039656551668606535542631027500562432323467653333210000000009930966857420037205655670353521452125410003410000005866877676587464074100000000000007850563100362000000686869932725665200353206974321075144079956344467932855400069654551000005868136541045434654310630000000007996845455635432106440265531151365465354444043155453221000000000069877421000000018511165553530252342037520016755446555410121000000';
