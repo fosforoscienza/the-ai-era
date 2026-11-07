@@ -32,7 +32,12 @@
     .opts.col .opt { border-radius: 14px; width: 100%; }
     .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
     .scale .opt { flex-direction: column; border-radius: 14px; padding: 10px 2px; gap: 4px; font-size: 11px; line-height: 1.15; text-align: center; justify-content: flex-start; }
-    .scale .opt i { font-style: normal; font-size: 30px; }
+    .opt .ic { flex: none; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; color: var(--soft);
+      background: linear-gradient(160deg, rgba(143,210,255,.16), rgba(143,210,255,.04)); border: 1px solid rgba(143,210,255,.2); transition: background .2s, color .2s; }
+    .opt .ic svg { width: 16px; height: 16px; }
+    .opt.on .ic { color: #02040b; background: rgba(2,4,11,.12); border-color: rgba(2,4,11,.18); }
+    .scale .opt .ic { width: 38px; height: 38px; border-radius: 50%; }
+    .scale .opt .ic svg { width: 28px; height: 28px; }
     input[type=text] { width: 100%; margin-top: 12px; font: inherit; font-size: 17px; color: var(--text); background: rgba(255,255,255,0.04);
       border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; outline: none; }
     input[type=text]:focus { border-color: var(--accent); }
@@ -42,7 +47,9 @@
     .err { min-height: 20px; margin-top: 10px; color: #ff8a98; font-size: 14px; text-align: center; }
     .note { margin-top: 14px; font-size: 12px; color: var(--muted); text-align: center; }
     .done { text-align: center; padding-top: 12vh; }
-    .done .big { font-size: 80px; animation: pop .8s var(--ease) both; }
+    .done .big { width: 96px; height: 96px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; color: #02040b;
+      background: linear-gradient(135deg, #8fd2ff, #41b7ff); box-shadow: 0 10px 40px rgba(65,183,255,0.4); animation: pop .8s var(--ease) both; }
+    .done .big svg { width: 50px; height: 50px; stroke-width: 2.4; }
     .done h1 { margin-top: 16px; }
     .done p { color: var(--muted); font-size: 17px; line-height: 1.45; }
     .done a { display: inline-block; margin-top: 18px; color: var(--soft); font-weight: 700; }
@@ -53,7 +60,7 @@
   <main id="app"></main>
 
   <script src="js/sns-config.js"></script>
-  <script src="js/questionario.js"></script>
+  <script src="js/questionario.js?v=2"></script>
   <script>
     const app = document.getElementById('app');
     const POST = QZ.FASE === 'post';
@@ -63,7 +70,7 @@
     const resultsHref = (POST ? 'confronto.html' : 'risultati.html') + (QZ.EVENTO !== 'sns' ? '?e=' + encodeURIComponent(QZ.EVENTO) : '');
 
     function done(again) {
-      app.innerHTML = `<div class="done"><div class="big">🙌</div><h1>Grazie!</h1>
+      app.innerHTML = `<div class="done"><div class="big">${QZ.CHECK}</div><h1>Grazie!</h1>
         <p>${again ? 'Hai già risposto da questo telefono.' : 'Le tue risposte sono arrivate.'}<br>Guarda lo schermo: tra poco ${POST ? 'il confronto tra inizio e fine serata' : 'i risultati di tutta la sala'}.</p>
         <a href="${resultsHref}">Vedi i risultati →</a>
         ${again ? '<br><a href="#" id="redo" style="font-weight:400;font-size:14px;color:#9fb0c6">Rispondi di nuovo</a>' : ''}</div>`;
@@ -77,8 +84,8 @@
         <input type="text" id="parola" maxlength="${q.max}" autocomplete="off" placeholder="Per esempio: opportunità"></div>`;
       const cls = q.type === 'scale' ? 'scale' : 'opts' + (key === 'frequenza' ? ' col' : '');
       const btns = q.opts.map(o => q.type === 'scale'
-        ? `<button type="button" class="opt" data-k="${key}" data-v="${o[0]}"><i>${o[2]}</i>${o[1]}</button>`
-        : `<button type="button" class="opt" data-k="${key}" data-v="${o[0]}"><span>${o[2]}</span>${esc(o[1])}</button>`).join('');
+        ? `<button type="button" class="opt" data-k="${key}" data-v="${o[0]}"><span class="ic">${QZ.icon(key, o[0])}</span>${o[1]}</button>`
+        : `<button type="button" class="opt" data-k="${key}" data-v="${o[0]}"><span class="ic">${QZ.icon(key, o[0])}</span>${esc(o[1])}</button>`).join('');
       return `<div class="q" id="q-${key}"><h2>${q.title}</h2>${q.hint ? `<p class="hint">${q.hint}</p>` : ''}<div class="${cls}">${btns}</div></div>`;
     }
 

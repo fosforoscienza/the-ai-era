@@ -19,7 +19,7 @@
     header { display: flex; align-items: flex-end; justify-content: space-between; gap: 2vw; animation: up .8s var(--ease) both; }
     .eyebrow { display: inline-flex; align-items: center; gap: 12px; font-size: 1.5vh; font-weight: 700; letter-spacing: .34em; text-transform: uppercase; color: var(--soft); }
     .eyebrow::before { content: ''; width: 34px; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
-    h1 { margin: .8vh 0 0; font-size: 6.6vh; font-weight: 900; letter-spacing: -0.03em; line-height: 1; }
+    h1 { margin: 0; font-size: 10.5vh; font-weight: 900; letter-spacing: -0.03em; line-height: 1; }
     h1 em { font-style: normal; background: linear-gradient(90deg, var(--soft), var(--cyan)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
     .count { display: flex; align-items: baseline; gap: 1vw; text-align: right; }
     .count b { font-size: 9vh; font-weight: 900; line-height: .9; letter-spacing: -0.04em; font-variant-numeric: tabular-nums;
@@ -45,17 +45,23 @@
     .levels { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .lv { display: grid; grid-template-columns: 1.6vh 3vh 1fr auto; align-items: center; gap: .7vw; font-size: 2vh; }
     .lv .sw { width: 1.6vh; height: 1.6vh; border-radius: .4vh; background: var(--c); }
-    .lv .ic { font-size: 2.4vh; }
+    /* icone: chip vettoriali al posto delle emoji */
+    .ic { display: inline-grid; place-items: center; flex: none; color: var(--soft); border-radius: 28%;
+      background: linear-gradient(160deg, rgba(143,210,255,.16), rgba(143,210,255,.04)); border: 1px solid rgba(143,210,255,.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+    .ic svg { width: 58%; height: 58%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .lv .ic { width: 3vh; height: 3vh; }
     .lv b { font-size: 2.6vh; font-weight: 900; font-variant-numeric: tabular-nums; }
 
     /* strumenti */
     .bars { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .bar { display: grid; grid-template-columns: 3.4vh 1fr auto; align-items: center; gap: .5vh .7vw; }
-    .bar .ic { font-size: 2.6vh; grid-row: span 2; }
+    .bar .ic { width: 3.4vh; height: 3.4vh; grid-row: span 2; }
     .bar .lb { font-size: 2vh; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .bar .pc { font-size: 2.5vh; font-weight: 900; font-variant-numeric: tabular-nums; grid-row: span 2; min-width: 4.6vw; text-align: right; }
     .bar .tr { height: 1.2vh; border-radius: 1vh; background: rgba(255,255,255,.06); overflow: hidden; }
     .bar .tr div { height: 100%; width: 0; border-radius: 1vh; background: linear-gradient(90deg, #2f9cf0, var(--soft)); transition: width 1s var(--ease); }
+    .bar.first .ic, .tile.top .ic { color: #02040b; background: linear-gradient(160deg, var(--soft), var(--cyan)); border-color: transparent; box-shadow: 0 0 1.4vh rgba(65,224,255,.45); }
     .bar.first .tr div { background: linear-gradient(90deg, var(--soft), var(--cyan)); box-shadow: 0 0 1.4vh rgba(65,224,255,.5); }
 
     /* usi */
@@ -63,7 +69,7 @@
     .tile { position: relative; border-radius: 1.4vh; background: rgba(255,255,255,.04); overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 0 1vw; }
     .tile .fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: linear-gradient(0deg, rgba(65,183,255,.6), rgba(65,183,255,.15)); transition: height 1s var(--ease); }
     .tile > span { position: relative; display: flex; align-items: center; gap: .6vw; }
-    .tile .ic { font-size: 3vh; }
+    .tile .ic { width: 3.6vh; height: 3.6vh; }
     .tile .pc { font-size: 3.4vh; font-weight: 900; font-variant-numeric: tabular-nums; }
     .tile .lb { position: relative; font-size: 1.65vh; line-height: 1.15; color: #dbe7f5; margin-top: .5vh; }
     .tile.top { outline: 2px solid var(--cyan); box-shadow: 0 0 2.4vh rgba(65,224,255,.3); }
@@ -71,7 +77,9 @@
     /* identikit */
     .profile { display: flex; align-items: center; gap: 1.4vw; padding: 2vh 2vw; border-radius: 2vh; animation: up .9s var(--ease) .45s both;
       background: linear-gradient(90deg, rgba(65,183,255,.16), rgba(65,224,255,.05)); border: 1px solid rgba(143,210,255,.25); }
-    .profile .ic { font-size: 4.6vh; }
+    .profile .ic { width: 6.4vh; height: 6.4vh; border-radius: 30%; color: #02040b; border: 0;
+      background: linear-gradient(160deg, var(--soft), var(--cyan)); box-shadow: 0 0 2.6vh rgba(65,224,255,.35); }
+    .profile .ic svg { stroke-width: 1.6; }
     .profile small { display: block; font-size: 1.5vh; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: var(--soft); }
     .profile p { margin: .4vh 0 0; font-size: 3vh; font-weight: 300; line-height: 1.2; }
     .profile p b { font-weight: 800; color: #fff; }
@@ -92,17 +100,17 @@
       #nav-dots, .nav-arrow, #lang-toggle, .wait { display: none !important; }
       .wrap { height: auto; padding: 24px 16px 40px; gap: 14px; grid-template-rows: none; }
       header { flex-direction: column; align-items: flex-start; }
-      .eyebrow { font-size: 11px; } h1 { font-size: 32px; }
+      .eyebrow { font-size: 11px; } h1 { font-size: 44px; }
       .count b { font-size: 56px; } .count > span { font-size: 14px; } .live { font-size: 11px; } .live::before { width: 8px; height: 8px; }
       .grid { grid-template-columns: 1fr; gap: 14px; }
       .card { padding: 18px 16px; border-radius: 18px; } .card h2 { font-size: 12px; margin-bottom: 14px; }
       .hero b { font-size: 72px; } .hero span { font-size: 15px; }
       .stack { height: 24px; margin: 16px 0 14px; border-radius: 8px; }
-      .levels { gap: 10px; } .lv { font-size: 14px; grid-template-columns: 12px 22px 1fr auto; gap: 8px; } .lv .sw { width: 12px; height: 12px; } .lv .ic { font-size: 18px; } .lv b { font-size: 17px; }
+      .levels { gap: 10px; } .lv { font-size: 14px; grid-template-columns: 12px 22px 1fr auto; gap: 8px; } .lv .sw { width: 12px; height: 12px; } .lv .ic { width: 22px; height: 22px; } .lv b { font-size: 17px; }
       .bars { gap: 12px; } .bar { grid-template-columns: 26px 1fr auto; gap: 4px 10px; }
-      .bar .ic { font-size: 20px; } .bar .lb { font-size: 14px; } .bar .pc { font-size: 17px; min-width: 46px; } .bar .tr { height: 8px; }
-      .tiles { gap: 6px; } .tile { padding: 14px 10px; border-radius: 12px; } .tile .ic { font-size: 20px; } .tile .pc { font-size: 20px; } .tile .lb { font-size: 12px; }
-      .profile { padding: 16px; border-radius: 18px; gap: 12px; } .profile .ic { font-size: 32px; } .profile small { font-size: 11px; } .profile p { font-size: 18px; }
+      .bar .ic { width: 26px; height: 26px; } .bar .lb { font-size: 14px; } .bar .pc { font-size: 17px; min-width: 46px; } .bar .tr { height: 8px; }
+      .tiles { gap: 6px; } .tile { padding: 14px 10px; border-radius: 12px; } .tile .ic { width: 26px; height: 26px; } .tile .pc { font-size: 20px; } .tile .lb { font-size: 12px; }
+      .profile { padding: 16px; border-radius: 18px; gap: 12px; } .profile .ic { width: 44px; height: 44px; } .profile small { font-size: 11px; } .profile p { font-size: 18px; }
     }
   </style>
 </head>
@@ -111,7 +119,6 @@
   <div class="wrap">
     <header>
       <div>
-        <div class="eyebrow">Conosciamoci meglio · parte 1</div>
         <h1>Come usate <em>l’AI</em></h1>
       </div>
       <div class="count" id="count"><b id="n">0</b><span>risposte<br><span class="live">in diretta</span></span></div>
@@ -127,7 +134,7 @@
       <section class="card"><h2>Per fare cosa</h2><div class="tiles" id="uses"></div></section>
     </div>
 
-    <div class="profile"><span class="ic">🧑‍💻</span><div><small>Lo spettatore tipo di stasera</small><p id="profile">…</p></div></div>
+    <div class="profile"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></span><div><small>Lo spettatore tipo di stasera</small><p id="profile">…</p></div></div>
   </div>
 
   <div class="wait" id="wait"><div><b>In attesa delle prime risposte…</b><span>Inquadrate il QR e rispondete dal telefono</span></div></div>
@@ -138,13 +145,15 @@
 
   <script src="js/common.js"></script>
   <script src="js/sns-config.js"></script>
-  <script src="js/questionario.js"></script>
+  <script src="js/questionario.js?v=2"></script>
   <script>
     const Q = QZ.Q, $ = id => document.getElementById(id);
     const COLORS = ['#3a4357', '#2f6fb0', '#2f9cf0', '#5cc3ff', '#41e0ff'];
     const pct = (v, n) => n ? Math.round(v * 100 / n) : 0;
     const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const topKey = obj => Object.keys(obj).sort((a, b) => obj[b] - obj[a])[0];
+
+    const icon = (k, o) => `<span class="ic">${QZ.icon(k, o[0])}</span>`;
 
     // frasi per l'identikit
     const FREQ_TXT = { mai: 'non usa ancora l’AI', mese: 'usa l’AI <b>qualche volta al mese</b>', settimana: 'usa l’AI <b>ogni settimana</b>',
@@ -156,12 +165,12 @@
     Q.frequenza.opts.forEach((o, i) => {
       const s = document.createElement('div'); s.style.background = COLORS[i]; s.id = 'st-' + o[0]; $('stack').appendChild(s);
       const l = document.createElement('div'); l.className = 'lv'; l.style.setProperty('--c', COLORS[i]);
-      l.innerHTML = `<i class="sw"></i><span class="ic">${o[2]}</span><span>${o[1]}</span><b id="lv-${o[0]}">0%</b>`; $('levels').appendChild(l);
+      l.innerHTML = `<i class="sw"></i>${icon('frequenza', o)}<span>${o[1]}</span><b id="lv-${o[0]}">0%</b>`; $('levels').appendChild(l);
     });
     Q.strumenti.opts.forEach(o => { const d = document.createElement('div'); d.className = 'bar'; d.id = 'to-' + o[0];
-      d.innerHTML = `<span class="ic">${o[2]}</span><span class="lb">${esc(o[1])}</span><span class="pc">0%</span><div class="tr"><div></div></div>`; $('tools').appendChild(d); });
+      d.innerHTML = `${icon('strumenti', o)}<span class="lb">${esc(o[1])}</span><span class="pc">0%</span><div class="tr"><div></div></div>`; $('tools').appendChild(d); });
     Q.usi.opts.forEach(o => { const t = document.createElement('div'); t.className = 'tile'; t.id = 'us-' + o[0];
-      t.innerHTML = `<div class="fill"></div><span><span class="ic">${o[2]}</span><span class="pc">0%</span></span><div class="lb">${esc(o[1])}</div>`; $('uses').appendChild(t); });
+      t.innerHTML = `<div class="fill"></div><span>${icon('usi', o)}<span class="pc">0%</span></span><div class="lb">${esc(o[1])}</div>`; $('uses').appendChild(t); });
 
     function countTo(el, to, suffix) {
       const from = +(el.dataset.v || 0); el.dataset.v = to; if (from === to) { el.textContent = to + suffix; return; }
