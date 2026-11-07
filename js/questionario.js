@@ -19,45 +19,44 @@ const QZ = (function () {
   const TABLE = CFG.url ? CFG.url.replace(/\/$/, '') + '/rest/v1/sns_questionario' : '';
   const HEADERS = { apikey: CFG.key, Authorization: 'Bearer ' + CFG.key };
 
-  // [chiave salvata, etichetta, emoji] — le icone vettoriali sono in ICONS, più sotto
+  // [chiave salvata, etichetta] — le icone vettoriali sono in ICONS, più sotto
   const Q = {
     frequenza: {
       part: 1, type: 'one', title: 'Quanto spesso usi l’AI?',
-      opts: [['mai', 'Mai', '🚫'], ['mese', 'Qualche volta al mese', '🌙'], ['settimana', 'Ogni settimana', '📅'],
-             ['giorno', 'Ogni giorno', '☀️'], ['sempre', 'Non ne posso più fare a meno', '⚡']]
+      opts: [['mai', 'Mai'], ['mese', 'Qualche volta al mese'], ['settimana', 'Ogni settimana'],
+             ['giorno', 'Ogni giorno'], ['sempre', 'Non ne posso più fare a meno']]
     },
     strumenti: {
       part: 1, type: 'many', title: 'Quali strumenti usi?', hint: 'Anche più di uno',
-      opts: [['chatgpt', 'ChatGPT', '💬'], ['gemini', 'Gemini', '✨'], ['claude', 'Claude', '🟠'], ['copilot', 'Copilot', '🪁'],
-             ['meta', 'Meta AI (WhatsApp)', '🟢'], ['perplexity', 'Perplexity', '🔭'], ['mistral', 'Mistral (Le Chat)', '🌬️'], ['altro', 'Altro', '➕'], ['nessuno', 'Nessuno', '🙅']]
+      opts: [['chatgpt', 'ChatGPT'], ['gemini', 'Gemini'], ['claude', 'Claude'], ['copilot', 'Copilot'],
+             ['meta', 'Meta AI (WhatsApp)'], ['perplexity', 'Perplexity'], ['mistral', 'Mistral (Le Chat)'], ['altro', 'Altro'], ['nessuno', 'Nessuno']]
     },
     usi: {
       part: 1, type: 'many', title: 'Per cosa la usi?', hint: 'Anche più di una cosa',
-      opts: [['info', 'Cercare informazioni', '🔎'], ['scrivere', 'Scrivere e correggere testi', '✍️'], ['lavoro', 'Lavoro', '💼'],
-             ['studio', 'Studio e scuola', '📚'], ['tradurre', 'Tradurre', '🌍'], ['immagini', 'Immagini e video', '🎨'],
-             ['codice', 'Programmare', '💻'], ['consigli', 'Consigli personali e salute', '🩺'], ['svago', 'Svago e curiosità', '🎲']]
+      opts: [['info', 'Cercare informazioni'], ['scrivere', 'Scrivere e correggere testi'], ['lavoro', 'Lavoro'],
+             ['studio', 'Studio e scuola'], ['tradurre', 'Tradurre'], ['immagini', 'Immagini e video'],
+             ['codice', 'Programmare'], ['consigli', 'Consigli personali e salute'], ['svago', 'Svago e curiosità']]
     },
     futuro: {
       part: 2, type: 'scale', title: 'Come vedi il futuro con l’AI?',
-      opts: [[1, 'Molto preoccupato', '😨'], [2, 'Preoccupato', '😟'], [3, 'Così così', '😐'], [4, 'Fiducioso', '🙂'], [5, 'Entusiasta', '🤩']]
+      opts: [[1, 'Molto preoccupato'], [2, 'Preoccupato'], [3, 'Così così'], [4, 'Fiducioso'], [5, 'Entusiasta']]
     },
     paure: {
       part: 2, type: 'many', max: 3, title: 'Cosa ti fa più paura?', hint: 'Fino a 3',
-      opts: [['lavoro', 'Perdita di posti di lavoro', '💼'], ['fake', 'Fake news e deepfake', '🎭'], ['privacy', 'Privacy e sorveglianza', '👁️'],
-             ['potere', 'Potere a poche aziende', '🏢'], ['pensiero', 'Smettere di pensare da soli', '🧠'],
-             ['armi', 'Uso militare', '🎯'], ['controllo', 'Perdere il controllo', '⚠️'], ['nessuna', 'Niente, sono tranquillo', '😌']]
+      opts: [['lavoro', 'Perdita di posti di lavoro'], ['fake', 'Fake news e deepfake'], ['privacy', 'Privacy e sorveglianza'],
+             ['potere', 'Potere a poche aziende'], ['pensiero', 'Smettere di pensare da soli'],
+             ['armi', 'Uso militare'], ['controllo', 'Perdere il controllo'], ['nessuna', 'Niente, sono tranquillo']]
     },
     opportunita: {
       part: 2, type: 'many', max: 3, title: 'Quali opportunità vedi?', hint: 'Fino a 3',
-      opts: [['medicina', 'Medicina e cure', '🩺'], ['scuola', 'Scuola e apprendimento', '🎓'], ['scienza', 'Scienza e scoperte', '🔬'],
-             ['noia', 'Meno lavori noiosi', '⏱️'], ['accesso', 'Aiuto a chi ha disabilità', '♿'], ['clima', 'Ambiente e clima', '🌱'],
-             ['creativita', 'Creatività', '🎨'], ['nessuna', 'Nessuna', '🤷']]
+      opts: [['medicina', 'Medicina e cure'], ['scuola', 'Scuola e apprendimento'], ['scienza', 'Scienza e scoperte'],
+             ['noia', 'Meno lavori noiosi'], ['accesso', 'Aiuto a chi ha disabilità'], ['clima', 'Ambiente e clima'],
+             ['creativita', 'Creatività'], ['nessuna', 'Nessuna']]
     },
     parola: { part: 2, type: 'text', max: 40, title: 'Il futuro dell’AI in una parola', hint: 'Facoltativo' }
   };
 
   // Icone vettoriali (stile Lucide, 24×24, a tratto) per questionario e risultati.
-  // L'emoji in Q resta come terzo campo per le pagine che la usano ancora (confronto).
   const FACE = '<circle cx="12" cy="12" r="9"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.6"/>';
   const ICONS = {
     frequenza: {

@@ -32,7 +32,10 @@
     .part.p2 .n { background: linear-gradient(135deg, #b8f4ff, var(--cyan)); box-shadow: 0 0 3vh rgba(65,224,255,.4); }
     .part h2 { margin: 0; font-size: 3.1vh; font-weight: 800; line-height: 1.15; }
     .part p { margin: .7vh 0 0; font-size: 2vh; color: var(--muted); }
-    .part .em { margin-left: .4vw; letter-spacing: .3vw; }
+    .part .em { display: inline-flex; gap: .45vw; margin-left: .6vw; vertical-align: -0.45em; }
+    .part .em i, .hint .cam { display: inline-grid; place-items: center; width: 1.9em; height: 1.9em; border-radius: 28%; color: #8fd2ff;
+      background: linear-gradient(160deg, rgba(143,210,255,.16), rgba(143,210,255,.04)); border: 1px solid rgba(143,210,255,.22); }
+    .part .em svg, .hint .cam svg { width: 58%; height: 58%; }
 
     /* QR */
     .right { position: fixed; z-index: 2; right: 7vw; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; animation: pop 1s var(--ease) .6s both; }
@@ -69,8 +72,8 @@
     <h1 id="title">Conosciamoci <em>meglio</em></h1>
     <div class="lead" id="lead">Due minuti dal telefono, <b>tutto anonimo</b>.<br>Le risposte di tutta la sala arrivano qui, sullo schermo.</div>
     <div class="parts" id="parts">
-      <div class="part"><div class="n">1</div><div><h2>Come usi l’AI nella tua quotidianità</h2><p>Quanto spesso, con quali strumenti, per fare cosa <span class="em">📱💬✍️</span></p></div></div>
-      <div class="part p2"><div class="n">2</div><div><h2>Come vedi il futuro dell’AI</h2><p>Paure e opportunità <span class="em">😨🚀</span></p></div></div>
+      <div class="part"><div class="n">1</div><div><h2>Come usi l’AI nella tua quotidianità</h2><p>Quanto spesso, con quali strumenti, per fare cosa <span class="em"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M11 18h2"/></svg></i><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></i><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></i></span></p></div></div>
+      <div class="part p2"><div class="n">2</div><div><h2>Come vedi il futuro dell’AI</h2><p>Paure e opportunità <span class="em"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4M12 17h.01"/></svg></i><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.2 2.2 0 0 0-2.9-.1Z"/><path d="m12 15-3-3a22 22 0 0 1 2-4A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2Z"/><path d="M9 12H4s.6-3 2-4c1.6-1.1 5 0 5 0M12 15v5s3-.6 4-2c1.1-1.6 0-5 0-5"/></svg></i></span></p></div></div>
     </div>
   </div>
 
@@ -78,7 +81,7 @@
     <div class="qrwrap"><div class="ring"></div><div class="ring"></div>
       <div class="qrcard"><img id="qr" src="img/questionario/qr-prima.svg" alt="QR code del questionario" /><div class="scan"></div></div>
     </div>
-    <div class="hint">📷 Inquadra con la fotocamera</div>
+    <div class="hint"><i class="cam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z"/><circle cx="12" cy="13" r="3"/></svg></i>Inquadra con la fotocamera</div>
     <div class="url" id="url">the-ai-era.vercel.app/questionario</div>
     <div class="live" id="live"><i></i><b id="n">0</b><span>risposte</span></div>
   </div>
@@ -89,7 +92,7 @@
 
   <script src="js/common.js"></script>
   <script src="js/sns-config.js"></script>
-  <script src="js/questionario.js?v=2"></script>
+  <script src="js/questionario.js?v=3"></script>
   <script>
     // ?fase=post: la versione di fine serata, solo la parte 2
     if (QZ.FASE === 'post') {
@@ -97,7 +100,7 @@
       document.getElementById('eyebrow').textContent = 'Prima di salutarci';
       document.getElementById('title').innerHTML = 'E <em>adesso?</em>';
       document.getElementById('lead').innerHTML = 'Le stesse domande di inizio serata, <b>solo sul futuro</b>.<br>Un minuto: vediamo se qualcosa è cambiato.';
-      document.getElementById('parts').innerHTML = '<div class="part p2"><div class="n">2</div><div><h2>Come vedi il futuro dell’AI, adesso?</h2><p>Paure e opportunità, dopo questa serata <span class="em">😨🚀</span></p></div></div>';
+      document.getElementById('parts').innerHTML = '<div class="part p2"><div class="n">2</div><div><h2>Come vedi il futuro dell’AI, adesso?</h2><p>Paure e opportunità, dopo questa serata <span class="em"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4M12 17h.01"/></svg></i><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.2 2.2 0 0 0-2.9-.1Z"/><path d="m12 15-3-3a22 22 0 0 1 2-4A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2Z"/><path d="M9 12H4s.6-3 2-4c1.6-1.1 5 0 5 0M12 15v5s3-.6 4-2c1.1-1.6 0-5 0-5"/></svg></i></span></p></div></div>';
       document.getElementById('qr').src = 'img/questionario/qr-dopo.svg';
       document.getElementById('url').textContent = 'the-ai-era.vercel.app/dopo';
     }

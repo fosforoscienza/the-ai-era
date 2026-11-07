@@ -1205,11 +1205,11 @@
   border: 1px solid rgba(239,68,68,0.28); border-radius: 14px;
 }
 #op-anthropic-usa-1 .rl::before {
-  content: '✕'; position: absolute; left: clamp(16px,1.6vw,22px); top: 50%;
+  content: ''; position: absolute; left: clamp(16px,1.6vw,22px); top: 50%;
   transform: translateY(-50%);
   width: clamp(28px,2.6vw,36px); height: clamp(28px,2.6vw,36px);
   display: flex; align-items: center; justify-content: center;
-  border-radius: 50%; background: rgba(239,68,68,0.18);
+  border-radius: 50%; background: rgba(239,68,68,0.18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f87171' stroke-width='2.8' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E") center / 46% no-repeat;
   border: 1px solid #ef4444; color: #ef4444;
   font-size: clamp(18px,1.64vw,23px); font-weight: 900;
 }
@@ -1341,15 +1341,15 @@
 
   <div class="lines">
     <div class="ln" data-reveal>
-      <div class="ic">✓</div>
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
       <div class="t" data-it="Niente <b>sorveglianza domestica di massa</b>" data-en="No <b>domestic mass surveillance</b>">Niente <b>sorveglianza domestica di massa</b></div>
     </div>
     <div class="ln" data-reveal>
-      <div class="ic">✓</div>
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
       <div class="t" data-it="<b>Responsabilità umana</b> nell'uso della forza" data-en="<b>Human accountability</b> in the use of force"><b>Responsabilità umana</b> nell'uso della forza</div>
     </div>
     <div class="ln" data-reveal>
-      <div class="ic">✓</div>
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
       <div class="t" data-it="Niente <b>direzione di sistemi d'arma autonomi</b>" data-en="No <b>direction of autonomous weapon systems</b>">Niente <b>direzione di sistemi d'arma autonomi</b></div>
     </div>
   </div>
@@ -1546,8 +1546,8 @@
   </div>
 
   <div class="models" data-reveal>
-    <div class="model"><div class="lock">🔒</div><div class="mt"><div class="k" data-it="Accesso bloccato" data-en="Access blocked">Accesso bloccato</div><div class="n">Claude Fable 5</div></div></div>
-    <div class="model"><div class="lock">🔒</div><div class="mt"><div class="k" data-it="Accesso bloccato" data-en="Access blocked">Accesso bloccato</div><div class="n">Claude Mythos 5</div></div></div>
+    <div class="model"><div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><div class="mt"><div class="k" data-it="Accesso bloccato" data-en="Access blocked">Accesso bloccato</div><div class="n">Claude Fable 5</div></div></div>
+    <div class="model"><div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><div class="mt"><div class="k" data-it="Accesso bloccato" data-en="Access blocked">Accesso bloccato</div><div class="n">Claude Mythos 5</div></div></div>
   </div>
 
   <div class="cols">
@@ -1660,14 +1660,14 @@
       </svg></div>
       <div class="llm-company">OpenAI</div>
       <div class="llm-model">GPT-4o · o3</div>
-      <div class="llm-flag-tag">🇺🇸</div>
+      <div class="llm-flag-tag">USA</div>
     </div>
 
     <div class="llm-card" style="--brand:#CC785C;--badge-bg:#CC785C;--badge-fg:#fff">
       <div class="llm-badge"><span>A</span></div>
       <div class="llm-company">Anthropic</div>
       <div class="llm-model">Claude 3.7 Sonnet</div>
-      <div class="llm-flag-tag">🇺🇸</div>
+      <div class="llm-flag-tag">USA</div>
     </div>
 
     <div class="llm-card" style="--brand:#4285F4;--badge-bg:#4285F4;--badge-fg:#fff">
@@ -1676,7 +1676,7 @@
       </svg></div>
       <div class="llm-company">Google</div>
       <div class="llm-model">Gemini 2.0 Flash</div>
-      <div class="llm-flag-tag">🇺🇸</div>
+      <div class="llm-flag-tag">USA</div>
     </div>
 
     <div class="llm-card" style="--brand:#1877F2;--badge-bg:#1877F2;--badge-fg:#fff">
@@ -1685,14 +1685,14 @@
       </svg></div>
       <div class="llm-company">Meta AI</div>
       <div class="llm-model">Llama 3.3 70B</div>
-      <div class="llm-flag-tag">🇺🇸</div>
+      <div class="llm-flag-tag">USA</div>
     </div>
 
     <div class="llm-card" style="--brand:#aaa;--badge-bg:#1a1a1a;--badge-fg:#fff">
       <div class="llm-badge"><span>X</span></div>
       <div class="llm-company">xAI</div>
       <div class="llm-model">Grok 3</div>
-      <div class="llm-flag-tag">🇺🇸</div>
+      <div class="llm-flag-tag">USA</div>
     </div>
 
     <div class="llm-card" style="--brand:#0078D4;--badge-bg:#111;--badge-fg:#fff">
@@ -1704,14 +1704,14 @@
       </svg></div>
       <div class="llm-company">Microsoft</div>
       <div class="llm-model">Copilot · Phi-4</div>
-      <div class="llm-flag-tag">🇺🇸</div>
+      <div class="llm-flag-tag">USA</div>
     </div>
 
     <div class="llm-card" style="--brand:#FF6B35;--badge-bg:#FF6B35;--badge-fg:#fff">
       <div class="llm-badge"><span>M</span></div>
       <div class="llm-company">Mistral AI</div>
       <div class="llm-model">Mistral Large 2<br>Mixtral 8×22B</div>
-      <div class="llm-flag-tag">🇪🇺</div>
+      <div class="llm-flag-tag">UE</div>
     </div>
 
   </div>
@@ -1817,21 +1817,21 @@
       </svg></div>
       <div class="llm-company">DeepSeek</div>
       <div class="llm-model">DeepSeek-R1 · V3</div>
-      <div class="llm-flag-tag">🇨🇳</div>
+      <div class="llm-flag-tag">CINA</div>
     </div>
 
     <div class="llm-card" data-reveal style="--brand:#2932E1;--badge-bg:#2932E1;--badge-fg:#fff;">
       <div class="llm-badge"><span>百</span></div>
       <div class="llm-company">Baidu</div>
       <div class="llm-model">ERNIE 4.0 Turbo</div>
-      <div class="llm-flag-tag">🇨🇳</div>
+      <div class="llm-flag-tag">CINA</div>
     </div>
 
     <div class="llm-card" data-reveal style="--brand:#FF6A00;--badge-bg:#FF6A00;--badge-fg:#fff;">
       <div class="llm-badge"><span>Q</span></div>
       <div class="llm-company">Alibaba</div>
       <div class="llm-model">Qwen 2.5 Max</div>
-      <div class="llm-flag-tag">🇨🇳</div>
+      <div class="llm-flag-tag">CINA</div>
     </div>
 
   </div>
@@ -1954,7 +1954,7 @@
       </svg></div>
       <div class="llm-company">Sberbank</div>
       <div class="llm-model">GigaChat Ultra<br>Reasoning</div>
-      <div class="llm-flag-tag">🇷🇺</div>
+      <div class="llm-flag-tag">RUSSIA</div>
     </div>
 
     <div class="llm-card" data-reveal style="--brand:#FC3F1D;--badge-bg:#FC3F1D;--badge-fg:#fff">
@@ -1964,21 +1964,21 @@
       </svg></div>
       <div class="llm-company">Yandex</div>
       <div class="llm-model">YandexGPT · Alice</div>
-      <div class="llm-flag-tag">🇷🇺</div>
+      <div class="llm-flag-tag">RUSSIA</div>
     </div>
 
     <div class="llm-card" data-reveal style="--brand:#FFDD2D;--badge-bg:#FFDD2D;--badge-fg:#000">
       <div class="llm-badge"><span>T</span></div>
       <div class="llm-company">T-Bank</div>
       <div class="llm-model">T-Pro 2.0 · T-Lite</div>
-      <div class="llm-flag-tag">🇷🇺</div>
+      <div class="llm-flag-tag">RUSSIA</div>
     </div>
 
     <div class="llm-card" data-reveal style="--brand:#E60000;--badge-bg:#E60000;--badge-fg:#fff">
       <div class="llm-badge"><span>M</span></div>
       <div class="llm-company">MTS AI</div>
       <div class="llm-model">MTS LLM</div>
-      <div class="llm-flag-tag">🇷🇺</div>
+      <div class="llm-flag-tag">RUSSIA</div>
     </div>
 
   </div>

@@ -105,6 +105,7 @@
       display: flex; align-items: center; gap: 5px;
       transition: all 0.2s;
     }
+    .globe-ctrl-btn svg { width: 14px; height: 14px; flex: none; }
     .globe-ctrl-btn:hover {
       background: rgba(65,183,255,0.15);
       color: #41b7ff;
@@ -189,18 +190,18 @@
       it: {
         title:    "Leader & CEO dell'AI",
         sub:      'Luoghi di nascita · clicca un punto per scoprire',
-        toDark:   '🌑 Vista scura',
-        toMarble: '🌍 Vista reale',
-        rotStop:  '⏸ Ferma',
-        rotPlay:  '▶ Ruota',
+        toDark:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>Vista scura',
+        toMarble: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></svg>Vista reale',
+        rotStop:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>Ferma',
+        rotPlay:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5v17l14-8.5-14-8.5Z"/></svg>Ruota',
       },
       en: {
         title:    'AI Leaders & CEOs',
         sub:      'Birthplaces · click a dot to discover',
-        toDark:   '🌑 Dark view',
-        toMarble: '🌍 Real view',
-        rotStop:  '⏸ Stop',
-        rotPlay:  '▶ Rotate',
+        toDark:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>Dark view',
+        toMarble: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></svg>Real view',
+        rotStop:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>Stop',
+        rotPlay:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5v17l14-8.5-14-8.5Z"/></svg>Rotate',
       },
     };
 
@@ -224,8 +225,8 @@
       const texBtn = document.getElementById('btn-texture');
       const rotBtn = document.getElementById('btn-rotate');
       if (!texBtn || !rotBtn) return;
-      texBtn.textContent = currentTexture === 'marble' ? t.toDark : t.toMarble;
-      rotBtn.textContent = isRotating ? t.rotStop : t.rotPlay;
+      texBtn.innerHTML = currentTexture === 'marble' ? t.toDark : t.toMarble;
+      rotBtn.innerHTML = isRotating ? t.rotStop : t.rotPlay;
       rotBtn.classList.toggle('paused', !isRotating);
     }
 

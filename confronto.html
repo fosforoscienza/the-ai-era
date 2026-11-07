@@ -49,7 +49,13 @@
     .face .cols { height: 5vh; display: flex; align-items: flex-end; gap: .25vw; }
     .face .cols div { width: 1.3vw; border-radius: .5vh .5vh 0 0; height: 0; transition: height 1s var(--ease); }
     .face .cols .p { background: var(--pre); } .face .cols .q { background: linear-gradient(0deg, var(--accent), var(--cyan)); }
-    .face i { font-style: normal; font-size: 2.6vh; }
+    .face i { font-style: normal; display: block; width: 3.4vh; height: 3.4vh; margin: 0 auto; color: var(--soft, #8fd2ff); }
+    .face i svg { width: 100%; height: 100%; }
+    .db .lb { display: flex; align-items: center; gap: .6vw; }
+    .db .lb .ic { flex: none; width: 2.6vh; height: 2.6vh; display: grid; place-items: center; border-radius: 28%; color: var(--soft, #8fd2ff);
+      background: linear-gradient(160deg, rgba(143,210,255,.16), rgba(143,210,255,.04)); border: 1px solid rgba(143,210,255,.22); }
+    .db .lb .ic svg { width: 62%; height: 62%; }
+    .db .lb .tx { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     .face span { font-size: 1.35vh; color: var(--muted); font-variant-numeric: tabular-nums; }
     .same { margin-top: 1.2vh; font-size: 1.6vh; color: var(--muted); }
     .same b { color: #fff; }
@@ -103,7 +109,7 @@
       .grid { grid-template-columns: 1fr; grid-template-rows: none; gap: 14px; }
       .grid .card { grid-column: auto; padding: 18px 16px; border-radius: 18px; } .card h2 { font-size: 12px; margin-bottom: 12px; }
       .fut svg { max-height: 130px; } .delta b { font-size: 48px; } .delta span { font-size: 15px; } .delta small { font-size: 12px; }
-      .face .cols { height: 48px; gap: 3px; } .face .cols div { width: 10px; } .face i { font-size: 20px; } .face span { font-size: 11px; }
+      .face .cols { height: 48px; gap: 3px; } .face .cols div { width: 10px; } .face i { width: 26px; height: 26px; } .face span { font-size: 11px; }
       .same { font-size: 13px; }
       .rows { gap: 12px; } .db, .axis { grid-template-columns: 1fr 52px; gap: 4px 10px; }
       .db .lb { grid-column: 1 / -1; font-size: 14px; } .db .tk { height: 22px; } .db .dot { width: 16px; height: 16px; margin: -8px 0 0 -8px; } .db .ln { height: 5px; top: calc(50% - 2.5px); }
@@ -131,7 +137,7 @@
           <svg viewBox="0 0 200 112" aria-hidden="true">
             <defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#ff5468"/><stop offset=".5" stop-color="#ffd166"/><stop offset="1" stop-color="#41e0ff"/></linearGradient></defs>
             <path d="M14 100 A86 86 0 0 1 186 100" fill="none" stroke="url(#gg)" stroke-width="16" stroke-linecap="round" opacity=".85"/>
-            <text x="8" y="111" font-size="13">😨</text><text x="178" y="111" font-size="13">🤩</text>
+            <g transform="translate(2 94) scale(.62)" fill="none" stroke="#dbe7f5" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.8"/><path d="M8 17c1-1.9 2.4-2.8 4-2.8s3 .9 4 2.8"/></g><g transform="translate(184 94) scale(.62)" fill="none" stroke="#dbe7f5" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.8"/><path d="M7.5 13h9a4.5 4.5 0 0 1-9 0Z"/></g>
             <g class="needle" id="ndPre" style="transform: rotate(-90deg)"><line x1="100" y1="100" x2="100" y2="34" stroke="#8a96aa" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 5"/></g>
             <g class="needle" id="ndPost" style="transform: rotate(-90deg)"><line x1="100" y1="100" x2="100" y2="24" stroke="#fff" stroke-width="5.5" stroke-linecap="round"/></g>
             <circle cx="100" cy="100" r="9" fill="#fff"/>
@@ -162,7 +168,7 @@
 
   <script src="js/common.js"></script>
   <script src="js/sns-config.js"></script>
-  <script src="js/questionario.js?v=2"></script>
+  <script src="js/questionario.js?v=3"></script>
   <script>
     const Q = QZ.Q, $ = id => document.getElementById(id);
     const pct = (v, n) => n ? Math.round(v * 100 / n) : 0;
@@ -171,9 +177,9 @@
     const angle = avg => -90 + (avg - 1) / 4 * 180;
 
     Q.futuro.opts.forEach(o => { const f = document.createElement('div'); f.className = 'face'; f.id = 'fa-' + o[0];
-      f.innerHTML = `<div class="cols"><div class="p"></div><div class="q"></div></div><i>${o[2]}</i><span>0% → 0%</span>`; $('faces').appendChild(f); });
+      f.innerHTML = `<div class="cols"><div class="p"></div><div class="q"></div></div><i class="ic">${QZ.icon('futuro', o[0])}</i><span>0% → 0%</span>`; $('faces').appendChild(f); });
     const dbRow = (key, o) => { const d = document.createElement('div'); d.className = 'db'; d.id = key + '-' + o[0];
-      d.innerHTML = `<span class="lb">${o[2]} ${esc(o[1])}</span><div class="tk"><div class="ln"></div><div class="dot p"></div><div class="dot q"></div></div><div class="vs">0%<small>era 0%</small></div>`; return d; };
+      d.innerHTML = `<span class="lb"><i class="ic">${QZ.icon(key, o[0])}</i><span class="tx">${esc(o[1])}</span></span><div class="tk"><div class="ln"></div><div class="dot p"></div><div class="dot q"></div></div><div class="vs">0%<small>era 0%</small></div>`; return d; };
     Q.paure.opts.forEach(o => $('fears').appendChild(dbRow('paure', o)));
     Q.opportunita.opts.forEach(o => $('opps').appendChild(dbRow('opportunita', o)));
 
