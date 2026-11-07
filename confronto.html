@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#02040b" />
+  <title>Prima e dopo — il futuro dell'AI</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --accent: #41b7ff; --soft: #8fd2ff; --muted: #9fb0c6; --line: rgba(143,210,255,0.14); --card: rgba(11,18,32,0.72);
+            --red: #ff5468; --cyan: #41e0ff; --pre: #6b7890; --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: #02040b !important; overflow: hidden; height: 100%; margin: 0; }
+    body { color: #fff; font-family: inherit; }
+    .bg { position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(50% 60% at 90% 0%, rgba(65,224,255,0.13), transparent 70%),
+                  radial-gradient(45% 55% at 0% 100%, rgba(255,84,104,0.08), transparent 70%); }
+    .wrap { position: relative; z-index: 1; height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 2vh; padding: 3.4vh 3vw 7.5vh; box-sizing: border-box; }
+
+    header { display: flex; align-items: flex-end; justify-content: space-between; gap: 2vw; animation: up .8s var(--ease) both; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 12px; font-size: 1.5vh; font-weight: 700; letter-spacing: .34em; text-transform: uppercase; color: var(--soft); }
+    .eyebrow::before { content: ''; width: 34px; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+    h1 { margin: .8vh 0 0; font-size: 6.4vh; font-weight: 900; letter-spacing: -0.03em; line-height: 1; }
+    h1 em { font-style: normal; background: linear-gradient(90deg, var(--soft), var(--cyan)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .counts { display: flex; gap: 2.4vw; align-items: flex-end; }
+    .counts div { text-align: right; }
+    .counts b { display: block; font-size: 7vh; font-weight: 900; line-height: .9; font-variant-numeric: tabular-nums; }
+    .counts .pre b { color: var(--pre); }
+    .counts span { font-size: 1.6vh; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; font-weight: 700; }
+    .legend-k { display: flex; gap: 1.4vw; font-size: 1.6vh; color: var(--muted); margin-top: .8vh; }
+    .legend-k i { display: inline-block; width: 1.4vh; height: 1.4vh; border-radius: 50%; vertical-align: -0.2vh; margin-right: .4vw; }
+
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: 1.15fr 1fr; gap: 1.8vh 1.2vw; min-height: 0; }
+    .card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 2vh; padding: 2vh 1.5vw; display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+      animation: up .9s var(--ease) both; }
+    .c-fut { grid-column: span 5; } .c-fear { grid-column: span 7; animation-delay: .15s; }
+    .c-word { grid-column: span 5; animation-delay: .3s; } .c-opp { grid-column: span 7; animation-delay: .45s; }
+    .card h2 { margin: 0 0 1.2vh; font-size: 1.6vh; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: var(--soft); }
+
+    /* futuro: tachimetro con due lancette */
+    .fut { flex: 1; display: grid; grid-template-columns: 1.1fr 1fr; gap: 1vw; align-items: center; min-height: 0; }
+    .fut svg { width: 100%; max-height: 16vh; overflow: visible; }
+    .needle { transform-origin: 100px 100px; transition: transform 1.4s var(--ease); }
+    .delta b { display: block; font-size: 8vh; font-weight: 900; line-height: .9; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+    .delta b.up { color: var(--cyan); } .delta b.down { color: var(--red); }
+    .delta span { display: block; font-size: 2.1vh; color: #fff; font-weight: 700; margin-top: .6vh; }
+    .delta small { display: block; font-size: 1.6vh; color: var(--muted); margin-top: .4vh; line-height: 1.3; }
+    .faces { display: grid; grid-template-columns: repeat(5, 1fr); gap: .6vw; margin-top: 1.4vh; }
+    .face { display: flex; flex-direction: column; align-items: center; gap: .3vh; }
+    .face .cols { height: 5vh; display: flex; align-items: flex-end; gap: .25vw; }
+    .face .cols div { width: 1.3vw; border-radius: .5vh .5vh 0 0; height: 0; transition: height 1s var(--ease); }
+    .face .cols .p { background: var(--pre); } .face .cols .q { background: linear-gradient(0deg, var(--accent), var(--cyan)); }
+    .face i { font-style: normal; font-size: 2.6vh; }
+    .face span { font-size: 1.35vh; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .same { margin-top: 1.2vh; font-size: 1.6vh; color: var(--muted); }
+    .same b { color: #fff; }
+
+    /* manubri: un punto per prima, uno per dopo */
+    .rows { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: .4vh; }
+    .db { display: grid; grid-template-columns: 15vw 1fr 5.4vw; align-items: center; gap: 1vw; }
+    .db.hide { display: none; }
+    .db .lb { font-size: 1.9vh; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .db .tk { position: relative; height: 3vh; }
+    .db .tk::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: rgba(255,255,255,.07); }
+    .db .ln { position: absolute; top: calc(50% - 0.35vh); height: .7vh; border-radius: 1vh; transition: left 1s var(--ease), width 1s var(--ease); }
+    .db .dot { position: absolute; top: 50%; width: 2.2vh; height: 2.2vh; margin: -1.1vh 0 0 -1.1vh; border-radius: 50%; transition: left 1s var(--ease); }
+    .db .dot.p { background: var(--pre); border: 2px solid #02040b; }
+    .db .dot.q { box-shadow: 0 0 1.4vh var(--c); background: var(--c); border: 2px solid #02040b; }
+    .db .ln { background: linear-gradient(90deg, rgba(255,255,255,.12), var(--c)); }
+    .db .ln.neg { background: linear-gradient(90deg, var(--c), rgba(255,255,255,.12)); }
+    .db .vs { text-align: right; font-variant-numeric: tabular-nums; font-size: 2.2vh; font-weight: 900; }
+    .db .vs small { display: block; font-size: 1.35vh; font-weight: 600; color: var(--muted); }
+    .c-fear .db { --c: var(--red); } .c-opp .db { --c: var(--cyan); }
+    .axis { display: grid; grid-template-columns: 15vw 1fr 5.4vw; gap: 1vw; font-size: 1.3vh; color: var(--muted); margin-top: .4vh; }
+    .axis div { display: flex; justify-content: space-between; }
+
+    /* parole prima e dopo */
+    .clouds { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1vw; min-height: 0; }
+    .clouds > div { display: flex; flex-direction: column; min-height: 0; border-radius: 1.2vh; background: rgba(255,255,255,.03); padding: 1.2vh .8vw; }
+    .clouds h3 { margin: 0 0 .6vh; font-size: 1.5vh; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+    .clouds .post h3 { color: var(--cyan); }
+    .cloud { flex: 1; display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: .4vh .8vw; overflow: hidden; }
+    .cloud span { font-weight: 800; line-height: 1; animation: pop .6s var(--ease) both; }
+    .pre .cloud span { color: #aab6c8 !important; }
+    .empty { color: var(--muted); font-size: 1.6vh; font-style: italic; text-align: center; margin: auto; }
+
+    .wait { position: fixed; inset: 0; z-index: 3; display: none; place-items: center; text-align: center; background: rgba(2,4,11,.55); backdrop-filter: blur(3px); }
+    .wait.on { display: grid; }
+    .wait b { display: block; font-size: 4vh; font-weight: 900; }
+    .wait span { color: var(--muted); font-size: 2.2vh; }
+
+    @keyframes up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @keyframes pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+    /* da telefono: una colonna che scorre */
+    @media (max-aspect-ratio: 1/1), (max-width: 760px) {
+      html, body { overflow: auto; height: auto; }
+      #nav-dots, .nav-arrow, #lang-toggle, .wait { display: none !important; }
+      .wrap { height: auto; padding: 24px 16px 40px; gap: 14px; grid-template-rows: none; }
+      header { flex-direction: column; align-items: flex-start; }
+      .eyebrow { font-size: 11px; } h1 { font-size: 30px; }
+      .counts div { text-align: left; } .counts b { font-size: 44px; } .counts span { font-size: 11px; } .legend-k { font-size: 12px; gap: 14px; } .legend-k i { width: 10px; height: 10px; margin-right: 5px; }
+      .grid { grid-template-columns: 1fr; grid-template-rows: none; gap: 14px; }
+      .grid .card { grid-column: auto; padding: 18px 16px; border-radius: 18px; } .card h2 { font-size: 12px; margin-bottom: 12px; }
+      .fut svg { max-height: 130px; } .delta b { font-size: 48px; } .delta span { font-size: 15px; } .delta small { font-size: 12px; }
+      .face .cols { height: 48px; gap: 3px; } .face .cols div { width: 10px; } .face i { font-size: 20px; } .face span { font-size: 11px; }
+      .same { font-size: 13px; }
+      .rows { gap: 12px; } .db, .axis { grid-template-columns: 1fr 52px; gap: 4px 10px; }
+      .db .lb { grid-column: 1 / -1; font-size: 14px; } .db .tk { height: 22px; } .db .dot { width: 16px; height: 16px; margin: -8px 0 0 -8px; } .db .ln { height: 5px; top: calc(50% - 2.5px); }
+      .db .vs { font-size: 16px; } .db .vs small { font-size: 11px; } .db.hide { display: grid; }
+      .axis > span { display: none; } .axis { font-size: 10px; }
+      .clouds { min-height: 140px; } .clouds h3 { font-size: 11px; } .empty { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="eyebrow">Conosciamoci meglio · prima e dopo</div>
+        <h1>Vi abbiamo <em>cambiato idea?</em></h1>
+        <div class="legend-k"><span><i style="background:var(--pre)"></i>A inizio serata</span><span><i style="background:var(--cyan)"></i>Adesso</span></div>
+      </div>
+      <div class="counts"><div class="pre"><b id="nPre">0</b><span>prima</span></div><div><b id="nPost">0</b><span>dopo</span></div></div>
+    </header>
+
+    <div class="grid">
+      <section class="card c-fut"><h2>Come vedete il futuro con l’AI</h2>
+        <div class="fut">
+          <svg viewBox="0 0 200 112" aria-hidden="true">
+            <defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#ff5468"/><stop offset=".5" stop-color="#ffd166"/><stop offset="1" stop-color="#41e0ff"/></linearGradient></defs>
+            <path d="M14 100 A86 86 0 0 1 186 100" fill="none" stroke="url(#gg)" stroke-width="16" stroke-linecap="round" opacity=".85"/>
+            <text x="8" y="111" font-size="13">😨</text><text x="178" y="111" font-size="13">🤩</text>
+            <g class="needle" id="ndPre" style="transform: rotate(-90deg)"><line x1="100" y1="100" x2="100" y2="34" stroke="#8a96aa" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 5"/></g>
+            <g class="needle" id="ndPost" style="transform: rotate(-90deg)"><line x1="100" y1="100" x2="100" y2="24" stroke="#fff" stroke-width="5.5" stroke-linecap="round"/></g>
+            <circle cx="100" cy="100" r="9" fill="#fff"/>
+          </svg>
+          <div class="delta"><b id="delta">—</b><span id="deltaTxt">in attesa delle risposte</span><small id="avgs"></small></div>
+        </div>
+        <div class="faces" id="faces"></div>
+        <div class="same" id="same"></div>
+      </section>
+
+      <section class="card c-fear"><h2>Cosa vi fa paura</h2><div class="rows" id="fears"></div>
+        <div class="axis"><span></span><div><span>0%</span><span>50%</span><span>100%</span></div><span></span></div></section>
+
+      <section class="card c-word"><h2>Il futuro dell’AI in una parola</h2>
+        <div class="clouds"><div class="pre"><h3>Prima</h3><div class="cloud" id="cloudPre"></div></div><div class="post"><h3>Adesso</h3><div class="cloud" id="cloudPost"></div></div></div>
+      </section>
+
+      <section class="card c-opp"><h2>Quali opportunità vedete</h2><div class="rows" id="opps"></div>
+        <div class="axis"><span></span><div><span>0%</span><span>50%</span><span>100%</span></div><span></span></div></section>
+    </div>
+  </div>
+
+  <div class="wait" id="wait"><div><b>In attesa delle risposte di fine serata…</b><span>Inquadrate il QR e rispondete dal telefono</span></div></div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="#">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="#">&#8594;</a>
+
+  <script src="js/common.js"></script>
+  <script src="js/sns-config.js"></script>
+  <script src="js/questionario.js"></script>
+  <script>
+    const Q = QZ.Q, $ = id => document.getElementById(id);
+    const pct = (v, n) => n ? Math.round(v * 100 / n) : 0;
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const num = x => x.toFixed(1).replace('.', ',');
+    const angle = avg => -90 + (avg - 1) / 4 * 180;
+
+    Q.futuro.opts.forEach(o => { const f = document.createElement('div'); f.className = 'face'; f.id = 'fa-' + o[0];
+      f.innerHTML = `<div class="cols"><div class="p"></div><div class="q"></div></div><i>${o[2]}</i><span>0% → 0%</span>`; $('faces').appendChild(f); });
+    const dbRow = (key, o) => { const d = document.createElement('div'); d.className = 'db'; d.id = key + '-' + o[0];
+      d.innerHTML = `<span class="lb">${o[2]} ${esc(o[1])}</span><div class="tk"><div class="ln"></div><div class="dot p"></div><div class="dot q"></div></div><div class="vs">0%<small>era 0%</small></div>`; return d; };
+    Q.paure.opts.forEach(o => $('fears').appendChild(dbRow('paure', o)));
+    Q.opportunita.opts.forEach(o => $('opps').appendChild(dbRow('opportunita', o)));
+
+    function dumbbells(key, pre, post, show) {
+      const keys = Object.keys(post[key]).sort((x, y) => (post[key][y] + pre[key][y] * .01) - (post[key][x] + pre[key][x] * .01));
+      keys.forEach((k, i) => {
+        const d = $(key + '-' + k), a = pct(pre[key][k], pre.n), b = pct(post[key][k], post.n);
+        d.style.order = i; d.classList.toggle('hide', i >= show);
+        d.querySelector('.dot.p').style.left = a + '%'; d.querySelector('.dot.q').style.left = b + '%';
+        const ln = d.querySelector('.ln'); ln.style.left = Math.min(a, b) + '%'; ln.style.width = Math.abs(b - a) + '%'; ln.classList.toggle('neg', b < a);
+        const diff = b - a;
+        d.querySelector('.vs').innerHTML = `${b}%<small>${diff === 0 ? 'uguale' : (diff > 0 ? '+' : '−') + Math.abs(diff) + ' punti'}</small>`;
+      });
+    }
+
+    function cloud(el, words, emptyTxt) {
+      el.textContent = '';
+      if (!words.length) { el.innerHTML = `<div class="empty">${emptyTxt}</div>`; return; }
+      const max = words[0][1], cols = ['#fff', '#8fd2ff', '#41e0ff', '#5cc3ff', '#ffd166', '#ff8a98'];
+      const phone = matchMedia('(max-aspect-ratio: 1/1), (max-width: 760px)').matches;
+      words.slice(0, 14).forEach(([w, c], i) => { const s = document.createElement('span'); s.textContent = w;
+        const size = 1.3 + 2.4 * Math.sqrt(c / max); s.style.fontSize = phone ? size * 7 + 'px' : size + 'vh';
+        s.style.color = cols[i % cols.length]; s.style.animationDelay = i * 0.04 + 's'; el.appendChild(s); });
+    }
+
+    let lastWords = '';
+    function render(rows) {
+      const preRows = rows.filter(r => r.fase !== 'post'), postRows = rows.filter(r => r.fase === 'post');
+      const pre = QZ.aggregate(preRows), post = QZ.aggregate(postRows);
+      $('nPre').textContent = pre.n; $('nPost').textContent = post.n;
+      $('wait').classList.toggle('on', post.n === 0);
+
+      // futuro: lancette e differenza tra le medie
+      $('ndPre').style.transform = `rotate(${pre.futuroN ? angle(pre.futuroMedia) : -90}deg)`;
+      $('ndPost').style.transform = `rotate(${post.futuroN ? angle(post.futuroMedia) : -90}deg)`;
+      if (pre.futuroN && post.futuroN) {
+        const d = post.futuroMedia - pre.futuroMedia, el = $('delta');
+        el.textContent = (d > 0 ? '+' : d < 0 ? '−' : '') + num(Math.abs(d));
+        el.className = d > 0.05 ? 'up' : d < -0.05 ? 'down' : '';
+        $('deltaTxt').textContent = d > 0.05 ? 'più fiduciosi di prima' : d < -0.05 ? 'più preoccupati di prima' : 'la sala la pensa come prima';
+        $('avgs').textContent = `media da ${num(pre.futuroMedia)} a ${num(post.futuroMedia)} su 5`;
+      }
+      const fMax = Math.max(1, ...[1, 2, 3, 4, 5].map(k => Math.max(pct(pre.futuro[k], pre.futuroN), pct(post.futuro[k], post.futuroN))));
+      Q.futuro.opts.forEach(o => { const f = $('fa-' + o[0]), a = pct(pre.futuro[o[0]], pre.futuroN), b = pct(post.futuro[o[0]], post.futuroN);
+        f.querySelector('.p').style.height = a * 100 / fMax + '%'; f.querySelector('.q').style.height = b * 100 / fMax + '%';
+        f.querySelector('span').textContent = `${a}% → ${b}%`; });
+
+      // le stesse persone (stesso telefono) prima e dopo
+      const before = new Map(); preRows.forEach(r => { if (r.anon_id && r.futuro) before.set(r.anon_id, r.futuro); });
+      let up = 0, down = 0, same = 0;
+      postRows.forEach(r => { const b = before.get(r.anon_id); if (b == null || !r.futuro) return; r.futuro > b ? up++ : r.futuro < b ? down++ : same++; });
+      const pairs = up + down + same;
+      $('same').innerHTML = pairs ? `Chi ha risposto due volte (<b>${pairs}</b>): <b style="color:var(--cyan)">${pct(up, pairs)}%</b> più fiduciosi · <b>${pct(same, pairs)}%</b> uguale · <b style="color:var(--red)">${pct(down, pairs)}%</b> più preoccupati` : '';
+
+      dumbbells('paure', pre, post, 6);
+      dumbbells('opportunita', pre, post, 6);
+
+      const sig = JSON.stringify([pre.parole.slice(0, 14), post.parole.slice(0, 14)]);
+      if (sig !== lastWords) { lastWords = sig; cloud($('cloudPre'), pre.parole, 'nessuna parola'); cloud($('cloudPost'), post.parole, 'in attesa…'); }
+    }
+
+    // dal database ogni 4 secondi, oppure finti con ?demo=1 (gli stessi telefoni prima e dopo)
+    const DEMO = new URLSearchParams(location.search).has('demo');
+    let demo = DEMO ? QZ.demoRows(140, 'pre').map((r, i) => Object.assign(r, { anon_id: 'd' + i })) : null, k = 0;
+    async function tick() {
+      try {
+        if (DEMO) { if (k < 110) { demo = demo.concat(QZ.demoRows(10, 'post').map((r, i) => Object.assign(r, { anon_id: 'd' + (k + i) }))); k += 10; } render(demo); }
+        else render(await QZ.fetchAll());
+      } catch (e) { /* rete assente: si riprova al giro dopo */ }
+    }
+    tick(); setInterval(tick, 4000);
+    initNav();
+  </script>
+</body>
+</html>

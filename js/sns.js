@@ -10,6 +10,10 @@ const SNS = (function () {
   // esauriscono la memoria dei telefoni). Si rigenera dopo ogni modifica.
   const SLIDES = [
     { id: 'slide:saturday-night-science', src: 'saturday-night-science.html', thumb: 'img/sns/saturday-night-science.jpg', title: 'The AI Era',             sub: 'Copertina · CICAP Fest' },
+    // Questionario «Conosciamoci meglio» (risposte su Supabase, js/questionario.js):
+    // QR a inizio serata, poi i risultati della parte 1. La parte 2 si rivede alla fine, prima e dopo.
+    { id: 'slide:conosciamoci',         src: 'conosciamoci.html', thumb: 'img/sns/conosciamoci.jpg', title: 'Conosciamoci meglio', sub: 'QR del questionario · inizio serata' },
+    { id: 'slide:risultati',            src: 'risultati.html',    thumb: 'img/sns/risultati.jpg',    title: 'Come usate l’AI',     sub: 'Risultati in diretta · parte 1' },
     { id: 'slide:dartmouth-1956-voce',    src: 'dartmouth-1956-voce.html', thumb: 'img/sns/dartmouth-1956-voce.jpg', title: "La nascita dell'AI",     sub: 'La voce della proposta' },
     { id: 'slide:dartmouth-1956-2',       src: 'dartmouth-1956-2.html', thumb: 'img/sns/dartmouth-1956-2.jpg',       title: '4 · 8 · 1',              sub: 'Firmatari · Settimane · Una parola nuova' },
     { id: 'slide:dartmouth-1956',         src: 'dartmouth-1956.html', thumb: 'img/sns/dartmouth-1956.jpg',         title: 'Dartmouth 1956',         sub: 'Copertina' },
@@ -54,6 +58,8 @@ const SNS = (function () {
     { id: 'slide:paypal-mafia-3',   src: 'paypal-mafia-3.html',   thumb: 'img/sns/paypal-mafia-3.jpg',   title: 'PayPal Mafia — foto',  sub: 'The AI Era' },
     { id: 'slide:paypal-mafia-4',   src: 'paypal-mafia-4.html',   thumb: 'img/sns/paypal-mafia-4.jpg',   title: 'PayPal Mafia — chi ha creato cosa', sub: 'Foto con i nomi' }
   ].concat(quizSlides(), [
+    { id: 'slide:conosciamoci-dopo',    src: 'conosciamoci.html?fase=post', thumb: 'img/sns/conosciamoci-dopo.jpg', title: 'E adesso?', sub: 'QR del questionario · fine serata (parte 2)' },
+    { id: 'slide:confronto',            src: 'confronto.html',    thumb: 'img/sns/confronto.jpg',    title: 'Vi abbiamo cambiato idea?', sub: 'Prima e dopo · parte 2 in diretta' },
     { id: 'slide:grazie',           src: 'grazie.html',           thumb: 'img/sns/grazie.jpg',           title: 'Grazie',               sub: 'Chiusura · social e Fosforo' },
     { id: 'slide:instagram',        src: 'instagram.html',        thumb: 'img/sns/instagram.jpg',        title: 'Instagram',            sub: '@mattia_crivellini · QR code' }
   ]);

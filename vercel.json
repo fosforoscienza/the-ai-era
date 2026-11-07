@@ -2,10 +2,36 @@
   "buildCommand": "sh scripts/sns-config.sh",
   "outputDirectory": ".",
   "redirects": [
-    { "source": "/", "destination": "/show", "permanent": false }
+    {
+      "source": "/",
+      "destination": "/show",
+      "permanent": false
+    }
   ],
   "rewrites": [
-    { "source": "/show", "destination": "/sns-show.html" },
-    { "source": "/console", "destination": "/sns-console.html" }
+    {
+      "source": "/show",
+      "destination": "/sns-show.html"
+    },
+    {
+      "source": "/console",
+      "destination": "/sns-console.html"
+    },
+    {
+      "source": "/questionario",
+      "destination": "/questionario.html"
+    },
+    {
+      "source": "/dopo",
+      "destination": "/questionario.html"
+    },
+    {
+      "source": "/risultati",
+      "destination": "/risultati.html"
+    },
+    {
+      "source": "/confronto",
+      "destination": "/confronto.html"
+    }
   ]
 }

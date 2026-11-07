@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conosciamoci meglio — Saturday Night Science</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --accent: #41b7ff; --soft: #8fd2ff; --cyan: #41e0ff; --red: #ff5468; --muted: #9fb0c6; --ease: cubic-bezier(0.16,1,0.3,1); }
+    html, body { background: #02040b !important; overflow: hidden; height: 100%; margin: 0; }
+    body { color: #fff; font-family: inherit; }
+    .bg { position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(45% 65% at 76% 50%, rgba(65,183,255,0.18), transparent 70%),
+                  radial-gradient(40% 50% at 5% 0%, rgba(65,224,255,0.07), transparent 70%); }
+    .grid-bg { position: fixed; inset: 0; z-index: 0; opacity: .5;
+      background-image: radial-gradient(rgba(143,210,255,.18) 1px, transparent 1.4px); background-size: 4.2vh 4.2vh;
+      mask-image: radial-gradient(60% 70% at 72% 50%, #000, transparent 75%); -webkit-mask-image: radial-gradient(60% 70% at 72% 50%, #000, transparent 75%); }
+
+    .left { position: fixed; z-index: 2; left: 6vw; top: 50%; transform: translateY(-50%); width: 44vw; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 12px; font-size: 1.7vh; font-weight: 700; letter-spacing: .34em; text-transform: uppercase; color: var(--soft); animation: up .8s var(--ease) .2s both; }
+    .eyebrow::before { content: ''; width: 34px; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+    h1 { margin: 1.6vh 0 0; font-size: 11vh; font-weight: 900; letter-spacing: -0.04em; line-height: .92; animation: up .9s var(--ease) .35s both; }
+    h1 em { font-style: normal; background: linear-gradient(90deg, var(--soft), var(--cyan)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding-right: .05em; }
+    .lead { margin: 2.4vh 0 4.4vh; font-size: 2.9vh; font-weight: 300; line-height: 1.35; color: rgba(255,255,255,.8); animation: up .9s var(--ease) .5s both; }
+    .lead b { font-weight: 700; color: #fff; }
+    .parts { display: grid; gap: 1.8vh; }
+    .part { display: grid; grid-template-columns: 7.4vh 1fr; gap: 1.6vw; align-items: center; padding: 2.2vh 1.6vw; border-radius: 2vh;
+      background: rgba(11,18,32,.75); border: 1px solid rgba(143,210,255,.18); animation: up .8s var(--ease) both; }
+    .part:nth-child(1) { animation-delay: .7s; } .part:nth-child(2) { animation-delay: .9s; }
+    .part .n { width: 7.4vh; height: 7.4vh; border-radius: 50%; display: grid; place-items: center; font-size: 3.6vh; font-weight: 900; color: #02040b;
+      background: linear-gradient(135deg, var(--soft), var(--accent)); box-shadow: 0 0 3vh rgba(65,183,255,.4); }
+    .part.p2 .n { background: linear-gradient(135deg, #b8f4ff, var(--cyan)); box-shadow: 0 0 3vh rgba(65,224,255,.4); }
+    .part h2 { margin: 0; font-size: 3.1vh; font-weight: 800; line-height: 1.15; }
+    .part p { margin: .7vh 0 0; font-size: 2vh; color: var(--muted); }
+    .part .em { margin-left: .4vw; letter-spacing: .3vw; }
+
+    /* QR */
+    .right { position: fixed; z-index: 2; right: 7vw; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; animation: pop 1s var(--ease) .6s both; }
+    .qrwrap { position: relative; width: 46vh; height: 46vh; display: grid; place-items: center; }
+    .ring { position: absolute; inset: 0; border-radius: 4vh; border: 2px solid rgba(143,210,255,.5); animation: ring 3s var(--ease) infinite; }
+    .ring:nth-child(2) { animation-delay: 1.5s; }
+    .qrcard { position: relative; width: 40vh; height: 40vh; padding: 2.6vh; box-sizing: border-box; background: #fff; border-radius: 3.2vh;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.3), 0 3vh 8vh rgba(65,183,255,.35); }
+    .qrcard img { width: 100%; height: 100%; display: block; }
+    .scan { position: absolute; left: 2.6vh; right: 2.6vh; height: .5vh; border-radius: 1vh; background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      box-shadow: 0 0 2vh var(--cyan); animation: scan 2.6s ease-in-out infinite; opacity: .85; }
+    .hint { margin-top: 3vh; font-size: 2.4vh; font-weight: 700; display: flex; align-items: center; gap: .8vw; }
+    .url { margin-top: .8vh; font-size: 2vh; color: var(--soft); letter-spacing: .02em; }
+    .live { margin-top: 2.6vh; display: inline-flex; align-items: baseline; gap: .8vw; padding: 1.2vh 1.6vw; border-radius: 99px; background: rgba(255,84,104,.1); border: 1px solid rgba(255,84,104,.35); }
+    .live i { width: 1.2vh; height: 1.2vh; border-radius: 50%; background: var(--red); box-shadow: 0 0 1.4vh var(--red); animation: blink 1.6s infinite; align-self: center; }
+    .live b { font-size: 3.4vh; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .live span { font-size: 2vh; color: #ffc2ca; }
+    .live.bump b { animation: bump .6s var(--ease); }
+
+    @keyframes up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+    @keyframes pop { from { opacity: 0; transform: translateY(-50%) scale(.85); } to { opacity: 1; transform: translateY(-50%); } }
+    @keyframes ring { 0% { transform: scale(.88); opacity: .8; } 100% { transform: scale(1.12); opacity: 0; } }
+    @keyframes scan { 0%, 100% { top: 3vh; } 50% { top: calc(100% - 3.5vh); } }
+    @keyframes blink { 50% { opacity: .25; } }
+    @keyframes bump { 40% { transform: scale(1.18); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="bg"></div><div class="grid-bg"></div>
+
+  <div class="left">
+    <div class="eyebrow" id="eyebrow">Prima di cominciare</div>
+    <h1 id="title">Conosciamoci <em>meglio</em></h1>
+    <div class="lead" id="lead">Due minuti dal telefono, <b>tutto anonimo</b>.<br>Le risposte di tutta la sala arrivano qui, sullo schermo.</div>
+    <div class="parts" id="parts">
+      <div class="part"><div class="n">1</div><div><h2>Come usi l’AI nella tua quotidianità</h2><p>Quanto spesso, con quali strumenti, per fare cosa <span class="em">📱💬✍️</span></p></div></div>
+      <div class="part p2"><div class="n">2</div><div><h2>Come vedi il futuro dell’AI</h2><p>Paure e opportunità <span class="em">😨🚀</span></p></div></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="qrwrap"><div class="ring"></div><div class="ring"></div>
+      <div class="qrcard"><img id="qr" src="img/questionario/qr-prima.svg" alt="QR code del questionario" /><div class="scan"></div></div>
+    </div>
+    <div class="hint">📷 Inquadra con la fotocamera</div>
+    <div class="url" id="url">the-ai-era.vercel.app/questionario</div>
+    <div class="live" id="live"><i></i><b id="n">0</b><span>risposte</span></div>
+  </div>
+
+  <div id="nav-dots"></div>
+  <a class="nav-arrow" id="nav-prev" href="#">&#8592;</a>
+  <a class="nav-arrow" id="nav-next" href="#">&#8594;</a>
+
+  <script src="js/common.js"></script>
+  <script src="js/sns-config.js"></script>
+  <script src="js/questionario.js"></script>
+  <script>
+    // ?fase=post: la versione di fine serata, solo la parte 2
+    if (QZ.FASE === 'post') {
+      document.title = 'E adesso? — Saturday Night Science';
+      document.getElementById('eyebrow').textContent = 'Prima di salutarci';
+      document.getElementById('title').innerHTML = 'E <em>adesso?</em>';
+      document.getElementById('lead').innerHTML = 'Le stesse domande di inizio serata, <b>solo sul futuro</b>.<br>Un minuto: vediamo se qualcosa è cambiato.';
+      document.getElementById('parts').innerHTML = '<div class="part p2"><div class="n">2</div><div><h2>Come vedi il futuro dell’AI, adesso?</h2><p>Paure e opportunità, dopo questa serata <span class="em">😨🚀</span></p></div></div>';
+      document.getElementById('qr').src = 'img/questionario/qr-dopo.svg';
+      document.getElementById('url').textContent = 'the-ai-era.vercel.app/dopo';
+    }
+
+    // contatore delle risposte in diretta
+    let last = -1;
+    async function tick() {
+      try {
+        const n = (await QZ.fetchAll(QZ.FASE)).length, el = document.getElementById('n');
+        el.textContent = n;
+        if (last >= 0 && n !== last) { const l = document.getElementById('live'); l.classList.remove('bump'); void l.offsetWidth; l.classList.add('bump'); }
+        last = n;
+      } catch (e) {}
+    }
+    tick(); setInterval(tick, 4000);
+    initNav();
+  </script>
+</body>
+</html>
