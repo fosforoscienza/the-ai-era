@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════════════
-// Saturday Night Science — regia condivisa tra show e console
+// The AI Era — regia condivisa tra show e console
 // Lo show (sns-show.html) va sul proiettore, la console (sns-console.html)
 // sullo schermo del relatore o sul telefono, anche su un altro dispositivo.
 // I video caricati dalla console restano in IndexedDB di quel browser: per
