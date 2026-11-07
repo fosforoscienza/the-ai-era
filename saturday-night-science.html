@@ -214,7 +214,7 @@
   </div>
 
   <script src="js/common.js"></script>
-  <script src="js/rete-neurale.js"></script>
+  <script src="js/rete-neurale.js?v=2"></script>
   <script>
     // Titolo lettera per lettera, con ritardi scalati
     document.querySelectorAll('[data-split]').forEach(el => {
@@ -259,7 +259,7 @@
     renderTexts();
     initNav();
 
-    startNeuralNet(document.getElementById('sky'));
+    startNeuralNet(document.getElementById('sky'), { hot: [255, 64, 88] });   // neuroni accesi rossi
   </script>
 </body>
 </html>

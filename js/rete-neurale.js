@@ -2,8 +2,13 @@
 // Rete neurale a strati per gli sfondi delle slide SNS: segnali che entrano
 // da sinistra, accendono i neuroni e si propagano strato dopo strato.
 // Uso: startNeuralNet(document.getElementById('sky'))
+//      startNeuralNet(cv, { hot: [255, 64, 88] })  → neuroni accesi di quel colore
 // ════════════════════════════════════════════════════
-function startNeuralNet(cv) {
+function startNeuralNet(cv, opts) {
+  const COLD = [143, 210, 255];                       // anello a riposo
+  const HOT = (opts && opts.hot) || null;             // colore dei neuroni accesi (default: azzurro)
+  const haloRGB = (HOT || [65, 183, 255]).join(',');
+  const ring = k => HOT ? COLD.map((c, i) => Math.round(c + (HOT[i] - c) * k)).join(',') : COLD.join(',');
   const ctx = cv.getContext('2d');
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const COUNTS = [5, 8, 11, 13, 11, 8, 5];          // neuroni per strato
@@ -76,14 +81,14 @@ function startNeuralNet(cv) {
       if (n.act > 0.02) {
         const r = 6 + n.act * 16;
         const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0, `rgba(65,183,255,${0.55 * n.act})`); g.addColorStop(1, 'rgba(65,183,255,0)');
+        g.addColorStop(0, `rgba(${haloRGB},${(HOT ? 0.7 : 0.55) * n.act})`); g.addColorStop(1, `rgba(${haloRGB},0)`);
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
       }
       ctx.fillStyle = '#02040b'; ctx.beginPath(); ctx.arc(x, y, 5, 0, 6.283); ctx.fill();
       ctx.lineWidth = 1.6;
-      ctx.strokeStyle = `rgba(143,210,255,${0.6 + n.act * 0.4})`;
+      ctx.strokeStyle = `rgba(${ring(Math.min(1, n.act * 1.5))},${0.6 + n.act * 0.4})`;
       ctx.beginPath(); ctx.arc(x, y, 5, 0, 6.283); ctx.stroke();
-      if (n.act > 0.05) { ctx.fillStyle = `rgba(255,255,255,${n.act})`; ctx.beginPath(); ctx.arc(x, y, 2, 0, 6.283); ctx.fill(); }
+      if (n.act > 0.05) { ctx.fillStyle = HOT ? `rgba(255,220,224,${n.act})` : `rgba(255,255,255,${n.act})`; ctx.beginPath(); ctx.arc(x, y, 2, 0, 6.283); ctx.fill(); }
       n.act *= 0.965;
     }
     if (!still) requestAnimationFrame(frame);
