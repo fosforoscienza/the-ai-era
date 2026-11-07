@@ -59,6 +59,9 @@ const SNS = (function () {
     { id: 'slide:paypal-mafia-3',   src: 'paypal-mafia-3.html',   thumb: 'img/sns/paypal-mafia-3.jpg',   title: 'PayPal Mafia — foto',  sub: 'The AI Era' },
     { id: 'slide:paypal-mafia-4',   src: 'paypal-mafia-4.html',   thumb: 'img/sns/paypal-mafia-4.jpg',   title: 'PayPal Mafia — chi ha creato cosa', sub: 'Foto con i nomi' }
   ].concat(quizSlides(), [
+    // Video in sequenza prima del questionario di fine serata (stesso id della galleria)
+    { id: 'video:la-nostra-voce', video: true, thumb: 'img/la-nostra-voce-poster.jpg',
+      title: 'La nostra voce', sub: 'Video · doppiaggio e voci sintetiche' },
     { id: 'slide:conosciamoci-dopo',    src: 'conosciamoci.html?fase=post', thumb: 'img/sns/conosciamoci-dopo.jpg', title: 'E adesso?', sub: 'QR del questionario · fine serata (parte 2)' },
     { id: 'slide:confronto',            src: 'confronto.html',    thumb: 'img/sns/confronto.jpg',    title: 'Vi abbiamo cambiato idea?', sub: 'Prima e dopo · parte 2 in diretta' },
     { id: 'slide:grazie',           src: 'grazie.html',           thumb: 'img/sns/grazie.jpg',           title: 'Grazie',               sub: 'Chiusura · social e Fosforo' },
@@ -101,7 +104,10 @@ const SNS = (function () {
       poster: 'img/che-cose-il-machine-learning-poster.jpg',
       title: "Che cos'è il machine learning", sub: 'Cicerone AI', dur: 138 },
     { id: 'video:intro', src: 'video/intro.m4v', poster: 'img/intro-poster.jpg',
-      title: 'Intro The AI Era', sub: 'The AI Era', dur: 60 }
+      title: 'Intro The AI Era', sub: 'The AI Era', dur: 60 },
+    // dall'ultima slide di «Divertiamoci con l'Intelligenza Artificiale 2025» (Keynote)
+    { id: 'video:la-nostra-voce', src: 'video/la-nostra-voce.mp4', poster: 'img/la-nostra-voce-poster.jpg',
+      title: 'La nostra voce', sub: 'Doppiaggio e voci sintetiche', dur: 133 }
   ];
 
   // ── Trasporto ──
