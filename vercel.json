@@ -32,6 +32,10 @@
     {
       "source": "/confronto",
       "destination": "/confronto.html"
+    },
+    {
+      "source": "/check",
+      "destination": "/check.html"
     }
   ]
 }

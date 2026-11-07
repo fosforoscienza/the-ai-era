@@ -149,6 +149,23 @@
     .drop.over { border-color: var(--accent); background: rgba(65,183,255,0.08); color: var(--text); }
     .note { font-size: 13px; color: var(--muted); margin-top: 12px; }
     
+    /* ── Questionario ── */
+    .qz { border: 1px solid var(--line); border-radius: 14px; background: var(--panel-2); padding: 14px; }
+    .qz .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .qz .stats { font-size: 14px; color: var(--muted); }
+    .qz .stats b { color: var(--text); }
+    .qz .row .btn { padding: 8px 14px; font-size: 14px; }
+    .qz a.btn { color: var(--text); text-decoration: none; }
+    .qz .row .btn.danger { border-color: rgba(255,77,94,0.5); color: #ffb3bb; }
+    .qz .words { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .qz .words .none { font-size: 13px; color: var(--muted); }
+    .qz .w { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: #050b16; color: var(--text); font: inherit; font-size: 15px; cursor: pointer; }
+    .qz .w small { color: var(--muted); margin-left: 4px; }
+    .qz .w.hidden, .qz .w.filtro { text-decoration: line-through; color: var(--muted); border-style: dashed; }
+    .qz .w.hidden { border-color: rgba(255,77,94,0.6); }
+    .qz .w.shown { border-color: rgba(65,224,160,0.6); }
+    .qz .w em { font-style: normal; font-size: 11px; margin-left: 6px; text-decoration: none; display: inline-block; }
+
     @media (max-width: 640px) {
       .onair { grid-template-columns: minmax(0, 1fr); padding: 14px 16px; }
       .onair .fx { grid-column: 1 / -1; order: 8; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -204,6 +221,18 @@
     </details>
 
     <section>
+      <h2>Questionario <span>risposte del pubblico · tocca una parola per toglierla dallo schermo (o rimetterla)</span></h2>
+      <div class="qz">
+        <div class="row">
+          <span class="stats" id="qz-stats">Collegamento al questionario…</span>
+          <button class="btn danger" id="qz-reset" style="margin-left:auto">Azzera risultati</button>
+          <a class="btn" id="qz-check" href="check.html">Prova generale →</a>
+        </div>
+        <div class="words" id="qz-words"></div>
+      </div>
+    </section>
+
+    <section>
       <h2>Slide <span>tocca per mandarla in onda · trascinala per riordinare (col dito: tieni premuto, poi sposta) · × per eliminare</span><span class="saved" id="saved">✓ Salvato</span><button class="reset" id="reset-order" hidden>Ordine iniziale</button></h2>
       <div class="grid" id="slides"></div>
       <div class="trash" id="trash" hidden><span class="lbl">Eliminate</span></div>
@@ -223,6 +252,7 @@
   <script src="js/sns-config.js"></script>
   <script src="js/film-quiz-data.js"></script>
   <script src="js/sns.js"></script>
+  <script src="js/questionario.js"></script>
   <script>
     const $ = id => document.getElementById(id);
     let show = null, lastSeen = 0, videoList = [];
@@ -597,6 +627,37 @@
       else if (m.t === 'order' && Array.isArray(m.ids) && (+m.rev || 0) > rev) adoptOrder(m.ids, m.deleted, +m.rev);
       else if (m.t === 'show-ready') SNS.send({ t: 'hello', net: true });
     });
+    // ── Questionario: conteggi, azzeramento, parole sullo schermo ──
+    const QZ_STATUS = { ok: '', shown: 'rimessa', hidden: 'nascosta', filtro: 'filtro' };
+    async function paintQuiz() {
+      let rows;
+      try { rows = await QZ.fetchAll(); } catch (_) { $('qz-stats').textContent = 'Questionario non raggiungibile (Mac mini?)'; return; }
+      const pre = rows.filter(r => r.fase === 'pre').length, post = rows.length - pre, c = QZ.ctl();
+      const at = c.resetAt ? ' · azzerato alle ' + new Date(c.resetAt).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : '';
+      $('qz-stats').innerHTML = `Serata <b>${QZ.EVENTO}</b> · <b>${pre}</b> risposte a inizio · <b>${post}</b> a fine serata${at}`;
+      const words = QZ.aggregate(rows).paroleTutte, box = $('qz-words');
+      box.textContent = '';
+      if (!words.length) { box.innerHTML = '<span class="none">Ancora nessuna parola.</span>'; return; }
+      words.forEach(([w, n, st]) => {
+        const b = document.createElement('button'); b.className = 'w ' + st; b.type = 'button';
+        b.title = st === 'ok' || st === 'shown' ? 'Togli dallo schermo' : 'Rimetti sullo schermo';
+        b.innerHTML = `${w.replace(/[&<>"]/g, '')}<small>×${n}</small>${QZ_STATUS[st] ? `<em>${QZ_STATUS[st]}</em>` : ''}`;
+        b.addEventListener('click', async () => {
+          b.disabled = true;
+          try { await QZ.setWord(w, !(st === 'ok' || st === 'shown')); } catch (_) { alert('Non riesco a salvare: controlla la connessione.'); }
+          paintQuiz();
+        });
+        box.appendChild(b);
+      });
+    }
+    $('qz-reset').addEventListener('click', async () => {
+      if (!confirm('Azzerare i risultati del questionario di questa serata?\nLe risposte arrivate finora non verranno più contate (restano salvate).')) return;
+      try { await QZ.resetResults(); } catch (_) { alert('Non riesco ad azzerare: controlla la connessione.'); }
+      paintQuiz();
+    });
+    paintQuiz(); setInterval(paintQuiz, 5000);
+    $('qz-check').href = 'check.html' + location.search;          // stessa stanza e serata
+
     // Ping: ogni 2 s nello stesso browser, ogni 10 s sulla rete
     let ticks = 0;
     setInterval(() => { const net = ++ticks % 5 === 0; SNS.send({ t: 'hello', net }, !net); paint(); }, 2000);

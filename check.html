@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#02040b" />
+  <title>Prova generale — Saturday Night Science</title>
+  <style>
+    :root { --bg: #02040b; --card: #0b1220; --line: rgba(143,210,255,0.14); --soft: #8fd2ff; --muted: #9fb0c6;
+            --ok: #3ee08f; --warn: #ffc857; --ko: #ff5468; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; }
+    .back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px; padding: 9px 16px; border-radius: 10px; border: 1px solid var(--line);
+      background: #0d1a2c; color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; }
+    .back:hover { border-color: rgba(143,210,255,.4); }
+    main { max-width: 860px; margin: 0 auto; padding: 32px 16px 48px; }
+    .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: var(--soft); }
+    h1 { margin: 8px 0 4px; font-size: 36px; font-weight: 900; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); margin: 0 0 22px; line-height: 1.45; }
+    .verdict { display: flex; align-items: center; gap: 14px; padding: 18px 20px; border-radius: 16px; margin-bottom: 18px; font-size: 20px; font-weight: 800;
+      background: rgba(255,255,255,.04); border: 1px solid var(--line); }
+    .verdict i { width: 18px; height: 18px; border-radius: 50%; background: var(--muted); flex: none; }
+    .verdict.ok { border-color: rgba(62,224,143,.5); } .verdict.ok i { background: var(--ok); box-shadow: 0 0 14px var(--ok); }
+    .verdict.warn { border-color: rgba(255,200,87,.5); } .verdict.warn i { background: var(--warn); box-shadow: 0 0 14px var(--warn); }
+    .verdict.ko { border-color: rgba(255,84,104,.5); } .verdict.ko i { background: var(--ko); box-shadow: 0 0 14px var(--ko); }
+    .verdict button { margin-left: auto; padding: 9px 16px; border-radius: 10px; border: 1px solid var(--line); background: #0d1a2c; color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .list { display: grid; gap: 10px; }
+    .item { display: grid; grid-template-columns: 14px 1fr; gap: 6px 14px; align-items: start; padding: 14px 16px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); }
+    .item i { width: 14px; height: 14px; border-radius: 50%; margin-top: 4px; background: #3a4357; }
+    .item.ok i { background: var(--ok); } .item.warn i { background: var(--warn); } .item.ko i { background: var(--ko); }
+    .item.run i { background: var(--soft); animation: blink 1s infinite; }
+    .item b { font-size: 16px; }
+    .item p { grid-column: 2; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .item p code { color: #dbe7f5; font-size: 13px; }
+    .item p a { color: var(--soft); }
+    @keyframes blink { 50% { opacity: .3; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" id="back" href="sns-console.html">← Torna alla console</a>
+    <div class="eyebrow">Saturday Night Science</div>
+    <h1>Prova generale</h1>
+    <p class="sub">Aprila in sala, con la rete del posto, sul computer del proiettore (e poi sul telefono della console): controlla che tutto quello che serve allo show risponda.</p>
+    <div class="verdict" id="verdict"><i></i><span id="verdict-txt">Controllo in corso…</span><button id="again">Ricontrolla</button></div>
+    <div class="list" id="list"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script>
+  <script src="js/sns-config.js"></script>
+  <script src="js/film-quiz-data.js"></script>
+  <script src="js/sns.js"></script>
+  <script src="js/questionario.js"></script>
+  <script>
+    const list = document.getElementById('list');
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const mb = n => (n / 1048576).toFixed(n > 104857600 ? 0 : 1).replace('.', ',') + ' MB';
+    const strip = src => src.split('?')[0];
+
+    // Ogni controllo: titolo + funzione che restituisce [stato, dettaglio]; stato: ok | warn | ko
+    const CHECKS = [
+      ['Connessione a internet', async () => {
+        const c = navigator.connection, t = c && c.effectiveType ? ` (${c.effectiveType}${c.downlink ? ', ~' + c.downlink + ' Mbit/s' : ''})` : '';
+        return navigator.onLine ? ['ok', 'Online' + t] : ['ko', 'Il browser risulta offline'];
+      }],
+      ['Configurazione del sito', async () => {
+        const c = window.SNS_CONFIG || {};
+        return c.url && c.key ? ['ok', `Server: <code>${c.url}</code>`] : ['ko', 'Manca <code>js/sns-config.js</code>: telecomando e questionario non funzionano'];
+      }],
+      ['Server sul Mac mini (questionario)', async () => {
+        const t0 = performance.now();
+        try { await QZ.fetchAll(); } catch (e) { return ['ko', 'Non risponde (' + e.message + '): il Mac mini è acceso e collegato?']; }
+        const ms = Math.round(performance.now() - t0);
+        return [ms < 1500 ? 'ok' : 'warn', `Risponde in ${ms} ms`];
+      }],
+      ['Canale della regia (telefono ↔ show)', async () => {
+        for (let i = 0; i < 20 && !SNS.online(); i++) await sleep(400);
+        return SNS.online() ? ['ok', `Collegato alla stanza <code>${SNS.room}</code> — console e show devono usare la stessa`]
+                            : ['ko', `Non collegato alla stanza <code>${SNS.room}</code>: dal telefono il telecomando non arriverà (con lo stesso browser funziona comunque)`];
+      }],
+      ['Show aperto', async () => {
+        let state = null;
+        const off = m => { if (m.t === 'state') state = m; };
+        SNS.listen(off); SNS.send({ t: 'hello', net: true });
+        for (let i = 0; i < 15 && !state; i++) await sleep(300);
+        if (!state) return ['warn', 'Nessuno show risponde adesso: aprilo su <a href="show" target="_blank">/show</a> e ricontrolla'];
+        const s = SNS.SLIDES.find(x => x.id === state.id);
+        return ['ok', 'Collegato, in onda: <b>' + (s ? s.title : state.id || 'copertina') + '</b>'];
+      }],
+      ['Questionario di stasera', async () => {
+        const rows = await QZ.fetchAll(), c = QZ.ctl(), pre = rows.filter(r => r.fase === 'pre').length;
+        const at = c.resetAt ? ', azzerato alle ' + new Date(c.resetAt).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : '';
+        return [pre || rows.length ? 'warn' : 'ok', `Serata <code>${QZ.EVENTO}</code>: ${pre} risposte a inizio, ${rows.length - pre} a fine serata${at}.` +
+          (rows.length ? ' Se sono prove, azzera dalla console prima dello show.' : ' Pronto, nessuna risposta ancora.')];
+      }],
+      ['Pagine del questionario (QR)', async () => {
+        const bad = [];
+        for (const u of ['questionario', 'dopo', 'risultati', 'confronto']) { const r = await fetch(u, { method: 'HEAD', cache: 'no-store' }).catch(() => null); if (!r || !r.ok) bad.push(u); }
+        return bad.length ? ['ko', 'Non rispondono: ' + bad.map(u => '/' + u).join(', ')] : ['ok', '/questionario, /dopo, /risultati e /confronto rispondono'];
+      }],
+      ['Slide dello show', async () => {
+        const srcs = [...new Set(SNS.SLIDES.filter(s => s.src).map(s => strip(s.src)))], bad = [];
+        await Promise.all(srcs.map(async u => { const r = await fetch(u, { method: 'HEAD', cache: 'no-store' }).catch(() => null); if (!r || !r.ok) bad.push(u); }));
+        return bad.length ? ['ko', `${bad.length} su ${srcs.length} non si caricano: ` + bad.join(', ')] : ['ok', `Tutte le ${srcs.length} slide si caricano`];
+      }],
+      ['Video e audio', async () => {
+        const files = SNS.VIDEOS.map(v => [v.title, v.src]).concat(SNS.SLIDES.filter(s => s.audio).map(s => [s.title, s.audio])), out = [];
+        let worst = 'ok';
+        for (const [title, src] of files) {
+          const r = await fetch(src, { method: 'HEAD', cache: 'no-store' }).catch(() => null);
+          if (!r || !r.ok) { worst = 'ko'; out.push(`✗ ${title} (<code>${src}</code>)`); continue; }
+          const len = +r.headers.get('content-length') || 0;
+          out.push(`✓ ${title}${len ? ' · ' + mb(len) : ''}`);
+        }
+        return [worst, out.join('<br>')];
+      }],
+      ['Video caricati dalla console', async () => {
+        const v = await SNS.videos.list().catch(() => []);
+        return ['ok', v.length ? `${v.length} in questo browser: ` + v.map(x => x.name).join(', ')
+          : 'Nessuno in questo browser (normale se non ne usi: i video caricati restano solo nel browser dove li hai caricati)'];
+      }]
+    ];
+
+    async function run() {
+      list.textContent = '';
+      const v = document.getElementById('verdict'); v.className = 'verdict';
+      document.getElementById('verdict-txt').textContent = 'Controllo in corso…';
+      const items = CHECKS.map(([title]) => {
+        const el = document.createElement('div'); el.className = 'item run';
+        el.innerHTML = `<i></i><b>${title}</b><p>…</p>`; list.appendChild(el); return el;
+      });
+      const results = await Promise.all(CHECKS.map(async ([, fn], i) => {
+        let res; try { res = await fn(); } catch (e) { res = ['ko', 'Errore: ' + e.message]; }
+        items[i].className = 'item ' + res[0]; items[i].querySelector('p').innerHTML = res[1]; return res[0];
+      }));
+      const ko = results.filter(x => x === 'ko').length, warn = results.filter(x => x === 'warn').length;
+      v.className = 'verdict ' + (ko ? 'ko' : warn ? 'warn' : 'ok');
+      document.getElementById('verdict-txt').textContent = ko ? `${ko} problemi da sistemare` : warn ? `Tutto funziona · ${warn} cose da guardare` : 'Tutto pronto per lo show';
+    }
+    document.getElementById('back').href = 'sns-console.html' + location.search;   // stessa stanza e serata
+    document.getElementById('again').addEventListener('click', run);
+    run();
+  </script>
+</body>
+</html>
