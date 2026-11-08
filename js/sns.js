@@ -50,6 +50,7 @@ const SNS = (function () {
     { id: 'slide:musk-page',        src: 'musk-page.html',        thumb: 'img/sns/musk-page.jpg',        title: 'Musk e Larry Page',    sub: 'The AI Era' },
     { id: 'slide:musk-page-2',      src: 'musk-page-2.html',      thumb: 'img/sns/musk-page-2.jpg',      title: "Musk e Page — due visioni dell'AI", sub: 'The AI Era' },
     { id: 'slide:musk-altman',      src: 'musk-altman.html',      thumb: 'img/sns/musk-altman.jpg',      title: 'Musk e Sam Altman',    sub: 'The AI Era' },
+    { id: 'slide:chatgpt-2022',     src: 'chatgpt-2022.html',     thumb: 'img/sns/chatgpt-2022.jpg',     title: '30 novembre 2022',     sub: 'ChatGPT per tutti · time to market e curva di apprendimento a zero' },
     { id: 'slide:llm-occidentali',  src: 'llm-occidentali.html',  thumb: 'img/sns/llm-occidentali.jpg',  title: 'LLM occidentali',      sub: 'The AI Era' },
     { id: 'slide:llm-asiatici',     src: 'llm-asiatici.html',     thumb: 'img/sns/llm-asiatici.jpg',     title: 'LLM asiatici',         sub: 'The AI Era' },
     { id: 'slide:llm-russi',        src: 'llm-russi.html',        thumb: 'img/sns/llm-russi.jpg',        title: 'LLM russi',            sub: 'The AI Era' },

@@ -40,7 +40,7 @@ const DEFAULT_PAGES = [
   'saturday-night-science.html', 'conosciamoci.html', 'risultati.html', 'index.html', 'video.html', 'fedro-voce.html', 'platone-fedro.html', 'scrittura.html', 'fotografia.html',
   'pechino-1.html', 'pechino-2.html', 'pechino-3.html',
   'dartmouth-1956.html', 'dartmouth-1956-voce.html', 'dartmouth-1956-2.html', 'cos-e-ai.html',
-  'timeline.html', 'napa-valley.html', 'musk-page.html', 'musk-page-2.html', 'musk-altman.html', 'paesi.html', 'leader.html',
+  'timeline.html', 'napa-valley.html', 'musk-page.html', 'musk-page-2.html', 'musk-altman.html', 'chatgpt-2022.html', 'paesi.html', 'leader.html',
   'trump-amodei.html', 'anthropic-usa-1.html', 'anthropic-usa-2.html', 'anthropic-usa-3.html', 'anthropic-usa-4.html',
   'llm-occidentali.html', 'llm-asiatici.html', 'llm-russi.html',
   'thiel.html', 'palantir-intro.html', 'palantir-intro-2.html', 'palantir.html', 'paypal-mafia.html', 'paypal-mafia-2.html', 'paypal-mafia-3.html', 'paypal-mafia-4.html', 'confronto.html',
