@@ -65,6 +65,8 @@ const SNS = (function () {
     // Video in sequenza prima del questionario di fine serata (stesso id della galleria)
     { id: 'video:tom-brad', video: true, thumb: 'img/tom-brad-poster.jpg',
       title: 'Tom contro Brad', sub: 'Video · generato dall’AI' },
+    { id: 'video:alba-transformer', video: true, thumb: 'img/alba-transformer-poster.jpg',
+      title: 'Arriva la pubblicità nell’AI', sub: 'Video · spot «Ads are coming to AI»' },
     { id: 'video:la-nostra-voce', video: true, thumb: 'img/la-nostra-voce-poster.jpg',
       title: 'La nostra voce', sub: 'Video · doppiaggio e voci sintetiche' },
     { id: 'slide:conosciamoci-dopo',    src: 'conosciamoci.html?fase=post', thumb: 'img/sns/conosciamoci-dopo.jpg', title: 'E adesso?', sub: 'QR del questionario · fine serata (parte 2)' },
@@ -115,7 +117,10 @@ const SNS = (function () {
       title: 'La nostra voce', sub: 'Doppiaggio e voci sintetiche', dur: 133 },
     // dalla presentazione Canva «L'alba dei transformer»: Tom Cruise contro Brad Pitt, generato dall'AI
     { id: 'video:tom-brad', src: 'video/tom-brad.mp4', poster: 'img/tom-brad-poster.jpg',
-      title: 'Tom contro Brad', sub: 'Video generato dall’AI', dur: 15 }
+      title: 'Tom contro Brad', sub: 'Video generato dall’AI', dur: 15 },
+    // dalla stessa presentazione: lo spot «Ads are coming to AI» (pubblicità dentro le chat)
+    { id: 'video:alba-transformer', src: 'video/alba-transformer.mp4', poster: 'img/alba-transformer-poster.jpg',
+      title: 'Arriva la pubblicità nell’AI', sub: 'Spot «Ads are coming to AI»', dur: 60 }
   ];
 
   // ── Trasporto ──
