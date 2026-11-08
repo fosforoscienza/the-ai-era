@@ -63,6 +63,8 @@ const SNS = (function () {
     { id: 'slide:paypal-mafia-4',   src: 'paypal-mafia-4.html',   thumb: 'img/sns/paypal-mafia-4.jpg',   title: 'PayPal Mafia — chi ha creato cosa', sub: 'Foto con i nomi' }
   ].concat(quizSlides(), [
     // Video in sequenza prima del questionario di fine serata (stesso id della galleria)
+    { id: 'video:tom-brad', video: true, thumb: 'img/tom-brad-poster.jpg',
+      title: 'Tom contro Brad', sub: 'Video · generato dall’AI' },
     { id: 'video:la-nostra-voce', video: true, thumb: 'img/la-nostra-voce-poster.jpg',
       title: 'La nostra voce', sub: 'Video · doppiaggio e voci sintetiche' },
     { id: 'slide:conosciamoci-dopo',    src: 'conosciamoci.html?fase=post', thumb: 'img/sns/conosciamoci-dopo.jpg', title: 'E adesso?', sub: 'QR del questionario · fine serata (parte 2)' },
@@ -110,7 +112,10 @@ const SNS = (function () {
       title: 'Intro The AI Era', sub: 'The AI Era', dur: 60 },
     // dall'ultima slide di «Divertiamoci con l'Intelligenza Artificiale 2025» (Keynote)
     { id: 'video:la-nostra-voce', src: 'video/la-nostra-voce.mp4', poster: 'img/la-nostra-voce-poster.jpg',
-      title: 'La nostra voce', sub: 'Doppiaggio e voci sintetiche', dur: 133 }
+      title: 'La nostra voce', sub: 'Doppiaggio e voci sintetiche', dur: 133 },
+    // dalla presentazione Canva «L'alba dei transformer»: Tom Cruise contro Brad Pitt, generato dall'AI
+    { id: 'video:tom-brad', src: 'video/tom-brad.mp4', poster: 'img/tom-brad-poster.jpg',
+      title: 'Tom contro Brad', sub: 'Video generato dall’AI', dur: 15 }
   ];
 
   // ── Trasporto ──
